@@ -4,7 +4,8 @@ const isAsyncSupported = require('is-async-supported');
 
 const pkg = require('../package.json');
 
-const { error, bold } = require('../src/log');
+const nbaGo = require('../src');
+const { error, bold } = require('../utils/log');
 
 if (!isAsyncSupported()) {
   require('async-to-gen/register');
@@ -12,9 +13,12 @@ if (!isAsyncSupported()) {
 
 program.version(pkg.version);
 
-program.command('nba-go <command>').action(command => {
-  console.log(command);
-});
+program
+  .command('player <playerName>')
+  .alias('p')
+  .action(playerName => {
+    nbaGo.player(playerName);
+  });
 
 program.command('*').action(command => {
   error(`unknown command: ${bold(command)}`);
