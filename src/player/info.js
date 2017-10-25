@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const Table = require('cli-table2');
 const format = require('date-fns/format');
 
-const teams = require('../../utils/teams');
+const teamColor = require('../../utils/teamColor');
 const { convertToCm, convertToKg } = require('../../utils/convertToCm');
 
 const alignCenter = columns =>
@@ -49,8 +49,8 @@ async function info(playerInfo) {
     ast,
   } = playerInfo;
 
-  const playerName = chalk`{bold.white.bgHex('${teams[teamAbbreviation]
-    ? teams[teamAbbreviation].color
+  const playerName = chalk`{bold.white.bgHex('${teamColor[teamAbbreviation]
+    ? teamColor[teamAbbreviation].color
     : '#000'}') ${teamAbbreviation}} {bold.white #${jersey} ${displayFirstLast}}`;
 
   const draft =

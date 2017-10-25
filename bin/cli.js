@@ -20,6 +20,13 @@ program
     nbaGo.player(playerName);
   });
 
+program
+  .command('games <date>')
+  .alias('g')
+  .action(date => {
+    nbaGo.games(date);
+  });
+
 program.command('*').action(command => {
   error(`unknown command: ${bold(command)}`);
   const commandNames = program.commands

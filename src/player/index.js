@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 const NBA = require('nba');
 const pMap = require('p-map');
 
