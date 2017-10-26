@@ -21,10 +21,14 @@ program
   });
 
 program
-  .command('game <date>')
+  .command('game')
   .alias('g')
-  .action(date => {
-    nbaGo.game(date);
+  .option('-d, --date <date>', 'Check games at specific date')
+  .option('-y, --yesterday', "Check yesterday's games")
+  .option('-t, --today', "Check today's games")
+  .option('-T, --tomorrow', "Check tomorrow's games")
+  .action(option => {
+    nbaGo.game(option);
   });
 
 program.command('*').action(command => {
