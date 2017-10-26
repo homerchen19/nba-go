@@ -1,17 +1,19 @@
 import chalk from 'chalk';
 
 const print = msg => {
-  console.log(chalk.green(`${msg}`));
+  console.log(chalk`{green ${msg}}`);
 };
 
 const warn = msg => {
-  console.log(chalk.yellow(`${msg}`));
+  console.log(chalk`{yellow ${msg}}`);
 };
 
 const error = msg => {
-  console.log(chalk.bold.red(`${msg}`));
+  console.log(chalk`{red.bold ${msg}}`);
 };
 
-const bold = msg => chalk.bold(msg);
+const bold = msg => chalk`{white.bold ${msg}}`;
 
-export { print, warn, error, bold };
+const neonGreen = msg => chalk`{hex('#66ff66') ${msg}}`;
+
+export { print, warn, error, bold, neonGreen };

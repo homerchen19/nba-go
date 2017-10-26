@@ -24,7 +24,7 @@ program
   .command('game <date>')
   .alias('g')
   .action(date => {
-    nbaGo.games(date);
+    nbaGo.game(date);
   });
 
 program.command('*').action(command => {

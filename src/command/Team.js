@@ -1,13 +1,14 @@
-import NbaEmoji from 'nba-emoji';
+import emoji from 'node-emoji';
 
 import teamColor from '../utils/teamColor';
 
 export default class Team {
-  constructor({ id, city, abbreviation, nickname }) {
+  constructor({ id, city, abbreviation, nickname, score }) {
     this.id = id;
     this.city = city;
     this.abbreviation = abbreviation;
     this.nickname = nickname;
+    this.score = score === '' ? '0' : score;
   }
 
   getCity() {
@@ -22,6 +23,10 @@ export default class Team {
     return this.nickname;
   }
 
+  getScore() {
+    return this.score;
+  }
+
   getFullName() {
     return `${this.city} ${this.nickname}`;
   }
@@ -30,9 +35,9 @@ export default class Team {
     return teamColor[this.abbreviation].color;
   }
 
-  getEmogiNickname(direction) {
+  getWinnerNickname(direction) {
     return direction === 'left'
-      ? `${NbaEmoji.getEmoji(this.abbreviation)}  ${this.nickname}`
-      : `${this.nickname} ${NbaEmoji.getEmoji(this.abbreviation)}`;
+      ? `${emoji.get('crown')}  ${this.nickname}`
+      : `${this.nickname} ${emoji.get('crown')}`;
   }
 }
