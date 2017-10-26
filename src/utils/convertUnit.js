@@ -11,7 +11,4 @@ const convertToCm = length => {
 const convertToKg = weight =>
   weight !== '' ? (weight * 0.45359237).toFixed(2) : '';
 
-module.exports = {
-  convertToCm,
-  convertToKg,
-};
+export { convertToCm, convertToKg };

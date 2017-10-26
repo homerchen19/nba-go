@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   ATL: {
     fullName: 'Atlanta Hawks',
     color: '#C8102E',

@@ -1,13 +1,13 @@
-const leftPad = require('left-pad');
-const rightPad = require('right-pad');
-const NBA = require('nba-stats-client');
-const parse = require('date-fns/parse');
-const inquirer = require('inquirer');
-const emoji = require('node-emoji');
+import leftPad from 'left-pad';
+import rightPad from 'right-pad';
+import NBA from 'nba-stats-client';
+import parse from 'date-fns/parse';
+import inquirer from 'inquirer';
+import emoji from 'node-emoji';
 
-const Team = require('./Team');
+import Team from './Team';
 
-async function games(date) {
+const game = async date => {
   const questions = [
     {
       name: 'game',
@@ -20,20 +20,20 @@ async function games(date) {
   const {
     sports_content: { games: { game: gamesData } },
   } = await NBA.getGamesFromDate(parse(date));
-  gamesData.forEach(game => {
-    const homeTeam = new Team(game.home);
-    const visitorTeam = new Team(game.visitor);
+  gamesData.forEach(gameData => {
+    const homeTeam = new Team(gameData.home);
+    const visitorTeam = new Team(gameData.visitor);
 
     questions[0].choices.push({
       name: `${leftPad(homeTeam.getEmogiNickname('left'), 15)} ${emoji.get(
         'basketball'
       )}  ${rightPad(visitorTeam.getEmogiNickname('right'), 15)}`,
-      value: game,
+      value: gameData,
     });
   });
 
   const answer = await inquirer.prompt(questions);
   console.log(answer);
-}
+};
 
-module.exports = games;
+export default game;

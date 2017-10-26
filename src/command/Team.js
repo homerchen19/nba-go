@@ -1,8 +1,8 @@
-const NbaEmoji = require('nba-emoji');
+import NbaEmoji from 'nba-emoji';
 
-const teamColor = require('../utils/teamColor');
+import teamColor from '../utils/teamColor';
 
-module.exports = class Team {
+export default class Team {
   constructor({ id, city, abbreviation, nickname }) {
     this.id = id;
     this.city = city;
@@ -35,4 +35,4 @@ module.exports = class Team {
       ? `${NbaEmoji.getEmoji(this.abbreviation)}  ${this.nickname}`
       : `${this.nickname} ${NbaEmoji.getEmoji(this.abbreviation)}`;
   }
-};
+}

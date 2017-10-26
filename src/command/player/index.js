@@ -1,9 +1,9 @@
-const NBA = require('nba');
-const pMap = require('p-map');
+import NBA from 'nba';
+import pMap from 'p-map';
 
-const playInfo = require('./info');
+import playInfo from './info';
 
-async function player(playerName) {
+const player = async playerName => {
   const _players = await NBA.searchPlayers(playerName);
 
   pMap(
@@ -19,6 +19,6 @@ async function player(playerName) {
     },
     { concurrency: 5 }
   );
-}
+};
 
-module.exports = player;
+export default player;

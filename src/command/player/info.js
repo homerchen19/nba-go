@@ -1,16 +1,16 @@
 /* eslint-disable no-console */
 
-const chalk = require('chalk');
-const Table = require('cli-table2');
-const format = require('date-fns/format');
+import chalk from 'chalk';
+import Table from 'cli-table2';
+import format from 'date-fns/format';
 
-const teamColor = require('../../utils/teamColor');
-const { convertToCm, convertToKg } = require('../../utils/convertToCm');
+import teamColor from '../../utils/teamColor';
+import { convertToCm, convertToKg } from '../../utils/convertUnit';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center' }));
 
-async function info(playerInfo) {
+const info = async playerInfo => {
   const playerTable = new Table({
     head: [],
     chars: {
@@ -84,6 +84,6 @@ async function info(playerInfo) {
     ])
   );
   console.log(playerTable.toString());
-}
+};
 
-module.exports = info;
+export default info;
