@@ -4,6 +4,8 @@ import pMap from 'p-map';
 import playInfo from './info';
 
 const player = async playerName => {
+  await NBA.updatePlayers();
+
   const _players = await NBA.searchPlayers(playerName);
 
   pMap(
