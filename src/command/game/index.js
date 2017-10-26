@@ -2,7 +2,9 @@ import NBA from 'nba-stats-client';
 import parse from 'date-fns/parse';
 import addDays from 'date-fns/add_days';
 import subDays from 'date-fns/sub_days';
+import format from 'date-fns/format';
 import emoji from 'node-emoji';
+import CFonts from 'cfonts';
 
 import createGameList from './createGameList';
 import { error } from '../../utils/log';
@@ -21,6 +23,17 @@ const game = async option => {
     error(`Can't find any option ${emoji.get('confused')}`);
     process.exit(1);
   }
+
+  CFonts.say(format(_date, 'YYYY/MM/DD'), {
+    font: 'block',
+    align: 'left',
+    colors: ['blue', 'red'],
+    background: 'black',
+    letterSpacing: 1,
+    lineHeight: 1,
+    space: true,
+    maxLength: '10',
+  });
 
   const {
     sports_content: { games: { game: gamesData } },
