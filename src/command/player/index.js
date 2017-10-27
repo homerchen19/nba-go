@@ -40,7 +40,7 @@ const player = async (playerName, option) => {
         });
       }
     },
-    { concurrency: 5 }
+    { concurrency: 1 }
   );
 };
 

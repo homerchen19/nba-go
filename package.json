@@ -39,6 +39,7 @@
     "inquirer": "^3.3.0",
     "is-async-supported": "^1.2.0",
     "nba": "^4.0.0",
+    "nba-color": "^1.0.0",
     "nba-stats-client": "^0.0.4",
     "node-emoji": "^1.8.1",
     "p-map": "^1.2.0",

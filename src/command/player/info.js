@@ -2,17 +2,16 @@
 
 import chalk from 'chalk';
 import format from 'date-fns/format';
+import { getMainColor } from 'nba-color';
 
-import { getTeamMainColor } from '../../utils/nbaColor';
 import { convertToCm, convertToKg } from '../../utils/convertUnit';
 import table from '../../utils/table';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center' }));
 
-const info = async playerInfo => {
+const info = playerInfo => {
   const playerTable = table.basicTable();
-
   const {
     teamAbbreviation,
     jersey,
@@ -30,10 +29,9 @@ const info = async playerInfo => {
     ast,
   } = playerInfo;
 
-  const playerName = chalk`{bold.white.bgHex('${getTeamMainColor(
-    teamAbbreviation
-  )
-    ? getTeamMainColor(teamAbbreviation)
+  const teamMainColor = getMainColor(teamAbbreviation);
+  const playerName = chalk`{bold.white.bgHex('${teamMainColor
+    ? teamMainColor.hex
     : '#000'}') ${teamAbbreviation}} {bold.white #${jersey} ${displayFirstLast}}`;
 
   const draft =
@@ -66,6 +64,7 @@ const info = async playerInfo => {
       ast,
     ])
   );
+
   console.log(playerTable.toString());
 };
 

@@ -1,26 +1,25 @@
 /* eslint-disable no-console */
 
 import chalk from 'chalk';
+import { getMainColor } from 'nba-color';
 
-import { getTeamMainColor } from '../../utils/nbaColor';
 import { bold } from '../../utils/log';
 import table from '../../utils/table';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center' }));
 
-const regularSeason = async ({
+const regularSeason = ({
   nowTeamAbbreviation,
   jersey,
   displayFirstLast,
   seasonTotalsRegularSeason,
   careerTotalsRegularSeason,
 }) => {
+  const nowTeamMainColor = getMainColor(nowTeamAbbreviation);
   const seasonTable = table.basicTable();
-  const playerName = chalk`{bold.white.bgHex('${getTeamMainColor(
-    nowTeamAbbreviation
-  )
-    ? getTeamMainColor(nowTeamAbbreviation)
+  const playerName = chalk`{bold.white.bgHex('${nowTeamMainColor
+    ? nowTeamMainColor.hex
     : '#000'}') ${nowTeamAbbreviation}} {bold.white #${jersey} ${displayFirstLast}}`;
   seasonTable.push([{ colSpan: 14, content: playerName, hAlign: 'center' }]);
   seasonTable.push(
@@ -59,12 +58,13 @@ const regularSeason = async ({
       blk,
       tov,
     } = season;
+    const teamMainColor = getMainColor(teamAbbreviation);
 
     seasonTable.push(
       alignCenter([
         bold(seasonId),
-        chalk`{bold.white.bgHex('${getTeamMainColor(teamAbbreviation)
-          ? getTeamMainColor(teamAbbreviation)
+        chalk`{bold.white.bgHex('${teamMainColor
+          ? teamMainColor.hex
           : '#000'}') ${teamAbbreviation}}`,
         playerAge,
         gp,
