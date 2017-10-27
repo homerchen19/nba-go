@@ -1,36 +1,17 @@
 /* eslint-disable no-console */
 
 import chalk from 'chalk';
-import Table from 'cli-table2';
 import format from 'date-fns/format';
 
-import teamColor from '../../utils/teamColor';
+import { getTeamMainColor } from '../../utils/nbaColor';
 import { convertToCm, convertToKg } from '../../utils/convertUnit';
+import table from '../../utils/table';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center' }));
 
 const info = async playerInfo => {
-  const playerTable = new Table({
-    head: [],
-    chars: {
-      top: '═',
-      'top-mid': '╤',
-      'top-left': '╔',
-      'top-right': '╗',
-      bottom: '═',
-      'bottom-mid': '╧',
-      'bottom-left': '╚',
-      'bottom-right': '╝',
-      left: '║',
-      'left-mid': '╟',
-      mid: '─',
-      'mid-mid': '┼',
-      right: '║',
-      'right-mid': '╢',
-      middle: '│',
-    },
-  });
+  const playerTable = table.basicTable();
 
   const {
     teamAbbreviation,
@@ -49,8 +30,10 @@ const info = async playerInfo => {
     ast,
   } = playerInfo;
 
-  const playerName = chalk`{bold.white.bgHex('${teamColor[teamAbbreviation]
-    ? teamColor[teamAbbreviation].color
+  const playerName = chalk`{bold.white.bgHex('${getTeamMainColor(
+    teamAbbreviation
+  )
+    ? getTeamMainColor(teamAbbreviation)
     : '#000'}') ${teamAbbreviation}} {bold.white #${jersey} ${displayFirstLast}}`;
 
   const draft =

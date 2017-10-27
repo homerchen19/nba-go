@@ -1,6 +1,6 @@
 import emoji from 'node-emoji';
 
-import teamColor from '../utils/teamColor';
+import { getTeamMainColor } from '../utils/nbaColor';
 
 export default class Team {
   constructor({ id, city, abbreviation, nickname, score }) {
@@ -32,7 +32,7 @@ export default class Team {
   }
 
   getColor() {
-    return teamColor[this.abbreviation].color;
+    return getTeamMainColor(this.abbreviation);
   }
 
   getWinnerNickname(direction) {

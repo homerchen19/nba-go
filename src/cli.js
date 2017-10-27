@@ -16,8 +16,11 @@ program.version(pkg.version);
 program
   .command('player <playerName>')
   .alias('p')
-  .action(playerName => {
-    nbaGo.player(playerName);
+  .option('-i, --info', "Check the player's basic iniformation")
+  .option('-r, --regular', "Check the player's career regular season data")
+  .option('-p, --playoffs', "Check the player's career playoffs data")
+  .action((playerName, option) => {
+    nbaGo.player(playerName, option);
   });
 
 program
