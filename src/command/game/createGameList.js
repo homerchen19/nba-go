@@ -1,7 +1,9 @@
+import NBA from 'nba';
 import inquirer from 'inquirer';
 import emoji from 'node-emoji';
 import { limit } from 'stringz';
 import { center, left, right } from 'wide-align';
+import pMap from 'p-map';
 
 import Team from '../Team';
 
@@ -28,14 +30,12 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime) => {
   }
 
   const homeTeamName = padHomeTeamName(
-    winner === 'home'
-      ? homeTeam.getWinnerNickname('left')
-      : homeTeam.getNickname()
+    winner === 'home' ? homeTeam.getWinnerName('left') : homeTeam.getName()
   );
   const visitorTeamName = padVisitorTeamName(
     winner === 'visitor'
-      ? visitorTeam.getWinnerNickname('right')
-      : visitorTeam.getNickname()
+      ? visitorTeam.getWinnerName('right')
+      : visitorTeam.getName()
   );
   const match = `${homeTeamName}${center(
     emoji.get('basketball'),
@@ -80,26 +80,50 @@ const createGameList = async gamesData => {
 
   const last = gamesData.length - 1;
 
-  gamesData.forEach((gameData, index) => {
-    const { home, visitor, period_time } = gameData;
-    const homeTeam = new Team(home);
-    const visitorTeam = new Team(visitor);
+  await pMap(
+    gamesData,
+    async (gameData, index) => {
+      const { home, visitor, period_time } = gameData;
 
-    questions[0].choices.push({
-      name: createGameChoice(homeTeam, visitorTeam, period_time),
-      value: gameData,
-    });
+      const {
+        teamInfoCommon: homeTeamInfoCommon,
+      } = await NBA.stats.teamInfoCommon({
+        TeamID: home.id,
+        Season: '2017-18',
+      });
+      const {
+        teamInfoCommon: visitorTeamInfoCommon,
+      } = await NBA.stats.teamInfoCommon({
+        TeamID: visitor.id,
+        Season: '2017-18',
+      });
 
-    if (index !== last) {
-      questions[0].choices.push(
-        new inquirer.Separator(`${limit('', MAX_WIDTH, '-')}`)
-      );
-    } else {
-      questions[0].choices.push(
-        new inquirer.Separator(`${limit('', MAX_WIDTH, '─')}`)
-      );
-    }
-  });
+      const homeTeam = new Team({
+        ...homeTeamInfoCommon[0],
+        score: home.score,
+      });
+      const visitorTeam = new Team({
+        ...visitorTeamInfoCommon[0],
+        score: visitor.score,
+      });
+
+      questions[0].choices.push({
+        name: createGameChoice(homeTeam, visitorTeam, period_time),
+        value: { gameData, homeTeam, visitorTeam },
+      });
+
+      if (index !== last) {
+        questions[0].choices.push(
+          new inquirer.Separator(`${limit('', MAX_WIDTH, '-')}`)
+        );
+      } else {
+        questions[0].choices.push(
+          new inquirer.Separator(`${limit('', MAX_WIDTH, '─')}`)
+        );
+      }
+    },
+    { concurrency: 1 }
+  );
 
   const answer = await inquirer.prompt(questions);
 

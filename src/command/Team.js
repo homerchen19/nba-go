@@ -2,12 +2,24 @@ import emoji from 'node-emoji';
 import { getMainColor } from 'nba-color';
 
 export default class Team {
-  constructor({ id, city, abbreviation, nickname, score }) {
-    this.id = id;
-    this.city = city;
-    this.abbreviation = abbreviation;
-    this.nickname = nickname;
+  constructor({
+    teamId,
+    teamCity,
+    teamName,
+    teamAbbreviation,
+    score,
+    w,
+    l,
+    divRank,
+  }) {
+    this.id = teamId;
+    this.city = teamCity;
+    this.name = teamName;
+    this.abbreviation = teamAbbreviation;
     this.score = score === '' ? '0' : score;
+    this.wins = w;
+    this.loses = l;
+    this.divRank = divRank;
   }
 
   getCity() {
@@ -18,16 +30,24 @@ export default class Team {
     return this.abbreviation;
   }
 
-  getNickname() {
-    return this.nickname;
+  getName() {
+    return this.name;
   }
 
   getScore() {
     return this.score;
   }
 
+  getWins() {
+    return this.wins;
+  }
+
+  getLoses() {
+    return this.loses;
+  }
+
   getFullName() {
-    return `${this.city} ${this.nickname}`;
+    return `${this.city} ${this.name}`;
   }
 
   getColor() {
@@ -36,9 +56,9 @@ export default class Team {
     return mainColor ? mainColor.hex : undefined;
   }
 
-  getWinnerNickname(direction) {
+  getWinnerName(direction) {
     return direction === 'left'
-      ? `${emoji.get('crown')}  ${this.nickname}`
-      : `${this.nickname} ${emoji.get('crown')}`;
+      ? `${emoji.get('crown')}  ${this.name}`
+      : `${this.name} ${emoji.get('crown')}`;
   }
 }
