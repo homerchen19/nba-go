@@ -22,6 +22,6 @@ const basicTable = () =>
     },
   });
 
-export default {
+module.exports = {
   basicTable,
 };

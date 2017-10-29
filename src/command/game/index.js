@@ -4,9 +4,10 @@ import addDays from 'date-fns/add_days';
 import subDays from 'date-fns/sub_days';
 import emoji from 'node-emoji';
 
-import createGameList from './createGameList';
+import createGameMenu from './createGameMenu';
+import createGameScoreboard from './createGameScoreboard';
 import { error } from '../../utils/log';
-import { cfontsDate } from '../../utils/cfonts';
+import { cfontsDate, cfontsGameTitle } from '../../utils/cfonts';
 
 const game = async option => {
   let _date;
@@ -29,8 +30,28 @@ const game = async option => {
     sports_content: { games: { game: gamesData } },
   } = await NBA.getGamesFromDate(parse(_date));
 
-  const answer = await createGameList(gamesData);
-  console.log(answer);
+  const { game: { homeTeam, visitorTeam, gameData } } = await createGameMenu(
+    gamesData
+  );
+  cfontsGameTitle(homeTeam, visitorTeam);
+
+  switch (gameData.period_time.game_status) {
+    case '1': {
+      console.log('pregame');
+      break;
+    }
+
+    case 'Halftime':
+    case '2': {
+      console.log('gaming');
+      break;
+    }
+
+    case '3':
+    default: {
+      createGameScoreboard(homeTeam, visitorTeam, gameData);
+    }
+  }
 };
 
 export default game;

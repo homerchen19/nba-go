@@ -8,7 +8,7 @@ import { convertToCm, convertToKg } from '../../utils/convertUnit';
 import table from '../../utils/table';
 
 const alignCenter = columns =>
-  columns.map(content => ({ content, hAlign: 'center' }));
+  columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
 
 const info = playerInfo => {
   const playerTable = table.basicTable();
@@ -40,7 +40,7 @@ const info = playerInfo => {
       : 'Undrafted';
 
   playerTable.push(
-    [{ colSpan: 9, content: playerName, hAlign: 'center' }],
+    [{ colSpan: 9, content: playerName, hAlign: 'center', vAlign: 'center' }],
     alignCenter([
       'Height',
       'Weight',

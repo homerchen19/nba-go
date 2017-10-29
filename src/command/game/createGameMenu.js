@@ -56,7 +56,7 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime) => {
   )}│`;
 };
 
-const createGameList = async gamesData => {
+const createGameMenu = async gamesData => {
   const header = `│ ${padHomeTeamName('Home')}${center(
     emoji.get('basketball'),
     8
@@ -101,10 +101,12 @@ const createGameList = async gamesData => {
       const homeTeam = new Team({
         ...homeTeamInfoCommon[0],
         score: home.score,
+        linescores: home.linescores,
       });
       const visitorTeam = new Team({
         ...visitorTeamInfoCommon[0],
         score: visitor.score,
+        linescores: visitor.linescores,
       });
 
       questions[0].choices.push({
@@ -130,4 +132,4 @@ const createGameList = async gamesData => {
   return answer;
 };
 
-export default createGameList;
+export default createGameMenu;

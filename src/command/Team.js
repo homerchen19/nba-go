@@ -11,6 +11,7 @@ export default class Team {
     w,
     l,
     divRank,
+    linescores,
   }) {
     this.id = teamId;
     this.city = teamCity;
@@ -20,6 +21,7 @@ export default class Team {
     this.wins = w;
     this.loses = l;
     this.divRank = divRank;
+    this.linescores = linescores ? linescores.period : [];
   }
 
   getCity() {
@@ -60,5 +62,11 @@ export default class Team {
     return direction === 'left'
       ? `${emoji.get('crown')}  ${this.name}`
       : `${this.name} ${emoji.get('crown')}`;
+  }
+
+  getQuarterScore(quarter) {
+    return this.linescores
+      .filter(quarterData => quarterData.period_value === quarter)
+      .map(quarterData => quarterData.score);
   }
 }
