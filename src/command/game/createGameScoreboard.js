@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
 
 import chalk from 'chalk';
-import indentString from 'indent-string';
-import size from 'window-size';
 
 import { bold, neonGreen } from '../../utils/log';
 import { basicTable } from '../../utils/table';
@@ -90,7 +88,7 @@ const createGameScorebaord = (homeTeam, visitorTeam, gameData) => {
     ]
   );
 
-  console.log(indentString(scoreboardTable.toString(), (size.width - 50) / 2));
+  console.log(scoreboardTable.toString());
 };
 
 export default createGameScorebaord;

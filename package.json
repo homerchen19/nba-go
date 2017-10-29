@@ -36,7 +36,6 @@
     "commander": "^2.11.0",
     "date-fns": "^1.29.0",
     "didyoumean": "^1.2.1",
-    "indent-string": "^3.2.0",
     "inquirer": "^3.3.0",
     "is-async-supported": "^1.2.0",
     "nba": "^4.0.0",
@@ -46,8 +45,7 @@
     "p-map": "^1.2.0",
     "stringz": "^0.2.3",
     "table": "^4.0.2",
-    "wide-align": "^1.1.2",
-    "window-size": "^1.1.0"
+    "wide-align": "^1.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

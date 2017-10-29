@@ -22,6 +22,8 @@ export default class Team {
     this.loses = l;
     this.divRank = divRank;
     this.linescores = linescores ? linescores.period : [];
+    this.gameStats = {};
+    this.gamePlayers = [];
   }
 
   getCity() {
@@ -68,5 +70,21 @@ export default class Team {
     return this.linescores
       .filter(quarterData => quarterData.period_value === quarter)
       .map(quarterData => quarterData.score);
+  }
+
+  setGameStats(stats) {
+    this.gameStats = stats;
+  }
+
+  setGamePlayers(players) {
+    this.gamePlayers = players;
+  }
+
+  getGameStats() {
+    return this.gameStats;
+  }
+
+  getGamePlayers() {
+    return this.gamePlayers;
   }
 }

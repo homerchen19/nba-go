@@ -6,6 +6,7 @@ import emoji from 'node-emoji';
 
 import createGameMenu from './createGameMenu';
 import createGameScoreboard from './createGameScoreboard';
+import createGameBoxScore from './createGameBoxScore';
 import { error } from '../../utils/log';
 import { cfontsDate, cfontsGameTitle } from '../../utils/cfonts';
 
@@ -33,7 +34,6 @@ const game = async option => {
   const { game: { homeTeam, visitorTeam, gameData } } = await createGameMenu(
     gamesData
   );
-  cfontsGameTitle(homeTeam, visitorTeam);
 
   switch (gameData.period_time.game_status) {
     case '1': {
@@ -49,7 +49,20 @@ const game = async option => {
 
     case '3':
     default: {
+      cfontsGameTitle(homeTeam);
       createGameScoreboard(homeTeam, visitorTeam, gameData);
+      cfontsGameTitle(visitorTeam);
+
+      const {
+        sports_content: { game: { home, visitor } },
+      } = await NBA.getBoxScoreFromDate(parse(_date), gameData.id);
+
+      homeTeam.setGameStats(home.stats);
+      homeTeam.setGamePlayers(home.players.player);
+      visitorTeam.setGameStats(visitor.stats);
+      visitorTeam.setGamePlayers(visitor.players.player);
+
+      createGameBoxScore(homeTeam, visitorTeam);
     }
   }
 };

@@ -16,24 +16,10 @@ const supportedColorMapping = color => {
     bealeStreetBlue: 'blue',
     smokeBlue: 'blue',
     darkBlue: 'blue',
+    black: 'white',
   };
 
   return unsupportedColors[color] ? unsupportedColors[color] : color;
-};
-
-const cfontsTeamName = (name, score, fontColor, backgroundColor) => {
-  CFonts.say(`${name}`, {
-    font: 'block',
-    align: 'center',
-    colors: [
-      supportedColorMapping(fontColor),
-      supportedColorMapping(backgroundColor),
-    ],
-    letterSpacing: 1,
-    lineHeight: 1,
-    space: true,
-    maxLength: '0',
-  });
 };
 
 const cfontsDate = date => {
@@ -49,34 +35,21 @@ const cfontsDate = date => {
   });
 };
 
-const cfontsGameTitle = (homeTeam, visitorTeam) => {
-  const homeTeamColorsList = getColorsList(homeTeam.getAbbreviation());
-  const visitorTeamColorsList = getColorsList(visitorTeam.getAbbreviation());
+const cfontsGameTitle = team => {
+  const teamColorsList = getColorsList(team.getAbbreviation());
 
-  cfontsTeamName(
-    homeTeam.getName(),
-    homeTeam.getScore(),
-    homeTeamColorsList[0],
-    homeTeamColorsList[1]
-  );
-
-  CFonts.say('v.s.', {
-    font: 'simple',
-    align: 'center',
-    colors: ['white'],
-    background: 'black',
+  CFonts.say(`${team.getName()} : ${team.getScore()}`, {
+    font: 'block',
+    align: 'left',
+    colors: [
+      supportedColorMapping(teamColorsList[0]),
+      supportedColorMapping(teamColorsList[1]),
+    ],
     letterSpacing: 1,
     lineHeight: 1,
-    space: false,
+    space: true,
     maxLength: '0',
   });
-
-  cfontsTeamName(
-    visitorTeam.getName(),
-    visitorTeam.getScore(),
-    visitorTeamColorsList[0],
-    visitorTeamColorsList[1]
-  );
 };
 
 module.exports = {
