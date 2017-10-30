@@ -8,7 +8,7 @@ import createGameMenu from './createGameMenu';
 import createGameScoreboard from './createGameScoreboard';
 import createGameBoxScore from './createGameBoxScore';
 import { error } from '../../utils/log';
-import { cfontsDate, cfontsGameTitle } from '../../utils/cfonts';
+import { cfontsDate } from '../../utils/cfonts';
 
 const game = async option => {
   let _date;
@@ -49,19 +49,27 @@ const game = async option => {
 
     case '3':
     default: {
-      cfontsGameTitle(homeTeam);
-      createGameScoreboard(homeTeam, visitorTeam, gameData);
-      cfontsGameTitle(visitorTeam);
-
       const {
-        sports_content: { game: { home, visitor } },
+        sports_content: {
+          game: gameBoxScoreData,
+          sports_meta: { season_meta: seasonMeta },
+        },
       } = await NBA.getBoxScoreFromDate(parse(_date), gameData.id);
+      const { home, visitor } = gameBoxScoreData;
 
       homeTeam.setGameStats(home.stats);
       homeTeam.setGamePlayers(home.players.player);
+      homeTeam.setGameLeaders(home.Leaders);
       visitorTeam.setGameStats(visitor.stats);
       visitorTeam.setGamePlayers(visitor.players.player);
+      visitorTeam.setGameLeaders(visitor.Leaders);
 
+      console.log('');
+      createGameScoreboard(homeTeam, visitorTeam, {
+        ...gameBoxScoreData,
+        ...seasonMeta,
+      });
+      console.log('');
       createGameBoxScore(homeTeam, visitorTeam);
     }
   }

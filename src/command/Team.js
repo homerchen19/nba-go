@@ -24,6 +24,7 @@ export default class Team {
     this.linescores = linescores ? linescores.period : [];
     this.gameStats = {};
     this.gamePlayers = [];
+    this.gameLeaders = {};
   }
 
   getCity() {
@@ -80,11 +81,19 @@ export default class Team {
     this.gamePlayers = players;
   }
 
+  setGameLeaders(leaders) {
+    this.gameLeaders = leaders;
+  }
+
   getGameStats() {
     return this.gameStats;
   }
 
   getGamePlayers() {
     return this.gamePlayers;
+  }
+
+  getGameLeaders(sector) {
+    return this.gameLeaders[sector];
   }
 }

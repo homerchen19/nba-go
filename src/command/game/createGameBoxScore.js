@@ -26,7 +26,7 @@ const createTeamBoxScore = team => {
       },
     ],
     alignCenter([
-      bold(''),
+      bold('PLAYER'),
       bold(''),
       bold('MIN'),
       bold('FG'),
@@ -109,7 +109,7 @@ const createTeamBoxScore = team => {
 
   boxScoreTable.push(
     alignCenter([
-      'Overall',
+      'Totals',
       '',
       '',
       bold(`${field_goals_made}-${field_goals_attempted}`),
