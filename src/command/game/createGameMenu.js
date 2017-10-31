@@ -4,6 +4,7 @@ import emoji from 'node-emoji';
 import { limit } from 'stringz';
 import { center, left, right } from 'wide-align';
 import pMap from 'p-map';
+import ora from 'ora';
 
 import Team from '../Team';
 
@@ -57,6 +58,7 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime) => {
 };
 
 const createGameMenu = async gamesData => {
+  const spinner = ora('Loading Game Schedule').start();
   const header = `│ ${padHomeTeamName('Home')}${center(
     emoji.get('basketball'),
     8
@@ -126,6 +128,8 @@ const createGameMenu = async gamesData => {
     },
     { concurrency: 1 }
   );
+
+  spinner.stop();
 
   const answer = await inquirer.prompt(questions);
 
