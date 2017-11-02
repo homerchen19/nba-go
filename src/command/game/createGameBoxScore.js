@@ -1,18 +1,13 @@
 /* eslint-disable no-console */
 
-import chalk from 'chalk';
-
 import { basicTable } from '../../utils/table';
 import { bold, neonGreen } from '../../utils/log';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'left', vAlign: 'center' }));
 
-const colorTeamName = (color, teamAbbreviation) =>
-  chalk`{bold.white.bgHex('${color}') ${teamAbbreviation}}`;
-
 const createTeamBoxScore = team => {
-  const players = team.getGamePlayers();
+  const players = team.getPlayers();
   const stats = team.getGameStats();
   const boxScoreTable = basicTable();
 
@@ -20,7 +15,7 @@ const createTeamBoxScore = team => {
     [
       {
         colSpan: 16,
-        content: `${colorTeamName(team.getColor(), team.getFullName())}`,
+        content: team.getFullName({ color: true }),
         hAlign: 'left',
         vAlign: 'center',
       },

@@ -1,0 +1,425 @@
+{
+  "sports_content": {
+    "sports_meta": {
+      "date_time": "20160930 1444",
+      "season_meta": {
+        "calendar_date": "20160930",
+        "season_year": "2016",
+        "stats_season_year": "2016",
+        "stats_season_id": "42015",
+        "stats_season_stage": "4",
+        "roster_season_year": "2016",
+        "schedule_season_year": "2016",
+        "standings_season_year": "2016",
+        "season_id": "12016",
+        "display_year": "2016-17",
+        "display_season": "Pre Season",
+        "season_stage": "1"
+      },
+      "next": {
+        "url":
+          "http://data.nba.com/data/5s/json/cms/noseason/scoreboard/20160503/games.json"
+      }
+    },
+    "games": {
+      "game": [
+        {
+          "id": "0041500211",
+          "game_url": "20160503/MIATOR",
+          "season_id": "42015",
+          "date": "20160503",
+          "time": "2000",
+          "arena": "Air Canada Centre",
+          "city": "Toronto",
+          "state": "ON",
+          "country": "",
+          "home_start_date": "20160503",
+          "home_start_time": "2000",
+          "visitor_start_date": "20160503",
+          "visitor_start_time": "2000",
+          "previewAvailable": "1",
+          "recapAvailable": "1",
+          "notebookAvailable": "0",
+          "tnt_ot": "1",
+          "buzzerBeater": "0",
+          "ticket": {
+            "ticket_link": ""
+          },
+          "period_time": {
+            "period_value": "5",
+            "period_status": "Final",
+            "game_status": "3",
+            "game_clock": "",
+            "total_periods": "4",
+            "period_name": "Qtr"
+          },
+          "lp": {
+            "lp_video": "false",
+            "condensed_bb": "false",
+            "visitor": {
+              "audio": {
+                "ENG": "false",
+                "SPA": "false"
+              },
+              "video": {
+                "avl": "false",
+                "onAir": "false",
+                "archBB": "false"
+              }
+            },
+            "home": {
+              "audio": {
+                "ENG": "false",
+                "SPA": "false"
+              },
+              "video": {
+                "avl": "false",
+                "onAir": "false",
+                "archBB": "false"
+              }
+            }
+          },
+          "dl": {
+            "link": [
+              {
+                "name": "TNT",
+                "long_nm": "",
+                "code": "tnt",
+                "url": "http://www.tntdrama.com/watchtnt/",
+                "mobile_url": "",
+                "home_visitor": "natl"
+              },
+              {
+                "name": "TNTOT",
+                "long_nm": "",
+                "code": "tntot",
+                "url": "http://www.nba.com/tntovertime/",
+                "mobile_url": "",
+                "home_visitor": "natl"
+              }
+            ]
+          },
+          "broadcasters": {
+            "radio": {
+              "broadcaster": [
+                {
+                  "scope": "natl",
+                  "home_visitor": "natl",
+                  "display_name": "Sirius:207"
+                },
+                {
+                  "scope": "local",
+                  "home_visitor": "visitor",
+                  "display_name": "790 The Ticket / S: WRTO MIX 98.3 FM"
+                },
+                {
+                  "scope": "local",
+                  "home_visitor": "home",
+                  "display_name": "TSN Radio 1050 Toronto"
+                }
+              ]
+            },
+            "tv": {
+              "broadcaster": [
+                {
+                  "scope": "natl",
+                  "home_visitor": "natl",
+                  "display_name": "TNT"
+                },
+                {
+                  "scope": "local",
+                  "home_visitor": "home",
+                  "display_name": "TSN"
+                }
+              ]
+            }
+          },
+          "playoffs": {
+            "round": "",
+            "conference": "",
+            "series": "",
+            "gameId": "0041500211",
+            "gameStatus": "1",
+            "game_number": "1",
+            "game_necessary_flag": "0",
+            "home_seed": "",
+            "visitor_seed": "",
+            "home_wins": "0",
+            "visitor_wins": "0"
+          },
+          "visitor": {
+            "id": "1610612748",
+            "team_key": "MIA",
+            "city": "Miami",
+            "abbreviation": "MIA",
+            "nickname": "Heat",
+            "url_name": "heat",
+            "team_code": "heat",
+            "score": "102",
+            "linescores": {
+              "period": [
+                {
+                  "period_value": "1",
+                  "period_name": "Q1",
+                  "score": "18"
+                },
+                {
+                  "period_value": "2",
+                  "period_name": "Q2",
+                  "score": "23"
+                },
+                {
+                  "period_value": "3",
+                  "period_name": "Q3",
+                  "score": "27"
+                },
+                {
+                  "period_value": "4",
+                  "period_name": "Q4",
+                  "score": "22"
+                },
+                {
+                  "period_value": "5",
+                  "period_name": "OT1",
+                  "score": "12"
+                }
+              ]
+            }
+          },
+          "home": {
+            "id": "1610612761",
+            "team_key": "TOR",
+            "city": "Toronto",
+            "abbreviation": "TOR",
+            "nickname": "Raptors",
+            "url_name": "raptors",
+            "team_code": "raptors",
+            "score": "96",
+            "linescores": {
+              "period": [
+                {
+                  "period_value": "1",
+                  "period_name": "Q1",
+                  "score": "18"
+                },
+                {
+                  "period_value": "2",
+                  "period_name": "Q2",
+                  "score": "25"
+                },
+                {
+                  "period_value": "3",
+                  "period_name": "Q3",
+                  "score": "20"
+                },
+                {
+                  "period_value": "4",
+                  "period_name": "Q4",
+                  "score": "27"
+                },
+                {
+                  "period_value": "5",
+                  "period_name": "OT1",
+                  "score": "6"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "0041500222",
+          "game_url": "20160503/PORGSW",
+          "season_id": "42015",
+          "date": "20160503",
+          "time": "2230",
+          "arena": "ORACLE Arena",
+          "city": "Oakland",
+          "state": "CA",
+          "country": "",
+          "home_start_date": "20160503",
+          "home_start_time": "1930",
+          "visitor_start_date": "20160503",
+          "visitor_start_time": "1930",
+          "previewAvailable": "1",
+          "recapAvailable": "1",
+          "notebookAvailable": "0",
+          "tnt_ot": "1",
+          "buzzerBeater": "0",
+          "ticket": {
+            "ticket_link": ""
+          },
+          "period_time": {
+            "period_value": "4",
+            "period_status": "Final",
+            "game_status": "3",
+            "game_clock": "",
+            "total_periods": "4",
+            "period_name": "Qtr"
+          },
+          "lp": {
+            "lp_video": "false",
+            "condensed_bb": "false",
+            "visitor": {
+              "audio": {
+                "ENG": "false",
+                "SPA": "false"
+              },
+              "video": {
+                "avl": "false",
+                "onAir": "false",
+                "archBB": "false"
+              }
+            },
+            "home": {
+              "audio": {
+                "ENG": "false",
+                "SPA": "false"
+              },
+              "video": {
+                "avl": "false",
+                "onAir": "false",
+                "archBB": "false"
+              }
+            }
+          },
+          "dl": {
+            "link": [
+              {
+                "name": "TNT",
+                "long_nm": "",
+                "code": "tnt",
+                "url": "http://www.tntdrama.com/watchtnt/",
+                "mobile_url": "",
+                "home_visitor": "natl"
+              },
+              {
+                "name": "TNTOT",
+                "long_nm": "",
+                "code": "tntot",
+                "url": "http://www.nba.com/tntovertime/",
+                "mobile_url": "",
+                "home_visitor": "natl"
+              }
+            ]
+          },
+          "broadcasters": {
+            "radio": {
+              "broadcaster": [
+                {
+                  "scope": "natl",
+                  "home_visitor": "natl",
+                  "display_name": "Sirius:207"
+                },
+                {
+                  "scope": "local",
+                  "home_visitor": "visitor",
+                  "display_name": "Rip City Radio 620"
+                },
+                {
+                  "scope": "local",
+                  "home_visitor": "home",
+                  "display_name": "KGO 810AM/KTCT 1050AM"
+                }
+              ]
+            },
+            "tv": {
+              "broadcaster": [
+                {
+                  "scope": "natl",
+                  "home_visitor": "natl",
+                  "display_name": "TNT"
+                },
+                {
+                  "scope": "can",
+                  "home_visitor": "can",
+                  "display_name": "TSN3/5"
+                }
+              ]
+            }
+          },
+          "playoffs": {
+            "round": "",
+            "conference": "",
+            "series": "",
+            "gameId": "0041500222",
+            "gameStatus": "1",
+            "game_number": "2",
+            "game_necessary_flag": "0",
+            "home_seed": "",
+            "visitor_seed": "",
+            "home_wins": "0",
+            "visitor_wins": "0"
+          },
+          "visitor": {
+            "id": "1610612757",
+            "team_key": "POR",
+            "city": "Portland",
+            "abbreviation": "POR",
+            "nickname": "Trail Blazers",
+            "url_name": "blazers",
+            "team_code": "blazers",
+            "score": "99",
+            "linescores": {
+              "period": [
+                {
+                  "period_value": "1",
+                  "period_name": "Q1",
+                  "score": "34"
+                },
+                {
+                  "period_value": "2",
+                  "period_name": "Q2",
+                  "score": "25"
+                },
+                {
+                  "period_value": "3",
+                  "period_name": "Q3",
+                  "score": "28"
+                },
+                {
+                  "period_value": "4",
+                  "period_name": "Q4",
+                  "score": "12"
+                }
+              ]
+            }
+          },
+          "home": {
+            "id": "1610612744",
+            "team_key": "GSW",
+            "city": "Golden State",
+            "abbreviation": "GSW",
+            "nickname": "Warriors",
+            "url_name": "warriors",
+            "team_code": "warriors",
+            "score": "110",
+            "linescores": {
+              "period": [
+                {
+                  "period_value": "1",
+                  "period_name": "Q1",
+                  "score": "21"
+                },
+                {
+                  "period_value": "2",
+                  "period_name": "Q2",
+                  "score": "30"
+                },
+                {
+                  "period_value": "3",
+                  "period_name": "Q3",
+                  "score": "25"
+                },
+                {
+                  "period_value": "4",
+                  "period_name": "Q4",
+                  "score": "34"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -31,12 +31,14 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime) => {
   }
 
   const homeTeamName = padHomeTeamName(
-    winner === 'home' ? homeTeam.getWinnerName('left') : homeTeam.getName()
+    winner === 'home'
+      ? homeTeam.getWinnerName('left')
+      : homeTeam.getName({ color: true })
   );
   const visitorTeamName = padVisitorTeamName(
     winner === 'visitor'
       ? visitorTeam.getWinnerName('right')
-      : visitorTeam.getName()
+      : visitorTeam.getName({ color: true })
   );
   const match = `${homeTeamName}${center(
     emoji.get('basketball'),

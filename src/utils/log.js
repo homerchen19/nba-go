@@ -16,4 +16,7 @@ const bold = msg => chalk`{white.bold ${msg}}`;
 
 const neonGreen = msg => chalk`{hex('#66ff66') ${msg}}`;
 
-export { print, warn, error, bold, neonGreen };
+const colorTeamName = (color, name) =>
+  chalk`{bold.white.bgHex('${color}') ${name}}`;
+
+export { print, warn, error, bold, neonGreen, colorTeamName };

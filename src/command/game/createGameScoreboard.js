@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 
-import chalk from 'chalk';
-
 import { bold, neonGreen } from '../../utils/log';
 import { basicTable } from '../../utils/table';
 
@@ -14,12 +12,9 @@ const vAlignCenter = columns =>
     return { ...column, vAlign: 'center' };
   });
 
-const colorTeamName = (color, teamAbbreviation) =>
-  chalk`{bold.white.bgHex('${color}') ${teamAbbreviation}}`;
-
 const getStartingPlayers = team =>
   team
-    .getGamePlayers()
+    .getPlayers()
     .filter(player => player.starting_position !== '')
     .map(player => ({
       name: `${player.first_name} ${player.last_name}`,
@@ -85,7 +80,7 @@ const createGameScorebaord = (homeTeam, visitorTeam, gameData) => {
     vAlignCenter([
       {
         colSpan: 2,
-        content: bold(colorTeamName(homeTeam.getColor(), homeTeam.getName())),
+        content: bold(homeTeam.getName({ color: true })),
         hAlign: 'center',
       },
       {
@@ -95,9 +90,7 @@ const createGameScorebaord = (homeTeam, visitorTeam, gameData) => {
       },
       {
         colSpan: 2,
-        content: bold(
-          colorTeamName(visitorTeam.getColor(), visitorTeam.getName())
-        ),
+        content: bold(visitorTeam.getName({ color: true })),
         hAlign: 'center',
       },
     ]),
@@ -135,10 +128,9 @@ const createGameScorebaord = (homeTeam, visitorTeam, gameData) => {
         ),
         hAlign: 'left',
       },
-      `${colorTeamName(
-        homeTeam.getColor(),
-        homeTeam.getAbbreviation()
-      )} (${homeTeam.getWins()}-${homeTeam.getLoses()})`,
+      `${homeTeam.getAbbreviation({
+        color: true,
+      })} (${homeTeam.getWins()}-${homeTeam.getLoses()})`,
       bold(homeTeam.getQuarterScore('1')),
       bold(homeTeam.getQuarterScore('2')),
       bold(homeTeam.getQuarterScore('3')),
@@ -163,10 +155,9 @@ const createGameScorebaord = (homeTeam, visitorTeam, gameData) => {
         ),
         hAlign: 'left',
       },
-      `${colorTeamName(
-        visitorTeam.getColor(),
-        visitorTeam.getAbbreviation()
-      )} (${visitorTeam.getWins()}-${visitorTeam.getLoses()})`,
+      `${visitorTeam.getAbbreviation({
+        color: true,
+      })} (${visitorTeam.getWins()}-${visitorTeam.getLoses()})`,
       bold(visitorTeam.getQuarterScore('1')),
       bold(visitorTeam.getQuarterScore('2')),
       bold(visitorTeam.getQuarterScore('3')),

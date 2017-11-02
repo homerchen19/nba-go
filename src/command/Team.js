@@ -1,6 +1,8 @@
 import emoji from 'node-emoji';
 import { getMainColor } from 'nba-color';
 
+import { colorTeamName } from '../utils/log';
+
 export default class Team {
   constructor({
     teamId,
@@ -23,20 +25,25 @@ export default class Team {
     this.divRank = divRank;
     this.linescores = linescores ? linescores.period : [];
     this.gameStats = {};
-    this.gamePlayers = [];
+    this.players = [];
     this.gameLeaders = {};
+    this.color = getMainColor(teamAbbreviation);
   }
 
   getCity() {
     return this.city;
   }
 
-  getAbbreviation() {
-    return this.abbreviation;
+  getAbbreviation({ color }) {
+    return color === false
+      ? this.abbreviation
+      : colorTeamName(this.getColor(), this.abbreviation);
   }
 
-  getName() {
-    return this.name;
+  getName({ color }) {
+    return color === false
+      ? this.name
+      : colorTeamName(this.getColor(), this.name);
   }
 
   getScore() {
@@ -51,49 +58,53 @@ export default class Team {
     return this.loses;
   }
 
-  getFullName() {
-    return `${this.city} ${this.name}`;
+  getFullName({ color }) {
+    return color === false
+      ? `${this.city} ${this.name}`
+      : colorTeamName(this.getColor(), `${this.city} ${this.name}`);
   }
 
   getColor() {
-    const mainColor = getMainColor(this.abbreviation);
-
-    return mainColor ? mainColor.hex : undefined;
+    return this.color ? this.color.hex : undefined;
   }
 
   getWinnerName(direction) {
     return direction === 'left'
-      ? `${emoji.get('crown')}  ${this.name}`
-      : `${this.name} ${emoji.get('crown')}`;
+      ? `${emoji.get('crown')}  ${colorTeamName(this.getColor(), this.name)}`
+      : `${colorTeamName(this.getColor(), this.name)} ${emoji.get('crown')}`;
   }
 
   getQuarterScore(quarter) {
     return this.linescores
       .filter(quarterData => quarterData.period_value === quarter)
-      .map(quarterData => quarterData.score);
-  }
-
-  setGameStats(stats) {
-    this.gameStats = stats;
-  }
-
-  setGamePlayers(players) {
-    this.gamePlayers = players;
-  }
-
-  setGameLeaders(leaders) {
-    this.gameLeaders = leaders;
+      .map(quarterData => quarterData.score)[0];
   }
 
   getGameStats() {
     return this.gameStats;
   }
 
-  getGamePlayers() {
-    return this.gamePlayers;
+  getPlayers() {
+    return this.players;
   }
 
   getGameLeaders(sector) {
     return this.gameLeaders[sector];
+  }
+
+  setGameScore(score) {
+    this.score = score;
+  }
+
+  setGameStats(stats) {
+    this.gameStats = stats;
+  }
+
+  setPlayers(players) {
+    this.players = players;
+  }
+
+  setGameLeaders(leaders) {
+    this.gameLeaders = leaders;
   }
 }
