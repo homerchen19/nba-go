@@ -22,7 +22,7 @@ const getTeamQuaterScores = (team, latestPeriod) => {
   const teamQuaterScores = [
     `${team.getAbbreviation({
       color: true,
-    })} (${team.getWins()}-${team.getLoses()})`,
+    })}`,
   ];
 
   for (let i = 1; i <= latestPeriod; i += 1) {

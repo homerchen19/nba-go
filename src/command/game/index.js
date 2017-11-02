@@ -9,6 +9,7 @@ import emoji from 'node-emoji';
 import delay from 'delay';
 import jsonfile from 'jsonfile';
 import path from 'path';
+import { right } from 'wide-align';
 
 import createGameMenu from './createGameMenu';
 import createGameScoreboard from './createGameScoreboard';
@@ -108,7 +109,7 @@ const game = async option => {
     case 'Halftime':
     case '2': {
       console.log('');
-      // let i = 1;
+      // const i = 1;
 
       const baseBox = blessed.box({
         top: 0,
@@ -148,7 +149,7 @@ const game = async option => {
       const homeTeamFullNameText = blessed.text({
         parent: screen,
         top: 7,
-        left: `33%-${homeTeam.getFullName({ color: false }).length + 25}`,
+        left: `33%-${homeTeam.getFullName({ color: false }).length + 24}`,
         width: 25,
         align: 'left',
         content: `${homeTeam.getFullName({
@@ -156,6 +157,20 @@ const game = async option => {
         })}`,
         style: {
           fg: 'white',
+        },
+      });
+
+      const homeTeamStandingsText = blessed.text({
+        top: 8,
+        left: '33%-39',
+        width: 15,
+        align: 'right',
+        content: right(
+          `HOME (${homeTeam.getWins()} - ${homeTeam.getLoses()})`,
+          15
+        ),
+        style: {
+          fg: '#fbfbfb',
         },
       });
 
@@ -174,7 +189,7 @@ const game = async option => {
 
       const visitorTeamFullNameText = blessed.text({
         top: 7,
-        left: '66%+30',
+        left: '66%+28',
         width: 25,
         align: 'left',
         content: `${visitorTeam.getFullName({
@@ -186,11 +201,22 @@ const game = async option => {
         },
       });
 
+      const visitorTeamStandingsText = blessed.text({
+        top: 8,
+        left: '66%+28',
+        width: 15,
+        align: 'left',
+        content: `(${visitorTeam.getWins()} - ${visitorTeam.getLoses()}) AWAY`,
+        style: {
+          fg: '#fbfbfb',
+        },
+      });
+
       const visitorTeamScoreText = blessed.bigtext({
         font: path.resolve(__filename, '../../../data/fonts/ter-u12n.json'),
         fontBold: path.resolve(__filename, '../../../data/fonts/ter-u12n.json'),
         top: 2,
-        left: '66%+8',
+        left: '66%+6',
         width: 15,
         align: 'left',
         style: {
@@ -243,8 +269,10 @@ const game = async option => {
       screen.append(baseBox);
       screen.append(timeText);
       screen.append(homeTeamFullNameText);
+      screen.append(homeTeamStandingsText);
       screen.append(homeTeamScoreText);
       screen.append(visitorTeamFullNameText);
+      screen.append(visitorTeamStandingsText);
       screen.append(visitorTeamScoreText);
       screen.append(scoreboardTable);
       screen.append(playByPlayTable);
