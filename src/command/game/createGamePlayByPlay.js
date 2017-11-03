@@ -13,7 +13,7 @@ const updateTeamQuarterScores = (team, latestPlay) => {
 
   let pastTeamQuarterScoreSum = 0;
   for (let i = 1; i <= +period - 1; i += 1) {
-    const teamQuarterScore = team.getQuarterScore(`${i}`);
+    const teamQuarterScore = +team.getQuarterScore(`${i}`);
     pastTeamQuarterScoreSum += teamQuarterScore;
   }
 

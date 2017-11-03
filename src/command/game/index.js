@@ -97,6 +97,7 @@ const game = async option => {
     scoreboardTable,
     seasonText,
     timeText,
+    arenaText,
     homeTeamScoreText,
     visitorTeamScoreText,
     playByPlayTable,
@@ -115,6 +116,8 @@ const game = async option => {
       seasonText.setContent(
         bold(`${seasonMeta.display_year} ${seasonMeta.display_season}`)
       );
+      const { arena, city, state } = gameBoxScoreData;
+      arenaText.setContent(`🏠  ${arena} | ${city}, ${state}`);
 
       while (true) {
         let gamePlayByPlayData = {};
@@ -175,6 +178,7 @@ const game = async option => {
 
     case '3':
     default: {
+      screen.destroy();
       console.log('');
       createGameScoreboard(homeTeam, visitorTeam, {
         ...gameBoxScoreData,

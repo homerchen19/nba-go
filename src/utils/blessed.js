@@ -120,9 +120,8 @@ const getBlessed = (homeTeam, visitorTeam) => {
   });
 
   const seasonText = blessed.text({
-    top: 2,
+    top: 1,
     left: 'center',
-    width: 30,
     align: 'center',
     style: {
       fg: 'white',
@@ -132,7 +131,15 @@ const getBlessed = (homeTeam, visitorTeam) => {
   const timeText = blessed.text({
     top: 12,
     left: 'center',
-    width: 15,
+    align: 'center',
+    style: {
+      fg: 'white',
+    },
+  });
+
+  const arenaText = blessed.text({
+    top: 2,
+    left: 'center',
     align: 'center',
     style: {
       fg: 'white',
@@ -174,6 +181,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
   screen.append(baseBox);
   screen.append(seasonText);
   screen.append(timeText);
+  screen.append(arenaText);
   screen.append(homeTeamFullNameText);
   screen.append(homeTeamStandingsText);
   screen.append(homeTeamScoreText);
@@ -189,6 +197,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
     scoreboardTable,
     seasonText,
     timeText,
+    arenaText,
     homeTeamScoreText,
     visitorTeamScoreText,
     playByPlayTable,
