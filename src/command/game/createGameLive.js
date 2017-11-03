@@ -4,26 +4,15 @@ import get from 'lodash/get';
 
 import { bold, neonGreen, colorTeamName } from '../../utils/log';
 
-const updateTeamQuarterScores = (team, latestPlay) => {
-  const {
-    period,
-    home_score: latestHomeTeamScore,
-    visitor_score: latestVisitorTeamScore,
-  } = latestPlay;
-
-  let pastTeamQuarterScoreSum = 0;
-  for (let i = 1; i <= +period - 1; i += 1) {
-    const teamQuarterScore = +team.getQuarterScore(`${i}`);
-    pastTeamQuarterScoreSum += teamQuarterScore;
-  }
+const updateTeamQuarterScores = (team, latestPeriod, teamPeriod) => {
+  const latestQuarterScore = teamPeriod.find(
+    quarter => quarter.period_value === latestPeriod
+  ).score;
 
   if (team.getIsHomeTeam()) {
-    team.setQuarterScore(period, latestHomeTeamScore - pastTeamQuarterScoreSum);
+    team.setQuarterScore(latestPeriod, latestQuarterScore);
   } else {
-    team.setQuarterScore(
-      period,
-      latestVisitorTeamScore - pastTeamQuarterScoreSum
-    );
+    team.setQuarterScore(latestPeriod, latestQuarterScore);
   }
 };
 
@@ -105,15 +94,15 @@ const getPlayByPlayRows = allPlays => {
   return playByPlayRows.join('\n');
 };
 
-const createGamePlayByPlay = (
+const createGameLive = (
   homeTeam,
   visitorTeam,
   playByPlayData,
+  gameBoxScoreData,
   blessedComponents
 ) => {
   const { play: allPlays, isFinal } = playByPlayData;
-  const latestPlay = allPlays.slice(-1).pop();
-  const { period: latestPeriod, clock: latestClock } = latestPlay;
+  const { period: latestPeriod, clock: latestClock } = allPlays.slice(-1).pop();
   const scoreboardTableHeader = getScoreboardTableHeader(latestPeriod);
   const {
     screen,
@@ -121,11 +110,16 @@ const createGamePlayByPlay = (
     timeText,
     homeTeamScoreText,
     visitorTeamScoreText,
-    playByPlayTable,
+    playByPlayBox,
   } = blessedComponents;
 
-  updateTeamQuarterScores(homeTeam, latestPlay);
-  updateTeamQuarterScores(visitorTeam, latestPlay);
+  const {
+    home: { linescores: { period: homeTeamPeriod } },
+    visitor: { linescores: { period: visitorTeamPeriod } },
+  } = gameBoxScoreData;
+
+  updateTeamQuarterScores(homeTeam, latestPeriod, homeTeamPeriod);
+  updateTeamQuarterScores(visitorTeam, latestPeriod, visitorTeamPeriod);
 
   scoreboardTable.setRows([
     scoreboardTableHeader,
@@ -133,8 +127,8 @@ const createGamePlayByPlay = (
     getTeamQuarterScores(visitorTeam, latestPeriod),
   ]);
 
-  playByPlayTable.setContent(getPlayByPlayRows(allPlays));
-  playByPlayTable.focus();
+  playByPlayBox.setContent(getPlayByPlayRows(allPlays));
+  playByPlayBox.focus();
 
   if (isFinal) {
     timeText.setContent(bold('Final'));
@@ -155,4 +149,4 @@ const createGamePlayByPlay = (
   screen.render();
 };
 
-export default createGamePlayByPlay;
+export default createGameLive;

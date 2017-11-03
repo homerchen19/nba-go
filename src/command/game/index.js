@@ -1,4 +1,4 @@
-/* eslint-disable no-await-in-loop, no-constant-condition */
+/* eslint-disable no-await-in-loop, no-constant-condition, no-console */
 
 import NBA from 'nba-stats-client';
 import parse from 'date-fns/parse';
@@ -12,7 +12,7 @@ import path from 'path';
 import createGameMenu from './createGameMenu';
 import createGameScoreboard from './createGameScoreboard';
 import createGameBoxScore from './createGameBoxScore';
-import createGamePlayByPlay from './createGamePlayByPlay';
+import createGameLive from './createGameLive';
 import { error, bold } from '../../utils/log';
 import { cfontsDate } from '../../utils/cfonts';
 import getBlessed from '../../utils/blessed';
@@ -100,7 +100,8 @@ const game = async option => {
     arenaText,
     homeTeamScoreText,
     visitorTeamScoreText,
-    playByPlayTable,
+    playByPlayBox,
+    boxscoreTable,
   } = getBlessed(homeTeam, visitorTeam);
 
   switch (gameData.period_time.game_status) {
@@ -128,11 +129,23 @@ const game = async option => {
           } = await jsonfile.readFileSync(
             path.resolve(__filename, '../../../data/playbyplay.json')
           );
+          const {
+            sports_content: { game: fakeGameBoxScoreData },
+          } = await jsonfile.readFileSync(
+            path.resolve(__filename, '../../../data/boxscore.json')
+          );
+
+          gameBoxScoreData = fakeGameBoxScoreData;
           gamePlayByPlayData = fakePlayByPlayData;
         } else {
           const {
             sports_content: { game: realPlayByPlayData },
           } = await NBA.getPlayByPlayFromDate(parse(_date), gameData.id);
+          const {
+            sports_content: { game: realGameBoxScoreData },
+          } = await NBA.getBoxScoreFromDate(parse(_date), gameData.id);
+
+          gameBoxScoreData = realGameBoxScoreData;
           gamePlayByPlayData = realPlayByPlayData;
         }
 
@@ -147,7 +160,7 @@ const game = async option => {
           lastPlay.description === 'End Period' &&
           lastPlay.home_score !== lastPlay.visitor_score;
 
-        createGamePlayByPlay(
+        createGameLive(
           homeTeam,
           visitorTeam,
           {
@@ -155,13 +168,15 @@ const game = async option => {
             ...seasonMeta,
             isFinal,
           },
+          gameBoxScoreData,
           {
             screen,
             scoreboardTable,
             timeText,
             homeTeamScoreText,
             visitorTeamScoreText,
-            playByPlayTable,
+            playByPlayBox,
+            boxscoreTable,
           }
         );
 

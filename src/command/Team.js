@@ -84,9 +84,9 @@ export default class Team {
   }
 
   getQuarterScore(quarter) {
-    return this.linescores
-      .filter(quarterData => quarterData.period_value === quarter)
-      .map(quarterData => quarterData.score)[0];
+    return this.linescores.find(
+      quarterData => quarterData.period_value === quarter
+    ).score;
   }
 
   getGameStats() {
@@ -122,8 +122,8 @@ export default class Team {
   }
 
   setQuarterScore(quarter, score) {
-    this.linescores.filter(
+    this.linescores.find(
       quarterData => quarterData.period_value === quarter
-    )[0].score = score;
+    ).score = score;
   }
 }

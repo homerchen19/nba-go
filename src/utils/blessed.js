@@ -146,11 +146,11 @@ const getBlessed = (homeTeam, visitorTeam) => {
     },
   });
 
-  const playByPlayTable = blessed.box({
+  const playByPlayBox = blessed.box({
     parent: screen,
     top: 15,
-    left: 5,
-    width: '75%-5',
+    left: 3,
+    width: '75%-3',
     height: '100%-15',
     padding: {
       top: 0,
@@ -178,6 +178,25 @@ const getBlessed = (homeTeam, visitorTeam) => {
     },
   });
 
+  const boxscoreTable = blessed.listtable({
+    parent: screen,
+    top: 15,
+    left: '75%',
+    width: '25%-3',
+    height: '100%-15',
+    padding: {
+      top: 0,
+      right: 0,
+      left: 2,
+      bottom: 0,
+    },
+    align: 'left',
+    label: ' Box Score ',
+    border: {
+      type: 'line',
+    },
+  });
+
   screen.append(baseBox);
   screen.append(seasonText);
   screen.append(timeText);
@@ -189,7 +208,8 @@ const getBlessed = (homeTeam, visitorTeam) => {
   screen.append(visitorTeamStandingsText);
   screen.append(visitorTeamScoreText);
   screen.append(scoreboardTable);
-  screen.append(playByPlayTable);
+  screen.append(playByPlayBox);
+  screen.append(boxscoreTable);
   screen.key(['escape', 'q', 'C-c'], () => process.exit(0));
 
   return {
@@ -200,7 +220,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
     arenaText,
     homeTeamScoreText,
     visitorTeamScoreText,
-    playByPlayTable,
+    playByPlayBox,
   };
 };
 
