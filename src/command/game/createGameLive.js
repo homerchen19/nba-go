@@ -94,6 +94,31 @@ const getPlayByPlayRows = allPlays => {
   return playByPlayRows.join('\n');
 };
 
+const getTeamBoxscore = (team, playersData) => {
+  const teamBoxscoreRows = [];
+  teamBoxscoreRows.push([
+    team.getAbbreviation({ color: true }),
+    bold('PTS'),
+    bold('AST'),
+    bold('REB'),
+  ]);
+
+  const mainPlayers = playersData
+    .sort((playerA, playerB) => +playerB.minutes - +playerA.minutes)
+    .slice(0, 5);
+
+  mainPlayers.forEach(player => {
+    teamBoxscoreRows.push([
+      bold(left(player.last_name, 14)),
+      left(player.points, 3),
+      left(player.assists, 3),
+      left(`${+player.rebounds_offensive + +player.rebounds_defensive}`, 3),
+    ]);
+  });
+
+  return teamBoxscoreRows;
+};
+
 const createGameLive = (
   homeTeam,
   visitorTeam,
@@ -103,7 +128,6 @@ const createGameLive = (
 ) => {
   const { play: allPlays, isFinal } = playByPlayData;
   const { period: latestPeriod, clock: latestClock } = allPlays.slice(-1).pop();
-  const scoreboardTableHeader = getScoreboardTableHeader(latestPeriod);
   const {
     screen,
     scoreboardTable,
@@ -111,6 +135,7 @@ const createGameLive = (
     homeTeamScoreText,
     visitorTeamScoreText,
     playByPlayBox,
+    boxscoreTable,
   } = blessedComponents;
 
   const {
@@ -122,9 +147,14 @@ const createGameLive = (
   updateTeamQuarterScores(visitorTeam, latestPeriod, visitorTeamPeriod);
 
   scoreboardTable.setRows([
-    scoreboardTableHeader,
+    getScoreboardTableHeader(latestPeriod),
     getTeamQuarterScores(homeTeam, latestPeriod),
     getTeamQuarterScores(visitorTeam, latestPeriod),
+  ]);
+
+  boxscoreTable.setRows([
+    ...getTeamBoxscore(homeTeam, gameBoxScoreData.home.players.player),
+    ...getTeamBoxscore(visitorTeam, gameBoxScoreData.visitor.players.player),
   ]);
 
   playByPlayBox.setContent(getPlayByPlayRows(allPlays));
