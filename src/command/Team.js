@@ -14,6 +14,7 @@ export default class Team {
     l,
     divRank,
     linescores,
+    isHomeTeam,
   }) {
     this.id = teamId;
     this.city = teamCity;
@@ -23,11 +24,19 @@ export default class Team {
     this.wins = w;
     this.loses = l;
     this.divRank = divRank;
-    this.linescores = linescores ? linescores.period : [];
     this.gameStats = {};
     this.players = [];
     this.gameLeaders = {};
     this.color = getMainColor(teamAbbreviation);
+    this.isHomeTeam = isHomeTeam;
+
+    if (linescores) {
+      this.linescores = Array.isArray(linescores.period)
+        ? linescores.period
+        : [linescores.period];
+    } else {
+      this.linescores = [];
+    }
   }
 
   getCity() {
@@ -92,6 +101,10 @@ export default class Team {
     return this.gameLeaders[sector];
   }
 
+  getIsHomeTeam() {
+    return this.isHomeTeam;
+  }
+
   setGameScore(score) {
     this.score = score;
   }
@@ -106,5 +119,11 @@ export default class Team {
 
   setGameLeaders(leaders) {
     this.gameLeaders = leaders;
+  }
+
+  setQuarterScore(quarter, score) {
+    this.linescores.filter(
+      quarterData => quarterData.period_value === quarter
+    )[0].score = score;
   }
 }

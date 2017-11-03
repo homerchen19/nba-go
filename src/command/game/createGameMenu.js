@@ -106,11 +106,13 @@ const createGameMenu = async gamesData => {
         ...homeTeamInfoCommon[0],
         score: home.score,
         linescores: home.linescores,
+        isHomeTeam: true,
       });
       const visitorTeam = new Team({
         ...visitorTeamInfoCommon[0],
         score: visitor.score,
         linescores: visitor.linescores,
+        isHomeTeam: false,
       });
 
       questions[0].choices.push({

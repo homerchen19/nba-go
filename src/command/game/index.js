@@ -13,7 +13,7 @@ import createGameMenu from './createGameMenu';
 import createGameScoreboard from './createGameScoreboard';
 import createGameBoxScore from './createGameBoxScore';
 import createGamePlayByPlay from './createGamePlayByPlay';
-import { error } from '../../utils/log';
+import { error, bold } from '../../utils/log';
 import { cfontsDate } from '../../utils/cfonts';
 import getBlessed from '../../utils/blessed';
 
@@ -95,6 +95,7 @@ const game = async option => {
   const {
     screen,
     scoreboardTable,
+    seasonText,
     timeText,
     homeTeamScoreText,
     visitorTeamScoreText,
@@ -111,6 +112,9 @@ const game = async option => {
     case '2': {
       console.log('');
       // let i = 1;
+      seasonText.setContent(
+        bold(`${seasonMeta.display_year} ${seasonMeta.display_season}`)
+      );
 
       while (true) {
         let gamePlayByPlayData = {};
@@ -162,7 +166,9 @@ const game = async option => {
           break;
         }
 
-        await delay(1000);
+        await delay(
+          gameData.period_time.game_status === 'Halftime' ? 15000 : 3000
+        );
       }
       break;
     }

@@ -4,6 +4,29 @@ import get from 'lodash/get';
 
 import { bold, neonGreen, colorTeamName } from '../../utils/log';
 
+const updateTeamQuarterScores = (team, latestPlay) => {
+  const {
+    period,
+    home_score: latestHomeTeamScore,
+    visitor_score: latestVisitorTeamScore,
+  } = latestPlay;
+
+  let pastTeamQuarterScoreSum = 0;
+  for (let i = 1; i <= +period - 1; i += 1) {
+    const teamQuarterScore = team.getQuarterScore(`${i}`);
+    pastTeamQuarterScoreSum += teamQuarterScore;
+  }
+
+  if (team.getIsHomeTeam()) {
+    team.setQuarterScore(period, latestHomeTeamScore - pastTeamQuarterScoreSum);
+  } else {
+    team.setQuarterScore(
+      period,
+      latestVisitorTeamScore - pastTeamQuarterScoreSum
+    );
+  }
+};
+
 const getOvertimePeriod = latestPeriod => parseInt(latestPeriod, 10) - 4;
 
 const getScoreboardTableHeader = latestPeriod => {
@@ -18,20 +41,23 @@ const getScoreboardTableHeader = latestPeriod => {
   return scoreboardTableHeader;
 };
 
-const getTeamQuaterScores = (team, latestPeriod) => {
-  const teamQuaterScores = [
+const getTeamQuarterScores = (team, latestPeriod) => {
+  const teamQuarterScores = [
     `${team.getAbbreviation({
       color: true,
     })}`,
   ];
 
   for (let i = 1; i <= latestPeriod; i += 1) {
-    teamQuaterScores.push(bold(team.getQuarterScore(`${i}`)));
+    teamQuarterScores.push(bold(team.getQuarterScore(`${i}`)));
+  }
+  for (let i = 0; i < 4 - latestPeriod; i += 1) {
+    teamQuarterScores.push('  ');
   }
 
-  teamQuaterScores.push(neonGreen(team.getScore()));
+  teamQuarterScores.push(neonGreen(team.getScore()));
 
-  return teamQuaterScores;
+  return teamQuarterScores;
 };
 
 const getPlayByPlayRows = allPlays => {
@@ -70,10 +96,10 @@ const getPlayByPlayRows = allPlays => {
       : '#000';
     const description = `${left(
       colorTeamName(teamColor, `${team_abr}`),
-      5
+      3
     )} ${eventDescription.replace(/\[.*\]/i, '')}\n`;
 
-    playByPlayRows.push([time, sroceboard, description].join('  │  '));
+    playByPlayRows.push([time, sroceboard, description].join(' │ '));
   }
 
   return playByPlayRows.join('\n');
@@ -86,7 +112,8 @@ const createGamePlayByPlay = (
   blessedComponents
 ) => {
   const { play: allPlays, isFinal } = playByPlayData;
-  const { period: latestPeriod, clock: latestClock } = allPlays.slice(-1).pop();
+  const latestPlay = allPlays.slice(-1).pop();
+  const { period: latestPeriod, clock: latestClock } = latestPlay;
   const scoreboardTableHeader = getScoreboardTableHeader(latestPeriod);
   const {
     screen,
@@ -97,10 +124,13 @@ const createGamePlayByPlay = (
     playByPlayTable,
   } = blessedComponents;
 
+  updateTeamQuarterScores(homeTeam, latestPlay);
+  updateTeamQuarterScores(visitorTeam, latestPlay);
+
   scoreboardTable.setRows([
     scoreboardTableHeader,
-    getTeamQuaterScores(homeTeam, latestPeriod),
-    getTeamQuaterScores(visitorTeam, latestPeriod),
+    getTeamQuarterScores(homeTeam, latestPeriod),
+    getTeamQuarterScores(visitorTeam, latestPeriod),
   ]);
 
   playByPlayTable.setContent(getPlayByPlayRows(allPlays));
@@ -112,7 +142,7 @@ const createGamePlayByPlay = (
     const overtimePeriod = getOvertimePeriod(latestPeriod);
     timeText.setContent(
       bold(
-        `${+overtimePeriod > 1 ? 'OT' : 'Q'}${+overtimePeriod > 1
+        `⏱  ${+overtimePeriod > 1 ? 'OT' : 'Q'}${+overtimePeriod > 1
           ? overtimePeriod
           : latestPeriod} ${latestClock}`
       )
