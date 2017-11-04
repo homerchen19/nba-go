@@ -9,18 +9,19 @@ import table from '../../utils/table';
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
 
-const regularSeason = ({
+const seasonStats = ({
+  seasonTtpe,
   nowTeamAbbreviation,
   jersey,
   displayFirstLast,
-  seasonTotalsRegularSeason,
-  careerTotalsRegularSeason,
+  seasonTotals,
+  careerTotals,
 }) => {
   const nowTeamMainColor = getMainColor(nowTeamAbbreviation);
   const seasonTable = table.basicTable();
   const playerName = chalk`{bold.white.bgHex('${nowTeamMainColor
     ? nowTeamMainColor.hex
-    : '#000'}') ${nowTeamAbbreviation}} {bold.white #${jersey} ${displayFirstLast}}`;
+    : '#000'}') ${nowTeamAbbreviation}} {bold.white #${jersey} ${displayFirstLast} │ ${seasonTtpe}}`;
   seasonTable.push([{ colSpan: 14, content: playerName, hAlign: 'center' }]);
   seasonTable.push(
     alignCenter([
@@ -41,7 +42,7 @@ const regularSeason = ({
     ])
   );
 
-  seasonTotalsRegularSeason.reverse().forEach(season => {
+  seasonTotals.reverse().forEach(season => {
     const {
       seasonId,
       teamAbbreviation,
@@ -94,7 +95,7 @@ const regularSeason = ({
     stl,
     blk,
     tov,
-  } = careerTotalsRegularSeason;
+  } = careerTotals;
 
   seasonTable.push(
     alignCenter([
@@ -118,4 +119,4 @@ const regularSeason = ({
   console.log(seasonTable.toString());
 };
 
-export default regularSeason;
+export default seasonStats;

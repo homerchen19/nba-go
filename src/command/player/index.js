@@ -1,8 +1,9 @@
 import NBA from 'nba';
 import pMap from 'p-map';
+import emoji from 'node-emoji';
 
 import playerInfo from './info';
-import regularSeason from './regularSeason';
+import seasonStats from './seasonStats';
 
 const player = async (playerName, option) => {
   await NBA.updatePlayers();
@@ -33,15 +34,39 @@ const player = async (playerName, option) => {
         commonPlayerInfo[0].nowTeamAbbreviation =
           commonPlayerInfo[0].teamAbbreviation;
 
-        regularSeason({
+        seasonStats({
+          seasonTtpe: 'Regular Season',
           ...commonPlayerInfo[0],
-          seasonTotalsRegularSeason,
-          careerTotalsRegularSeason: careerTotalsRegularSeason[0],
+          seasonTotals: seasonTotalsRegularSeason,
+          careerTotals: careerTotalsRegularSeason[0],
         });
       }
 
       if (option.playoffs) {
-        console.log('playoffs');
+        const {
+          seasonTotalsPostSeason,
+          careerTotalsPostSeason,
+        } = await NBA.stats.playerProfile({
+          PlayerID: _player.playerId,
+        });
+
+        if (careerTotalsPostSeason.length === 0) {
+          console.log(
+            `Sorry, ${_player.firstName} ${_player.firstName} doesn't have any playoffs data. ${emoji.get(
+              'confused'
+            )}`
+          );
+        } else {
+          commonPlayerInfo[0].nowTeamAbbreviation =
+            commonPlayerInfo[0].teamAbbreviation;
+
+          seasonStats({
+            seasonTtpe: 'Playoffs',
+            ...commonPlayerInfo[0],
+            seasonTotals: seasonTotalsPostSeason,
+            careerTotals: careerTotalsPostSeason[0],
+          });
+        }
       }
     },
     { concurrency: 1 }
