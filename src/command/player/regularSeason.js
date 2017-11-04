@@ -7,7 +7,7 @@ import { bold } from '../../utils/log';
 import table from '../../utils/table';
 
 const alignCenter = columns =>
-  columns.map(content => ({ content, hAlign: 'center' }));
+  columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
 
 const regularSeason = ({
   nowTeamAbbreviation,

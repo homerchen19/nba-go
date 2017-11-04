@@ -2,10 +2,10 @@ import program from 'commander';
 import didYouMean from 'didyoumean';
 import isAsyncSupported from 'is-async-supported';
 
-import pkg from '../package.json';
-
 import nbaGo from './command';
 import { error, bold } from './utils/log';
+
+import pkg from '../package.json';
 
 if (!isAsyncSupported()) {
   require('async-to-gen/register');
@@ -20,6 +20,10 @@ program
   .option('-r, --regular', "Check the player's career regular season data")
   .option('-p, --playoffs', "Check the player's career playoffs data")
   .action((playerName, option) => {
+    if (!option.info && !option.regular && !option.playoffs) {
+      // eslint-disable-next-line no-param-reassign
+      option.info = true;
+    }
     nbaGo.player(playerName, option);
   });
 
@@ -35,14 +39,14 @@ program
   });
 
 program.command('*').action(command => {
-  error(`unknown command: ${bold(command)}`);
+  error(`Unknown command: ${bold(command)}`);
   const commandNames = program.commands
     .map(c => c._name)
     .filter(name => name !== '*');
 
   const closeMatch = didYouMean(command, commandNames);
   if (closeMatch) {
-    error(`did you mean ${bold(closeMatch)}?`);
+    error(`Did you mean ${bold(closeMatch)} ?`);
   }
   process.exit(1);
 });

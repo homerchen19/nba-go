@@ -39,6 +39,10 @@ const player = async (playerName, option) => {
           careerTotalsRegularSeason: careerTotalsRegularSeason[0],
         });
       }
+
+      if (option.playoffs) {
+        console.log('playoffs');
+      }
     },
     { concurrency: 1 }
   );
