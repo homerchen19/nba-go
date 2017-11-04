@@ -1,10 +1,14 @@
 import { getMainColor } from 'nba-color';
 import { left, right } from 'wide-align';
 import get from 'lodash/get';
+import emoji from 'node-emoji';
 
 import { bold, neonGreen, colorTeamName } from '../../utils/log';
 
 const updateTeamQuarterScores = (team, latestPeriod, teamPeriod) => {
+  // eslint-disable-next-line no-param-reassign
+  teamPeriod = Array.isArray(teamPeriod) ? teamPeriod : [teamPeriod];
+
   const latestQuarterScore = teamPeriod.find(
     quarter => quarter.period_value === latestPeriod
   ).score;
@@ -166,7 +170,9 @@ const createGameLive = (
     const overtimePeriod = getOvertimePeriod(latestPeriod);
     timeText.setContent(
       bold(
-        `⏱  ${+overtimePeriod > 1 ? 'OT' : 'Q'}${+overtimePeriod > 1
+        `${emoji.get('stopwatch')}  ${+overtimePeriod > 1
+          ? 'OT'
+          : 'Q'}${+overtimePeriod > 1
           ? overtimePeriod
           : latestPeriod} ${latestClock}`
       )

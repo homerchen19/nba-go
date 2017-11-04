@@ -39,6 +39,10 @@ export default class Team {
     }
   }
 
+  getID() {
+    return this.id;
+  }
+
   getCity() {
     return this.city;
   }

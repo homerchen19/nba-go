@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop, no-constant-condition, no-console */
 
-import NBA from 'nba-stats-client';
+import NBA from 'nba';
+import NBA_client from 'nba-stats-client';
 import parse from 'date-fns/parse';
 import addDays from 'date-fns/add_days';
 import subDays from 'date-fns/sub_days';
@@ -8,8 +9,10 @@ import emoji from 'node-emoji';
 import delay from 'delay';
 import jsonfile from 'jsonfile';
 import path from 'path';
+import ora from 'ora';
 
-import createGameMenu from './createGameMenu';
+import createGameSchedule from './createGameSchedule';
+import createGamePreview from './createGamePreview';
 import createGameScoreboard from './createGameScoreboard';
 import createGameBoxScore from './createGameBoxScore';
 import createGameLive from './createGameLive';
@@ -21,7 +24,7 @@ const game = async option => {
   let _date;
   let gamesData;
   let gameBoxScoreData;
-  let seasonMeta;
+  let seasonMetaData;
 
   if (option.date) {
     _date = option.date;
@@ -49,37 +52,37 @@ const game = async option => {
   } else {
     const {
       sports_content: { games: { game: realGamesData } },
-    } = await NBA.getGamesFromDate(parse(_date));
+    } = await NBA_client.getGamesFromDate(parse(_date));
 
     gamesData = realGamesData;
   }
 
-  const { game: { homeTeam, visitorTeam, gameData } } = await createGameMenu(
-    gamesData
-  );
+  const {
+    game: { homeTeam, visitorTeam, gameData },
+  } = await createGameSchedule(gamesData);
 
   if (process.env.NODE_ENV === 'development_fake') {
     const {
       sports_content: {
         game: fakeGameBoxScoreData,
-        sports_meta: { season_meta: fakeSeasonMeta },
+        sports_meta: { season_meta: fakeSeasonMetaData },
       },
     } = await jsonfile.readFileSync(
       path.resolve(__filename, '../../../data/boxscore.json')
     );
 
     gameBoxScoreData = fakeGameBoxScoreData;
-    seasonMeta = fakeSeasonMeta;
+    seasonMetaData = fakeSeasonMetaData;
   } else {
     const {
       sports_content: {
         game: realGameBoxScoreData,
-        sports_meta: { season_meta: realSeasonMeta },
+        sports_meta: { season_meta: realSeasonMetaData },
       },
-    } = await NBA.getBoxScoreFromDate(parse(_date), gameData.id);
+    } = await NBA_client.getBoxScoreFromDate(parse(_date), gameData.id);
 
     gameBoxScoreData = realGameBoxScoreData;
-    seasonMeta = realSeasonMeta;
+    seasonMetaData = realSeasonMetaData;
   }
   const { home, visitor } = gameBoxScoreData;
 
@@ -106,19 +109,45 @@ const game = async option => {
 
   switch (gameData.period_time.game_status) {
     case '1': {
-      console.log('pregame');
+      screen.destroy();
+      console.log('');
+
+      const spinner = ora('Loading Game Preview').start();
+
+      const {
+        overallTeamDashboard: [homeTeamDashboardData],
+      } = await NBA.stats.teamSplits({
+        Season: '2017-18',
+        TeamID: homeTeam.getID(),
+      });
+      const {
+        overallTeamDashboard: [visitorTeamDashboardData],
+      } = await NBA.stats.teamSplits({
+        Season: '2017-18',
+        TeamID: visitorTeam.getID(),
+      });
+
+      spinner.stop();
+
+      createGamePreview(homeTeam, visitorTeam, {
+        ...seasonMetaData,
+        ...gameBoxScoreData,
+        homeTeamDashboardData,
+        visitorTeamDashboardData,
+      });
       break;
     }
 
     case 'Halftime':
     case '2': {
-      console.log('');
       // let i = 1;
       seasonText.setContent(
-        bold(`${seasonMeta.display_year} ${seasonMeta.display_season}`)
+        bold(`${seasonMetaData.display_year} ${seasonMetaData.display_season}`)
       );
       const { arena, city, state } = gameBoxScoreData;
-      arenaText.setContent(`🏠  ${arena} | ${city}, ${state}`);
+      arenaText.setContent(
+        `${emoji.get('house')}  ${arena} | ${city}, ${state}`
+      );
 
       while (true) {
         let gamePlayByPlayData = {};
@@ -140,10 +169,10 @@ const game = async option => {
         } else {
           const {
             sports_content: { game: realPlayByPlayData },
-          } = await NBA.getPlayByPlayFromDate(parse(_date), gameData.id);
+          } = await NBA_client.getPlayByPlayFromDate(parse(_date), gameData.id);
           const {
             sports_content: { game: realGameBoxScoreData },
-          } = await NBA.getBoxScoreFromDate(parse(_date), gameData.id);
+          } = await NBA_client.getBoxScoreFromDate(parse(_date), gameData.id);
 
           gameBoxScoreData = realGameBoxScoreData;
           gamePlayByPlayData = realPlayByPlayData;
@@ -165,7 +194,7 @@ const game = async option => {
           visitorTeam,
           {
             ...gamePlayByPlayData,
-            ...seasonMeta,
+            ...seasonMetaData,
             isFinal,
           },
           gameBoxScoreData,
@@ -197,7 +226,7 @@ const game = async option => {
       console.log('');
       createGameScoreboard(homeTeam, visitorTeam, {
         ...gameBoxScoreData,
-        ...seasonMeta,
+        ...seasonMetaData,
       });
       console.log('');
       createGameBoxScore(homeTeam, visitorTeam);

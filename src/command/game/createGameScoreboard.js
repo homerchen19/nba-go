@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+import format from 'date-fns/format';
+import emoji from 'node-emoji';
 
 import { bold, neonGreen } from '../../utils/log';
 import { basicTable } from '../../utils/table';
@@ -48,22 +50,13 @@ const teamGameLeaders = (homeTeam, visitorTeam, field) =>
     },
   ]);
 
-const createGameScorebaord = (homeTeam, visitorTeam, gameData) => {
+const createGameScorebaord = (
+  homeTeam,
+  visitorTeam,
+  { date, time, arena, city, state, display_year, display_season }
+) => {
   const scoreboardTable = basicTable();
-  const {
-    date,
-    time,
-    arena,
-    city,
-    state,
-    display_year,
-    display_season,
-  } = gameData;
 
-  const formatedDate = `${date.slice(0, 4)}/${date.slice(4, 6)}/${date.slice(
-    6,
-    8
-  )}`;
   const formatedTime = `${time.slice(0, 2)}:${time.slice(2, 4)}`;
 
   const homeTeamStartingPlayers = getStartingPlayers(homeTeam);
@@ -184,7 +177,12 @@ const createGameScorebaord = (homeTeam, visitorTeam, gameData) => {
       },
       {
         colSpan: 6,
-        content: bold(`${formatedDate} ${formatedTime}`),
+        content: bold(
+          `${emoji.get('calendar')}  ${format(
+            date,
+            'YYYY/MM/DD'
+          )} ${formatedTime}`
+        ),
         hAlign: 'center',
       },
       'PF',
@@ -208,7 +206,7 @@ const createGameScorebaord = (homeTeam, visitorTeam, gameData) => {
       },
       {
         colSpan: 6,
-        content: bold(`${arena} │ ${city}, ${state}`),
+        content: bold(`${emoji.get('house')}  ${arena} │ ${city}, ${state}`),
         hAlign: 'center',
       },
       'C',
