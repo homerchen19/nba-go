@@ -1,6 +1,6 @@
 {
   "name": "nba-go",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "",
   "main": "lib/cli.js",
   "bin": {
