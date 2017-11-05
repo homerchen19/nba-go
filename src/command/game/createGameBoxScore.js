@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import { basicTable } from '../../utils/table';
 import { bold, neonGreen } from '../../utils/log';
 

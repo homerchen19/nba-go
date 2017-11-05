@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import chalk from 'chalk';
 
 import { error, bold, neonGreen, colorTeamName } from '../log';

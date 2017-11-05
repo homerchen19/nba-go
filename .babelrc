@@ -1,13 +1,4 @@
 {
-  "presets": [
-    [
-      "env",
-      {
-        "targets": {
-          "node": "7.6"
-        }
-      }
-    ]
-  ],
+  "presets": ["env"],
   "plugins": ["transform-class-properties", "transform-object-rest-spread"]
 }

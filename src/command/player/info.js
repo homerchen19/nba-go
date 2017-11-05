@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import chalk from 'chalk';
 import format from 'date-fns/format';
 import { getMainColor } from 'nba-color';

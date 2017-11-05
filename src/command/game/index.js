@@ -1,4 +1,4 @@
-/* eslint-disable no-await-in-loop, no-constant-condition, no-console */
+/* eslint-disable no-await-in-loop, no-constant-condition */
 
 import NBA from 'nba';
 import NBA_client from 'nba-stats-client';

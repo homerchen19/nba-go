@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import format from 'date-fns/format';
 import emoji from 'node-emoji';
 

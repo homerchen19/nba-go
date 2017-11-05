@@ -47,7 +47,7 @@ describe('getBlessed', () => {
     it('should append 13 components and 1 key event', () => {
       const { screen } = getBlessed(mockTeam(), mockTeam());
 
-      expect(screen.append.mock.calls.length).toBe(13);
+      expect(screen.append.mock.calls.length).toBe(14);
       expect(screen.key.mock.calls.length).toBe(1);
     });
   });
@@ -58,7 +58,7 @@ describe('getBlessed', () => {
 
       expect(blessed.box.mock.calls.length).toBe(2);
       expect(blessed.table.mock.calls.length).toBe(2);
-      expect(blessed.text.mock.calls.length).toBe(7);
+      expect(blessed.text.mock.calls.length).toBe(8);
       expect(blessed.bigtext.mock.calls.length).toBe(2);
     });
 
@@ -67,7 +67,7 @@ describe('getBlessed', () => {
       getBlessed(mockTeam(), mockTeam());
 
       process.stdin.emit('keypress', '', { name: 'escape' });
-      expect(process.exit).toBeCalledWith(0);
+      expect(process.exit).toBeCalledWith(1);
     });
   });
 });
