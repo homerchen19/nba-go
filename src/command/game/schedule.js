@@ -93,13 +93,13 @@ const schedule = async gamesData => {
         teamInfoCommon: homeTeamInfoCommon,
       } = await NBA.stats.teamInfoCommon({
         TeamID: home.id,
-        Season: '2017-18',
+        Season: process.env.season,
       });
       const {
         teamInfoCommon: visitorTeamInfoCommon,
       } = await NBA.stats.teamInfoCommon({
         TeamID: visitor.id,
-        Season: '2017-18',
+        Season: process.env.season,
       });
 
       const homeTeam = new Team({

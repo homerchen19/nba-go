@@ -1,5 +1,6 @@
 import format from 'date-fns/format';
 import emoji from 'node-emoji';
+import { center } from 'wide-align';
 
 import { bold, neonGreen } from '../../utils/log';
 import { basicTable } from '../../utils/table';
@@ -16,10 +17,12 @@ const vAlignCenter = columns =>
 const getStartingPlayers = team =>
   team
     .getPlayers()
-    .filter(player => player.starting_position !== '')
+    .filter(
+      player => player.starting_position !== '' || player.on_court === '1'
+    )
     .map(player => ({
       name: `${player.first_name} ${player.last_name}`,
-      position: player.starting_position,
+      position: player.starting_position || player.position_short,
     }));
 
 const teamGameLeaders = (homeTeam, visitorTeam, field) =>
@@ -90,8 +93,9 @@ const scorebaord = (
       'PG',
       {
         content: bold(
-          homeTeamStartingPlayers.filter(player => player.position === 'PG')[0]
-            .name
+          homeTeamStartingPlayers.filter(
+            player => player.position.indexOf('G') > -1
+          )[1].name
         ),
         hAlign: 'left',
       },
@@ -99,14 +103,14 @@ const scorebaord = (
       bold('Q1'),
       bold('Q2'),
       bold('Q3'),
-      bold('Q4'),
-      bold('Total'),
+      bold('Q4'), // FIXME OT
+      bold(center('Total', 9)),
       'PG',
       {
         content: bold(
           visitorTeamStartingPlayers.filter(
-            player => player.position === 'PG'
-          )[0].name
+            player => player.position.indexOf('G') > -1
+          )[1].name
         ),
         hAlign: 'left',
       },
@@ -115,8 +119,9 @@ const scorebaord = (
       'SG',
       {
         content: bold(
-          homeTeamStartingPlayers.filter(player => player.position === 'SG')[0]
-            .name
+          homeTeamStartingPlayers.filter(
+            player => player.position.indexOf('G') > -1
+          )[0].name
         ),
         hAlign: 'left',
       },
@@ -132,7 +137,7 @@ const scorebaord = (
       {
         content: bold(
           visitorTeamStartingPlayers.filter(
-            player => player.position === 'SG'
+            player => player.position.indexOf('G') > -1
           )[0].name
         ),
         hAlign: 'left',
@@ -142,8 +147,9 @@ const scorebaord = (
       'SF',
       {
         content: bold(
-          homeTeamStartingPlayers.filter(player => player.position === 'SF')[0]
-            .name
+          homeTeamStartingPlayers.filter(
+            player => player.position.indexOf('F') > -1
+          )[1].name
         ),
         hAlign: 'left',
       },
@@ -159,8 +165,8 @@ const scorebaord = (
       {
         content: bold(
           visitorTeamStartingPlayers.filter(
-            player => player.position === 'SF'
-          )[0].name
+            player => player.position.indexOf('F') > -1
+          )[1].name
         ),
         hAlign: 'left',
       },
@@ -169,8 +175,9 @@ const scorebaord = (
       'PF',
       {
         content: bold(
-          homeTeamStartingPlayers.filter(player => player.position === 'PF')[0]
-            .name
+          homeTeamStartingPlayers.filter(
+            player => player.position.indexOf('F') > -1
+          )[0].name
         ),
         hAlign: 'left',
       },
@@ -188,7 +195,7 @@ const scorebaord = (
       {
         content: bold(
           visitorTeamStartingPlayers.filter(
-            player => player.position === 'PF'
+            player => player.position.indexOf('F') > -1
           )[0].name
         ),
         hAlign: 'left',
@@ -198,8 +205,7 @@ const scorebaord = (
       'C',
       {
         content: bold(
-          homeTeamStartingPlayers.filter(player => player.position === 'C')[0]
-            .name
+          homeTeamStartingPlayers.find(player => player.position === 'C').name
         ),
         hAlign: 'left',
       },
@@ -211,9 +217,8 @@ const scorebaord = (
       'C',
       {
         content: bold(
-          visitorTeamStartingPlayers.filter(
-            player => player.position === 'C'
-          )[0].name
+          visitorTeamStartingPlayers.find(player => player.position === 'C')
+            .name
         ),
         hAlign: 'left',
       },

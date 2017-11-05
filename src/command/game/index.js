@@ -5,10 +5,13 @@ import NBA_client from 'nba-stats-client';
 import parse from 'date-fns/parse';
 import addDays from 'date-fns/add_days';
 import subDays from 'date-fns/sub_days';
+import format from 'date-fns/format';
+import getYear from 'date-fns/get_year';
+import getMonth from 'date-fns/get_month';
+import isValid from 'date-fns/is_valid';
 import emoji from 'node-emoji';
 import delay from 'delay';
 import ora from 'ora';
-import format from 'date-fns/format';
 
 import schedule from './schedule';
 import preview from './preview';
@@ -20,11 +23,36 @@ import { error, bold } from '../../utils/log';
 import { cfontsDate } from '../../utils/cfonts';
 import getBlessed from '../../utils/blessed';
 
+const getSeason = date => {
+  const year = getYear(new Date(date));
+  const month = getMonth(new Date(date));
+
+  if (year < 2012 || (year === 2012 && month < 5)) {
+    error(
+      `Sorry, https://stats.nba.com/ doesn't provide season data before 2012-13 ${emoji.get(
+        'confused'
+      )}`
+    );
+    process.exit(1);
+  }
+
+  if (month > 9) {
+    process.env.season = `${year}-${(year + 1).toString().slice(-2)}`;
+  } else {
+    process.env.season = `${year - 1}-${year.toString().slice(-2)}`;
+  }
+};
+
 const game = async option => {
   let _date;
 
   if (option.date) {
-    _date = option.date;
+    if (isValid(new Date(option.date))) {
+      _date = format(parse(option.date), 'YYYY/MM/DD');
+    } else {
+      error('Date is invalid');
+      process.exit(1);
+    }
   } else if (option.today) {
     _date = Date.now();
   } else if (option.tomorrow) {
@@ -36,11 +64,13 @@ const game = async option => {
     process.exit(1);
   }
 
+  getSeason(_date);
+
   cfontsDate(_date);
 
   const {
     sports_content: { games: { game: gamesData } },
-  } = await NBA_client.getGamesFromDate(parse(_date));
+  } = await NBA_client.getGamesFromDate(new Date(_date));
 
   const { game: { homeTeam, visitorTeam, gameData } } = await schedule(
     gamesData
@@ -51,7 +81,7 @@ const game = async option => {
       game: _gameBoxScoreData,
       sports_meta: { season_meta: seasonMetaData },
     },
-  } = await NBA_client.getBoxScoreFromDate(parse(_date), gameData.id);
+  } = await NBA_client.getBoxScoreFromDate(new Date(_date), gameData.id);
 
   let gameBoxScoreData = _gameBoxScoreData;
 
@@ -87,13 +117,13 @@ const game = async option => {
       const {
         overallTeamDashboard: [homeTeamDashboardData],
       } = await NBA.stats.teamSplits({
-        Season: '2017-18',
+        Season: process.env.season,
         TeamID: homeTeam.getID(),
       });
       const {
         overallTeamDashboard: [visitorTeamDashboardData],
       } = await NBA.stats.teamSplits({
-        Season: '2017-18',
+        Season: process.env.season,
         TeamID: visitorTeam.getID(),
       });
 
@@ -129,10 +159,13 @@ const game = async option => {
 
         const {
           sports_content: { game: updatedPlayByPlayData },
-        } = await NBA_client.getPlayByPlayFromDate(parse(_date), gameData.id);
+        } = await NBA_client.getPlayByPlayFromDate(
+          new Date(_date),
+          gameData.id
+        );
         const {
           sports_content: { game: updatedGameBoxScoreData },
-        } = await NBA_client.getBoxScoreFromDate(parse(_date), gameData.id);
+        } = await NBA_client.getBoxScoreFromDate(new Date(_date), gameData.id);
 
         gamePlayByPlayData = updatedPlayByPlayData;
         gameBoxScoreData = updatedGameBoxScoreData;

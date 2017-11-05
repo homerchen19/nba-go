@@ -102,7 +102,17 @@ export default class Team {
   }
 
   getGameLeaders(sector) {
-    return this.gameLeaders[sector];
+    return this.gameLeaders
+      ? this.gameLeaders[sector]
+      : {
+          StatValue: '-',
+          leader: [
+            {
+              FirstName: '',
+              LastName: '',
+            },
+          ],
+        };
   }
 
   getIsHomeTeam() {
