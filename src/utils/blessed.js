@@ -26,7 +26,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
   });
 
   const scoreboardTable = blessed.table({
-    top: 4,
+    top: 5,
     left: 'center',
     width: '33%',
     height: 8,
@@ -120,7 +120,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
   });
 
   const seasonText = blessed.text({
-    top: 1,
+    top: 0,
     left: 'center',
     align: 'center',
     style: {
@@ -129,7 +129,16 @@ const getBlessed = (homeTeam, visitorTeam) => {
   });
 
   const timeText = blessed.text({
-    top: 12,
+    top: 13,
+    left: 'center',
+    align: 'center',
+    style: {
+      fg: 'white',
+    },
+  });
+
+  const dateText = blessed.text({
+    top: 2,
     left: 'center',
     align: 'center',
     style: {
@@ -138,7 +147,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
   });
 
   const arenaText = blessed.text({
-    top: 2,
+    top: 3,
     left: 'center',
     align: 'center',
     style: {
@@ -160,7 +169,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
     },
     align: 'left',
     keys: true,
-    vi: true,
+    mouse: false,
     scrollable: true,
     focused: true,
     label: ' Play By Play ',
@@ -195,6 +204,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
   screen.append(baseBox);
   screen.append(seasonText);
   screen.append(timeText);
+  screen.append(dateText);
   screen.append(arenaText);
   screen.append(homeTeamFullNameText);
   screen.append(homeTeamStandingsText);
@@ -205,13 +215,14 @@ const getBlessed = (homeTeam, visitorTeam) => {
   screen.append(scoreboardTable);
   screen.append(playByPlayBox);
   screen.append(boxscoreTable);
-  screen.key(['escape', 'q', 'C-c'], () => process.exit(0));
+  screen.key(['escape', 'q', 'C-c'], () => process.exit(1));
 
   return {
     screen,
     scoreboardTable,
     seasonText,
     timeText,
+    dateText,
     arenaText,
     homeTeamScoreText,
     visitorTeamScoreText,

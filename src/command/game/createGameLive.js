@@ -11,12 +11,14 @@ const updateTeamQuarterScores = (team, latestPeriod, teamPeriod) => {
 
   const latestQuarterScore = teamPeriod.find(
     quarter => quarter.period_value === latestPeriod
-  ).score;
+  );
 
-  if (team.getIsHomeTeam()) {
-    team.setQuarterScore(latestPeriod, latestQuarterScore);
-  } else {
-    team.setQuarterScore(latestPeriod, latestQuarterScore);
+  if (latestQuarterScore) {
+    if (team.getIsHomeTeam()) {
+      team.setQuarterScore(latestPeriod, latestQuarterScore.score);
+    } else {
+      team.setQuarterScore(latestPeriod, latestQuarterScore.score);
+    }
   }
 };
 

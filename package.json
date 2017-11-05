@@ -45,7 +45,6 @@
     "didyoumean": "^1.2.1",
     "inquirer": "^3.3.0",
     "is-async-supported": "^1.2.0",
-    "jsonfile": "^4.0.0",
     "lodash": "^4.17.4",
     "log-update": "^2.2.0",
     "nba": "^4.0.0",

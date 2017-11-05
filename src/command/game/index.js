@@ -7,9 +7,8 @@ import addDays from 'date-fns/add_days';
 import subDays from 'date-fns/sub_days';
 import emoji from 'node-emoji';
 import delay from 'delay';
-import jsonfile from 'jsonfile';
-import path from 'path';
 import ora from 'ora';
+import format from 'date-fns/format';
 
 import createGameSchedule from './createGameSchedule';
 import createGamePreview from './createGamePreview';
@@ -22,9 +21,6 @@ import getBlessed from '../../utils/blessed';
 
 const game = async option => {
   let _date;
-  let gamesData;
-  let gameBoxScoreData;
-  let seasonMetaData;
 
   if (option.date) {
     _date = option.date;
@@ -41,49 +37,23 @@ const game = async option => {
 
   cfontsDate(_date);
 
-  if (process.env.NODE_ENV === 'development_fake') {
-    const {
-      sports_content: { games: { game: fakeGamesData } },
-    } = await jsonfile.readFileSync(
-      path.resolve(__filename, '../../../data/scoreboard.json')
-    );
-
-    gamesData = fakeGamesData;
-  } else {
-    const {
-      sports_content: { games: { game: realGamesData } },
-    } = await NBA_client.getGamesFromDate(parse(_date));
-
-    gamesData = realGamesData;
-  }
+  const {
+    sports_content: { games: { game: gamesData } },
+  } = await NBA_client.getGamesFromDate(parse(_date));
 
   const {
     game: { homeTeam, visitorTeam, gameData },
   } = await createGameSchedule(gamesData);
 
-  if (process.env.NODE_ENV === 'development_fake') {
-    const {
-      sports_content: {
-        game: fakeGameBoxScoreData,
-        sports_meta: { season_meta: fakeSeasonMetaData },
-      },
-    } = await jsonfile.readFileSync(
-      path.resolve(__filename, '../../../data/boxscore.json')
-    );
+  const {
+    sports_content: {
+      game: _gameBoxScoreData,
+      sports_meta: { season_meta: seasonMetaData },
+    },
+  } = await NBA_client.getBoxScoreFromDate(parse(_date), gameData.id);
 
-    gameBoxScoreData = fakeGameBoxScoreData;
-    seasonMetaData = fakeSeasonMetaData;
-  } else {
-    const {
-      sports_content: {
-        game: realGameBoxScoreData,
-        sports_meta: { season_meta: realSeasonMetaData },
-      },
-    } = await NBA_client.getBoxScoreFromDate(parse(_date), gameData.id);
+  let gameBoxScoreData = _gameBoxScoreData;
 
-    gameBoxScoreData = realGameBoxScoreData;
-    seasonMetaData = realSeasonMetaData;
-  }
   const { home, visitor } = gameBoxScoreData;
 
   homeTeam.setGameStats(home.stats);
@@ -93,13 +63,12 @@ const game = async option => {
   visitorTeam.setPlayers(visitor.players.player);
   visitorTeam.setGameLeaders(visitor.Leaders);
 
-  // gameData.period_time.game_status = '2';
-
   const {
     screen,
     scoreboardTable,
     seasonText,
     timeText,
+    dateText,
     arenaText,
     homeTeamScoreText,
     visitorTeamScoreText,
@@ -140,11 +109,16 @@ const game = async option => {
 
     case 'Halftime':
     case '2': {
-      // let i = 1;
       seasonText.setContent(
         bold(`${seasonMetaData.display_year} ${seasonMetaData.display_season}`)
       );
-      const { arena, city, state } = gameBoxScoreData;
+      const { arena, city, state, date, time } = gameBoxScoreData;
+      dateText.setContent(
+        `${emoji.get('calendar')}  ${format(date, 'YYYY/MM/DD')} ${time.slice(
+          0,
+          2
+        )}:${time.slice(2, 4)}`
+      );
       arenaText.setContent(
         `${emoji.get('house')}  ${arena} | ${city}, ${state}`
       );
@@ -152,37 +126,19 @@ const game = async option => {
       while (true) {
         let gamePlayByPlayData = {};
 
-        if (process.env.NODE_ENV === 'development_fake') {
-          const {
-            sports_content: { game: fakePlayByPlayData },
-          } = await jsonfile.readFileSync(
-            path.resolve(__filename, '../../../data/playbyplay.json')
-          );
-          const {
-            sports_content: { game: fakeGameBoxScoreData },
-          } = await jsonfile.readFileSync(
-            path.resolve(__filename, '../../../data/boxscore.json')
-          );
+        const {
+          sports_content: { game: updatedPlayByPlayData },
+        } = await NBA_client.getPlayByPlayFromDate(parse(_date), gameData.id);
+        const {
+          sports_content: { game: updatedGameBoxScoreData },
+        } = await NBA_client.getBoxScoreFromDate(parse(_date), gameData.id);
 
-          gameBoxScoreData = fakeGameBoxScoreData;
-          gamePlayByPlayData = fakePlayByPlayData;
-        } else {
-          const {
-            sports_content: { game: realPlayByPlayData },
-          } = await NBA_client.getPlayByPlayFromDate(parse(_date), gameData.id);
-          const {
-            sports_content: { game: realGameBoxScoreData },
-          } = await NBA_client.getBoxScoreFromDate(parse(_date), gameData.id);
-
-          gameBoxScoreData = realGameBoxScoreData;
-          gamePlayByPlayData = realPlayByPlayData;
-        }
+        gamePlayByPlayData = updatedPlayByPlayData;
+        gameBoxScoreData = updatedGameBoxScoreData;
 
         const lastPlay = gamePlayByPlayData.play.slice(-1).pop();
         homeTeam.setGameScore(lastPlay.home_score);
         visitorTeam.setGameScore(lastPlay.visitor_score);
-        // homeTeam.setGameScore(`${(i += 3)}`);
-        // visitorTeam.setGameScore(`${(i += 3)}`);
 
         const isFinal =
           (lastPlay.period === '4' || +lastPlay.period > 4) &&
