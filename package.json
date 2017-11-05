@@ -8,7 +8,7 @@
     "ng": "bin/cli.js"
   },
   "scripts": {
-    "build": "npm run clean && babel src -d lib",
+    "build": "npm run clean && babel src -d lib --copy-files --ignore '**/*.spec.js'",
     "clean": "rimraf lib",
     "precommit": "lint-staged",
     "lint": "eslint src",
