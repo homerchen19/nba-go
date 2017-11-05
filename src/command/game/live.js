@@ -125,7 +125,7 @@ const getTeamBoxscore = (team, playersData) => {
   return teamBoxscoreRows;
 };
 
-const createGameLive = (
+const live = (
   homeTeam,
   visitorTeam,
   playByPlayData,
@@ -187,4 +187,4 @@ const createGameLive = (
   screen.render();
 };
 
-export default createGameLive;
+export default live;

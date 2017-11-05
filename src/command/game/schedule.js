@@ -59,7 +59,7 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime) => {
   )}│`;
 };
 
-const createGameSchedule = async gamesData => {
+const schedule = async gamesData => {
   const spinner = ora('Loading Game Schedule').start();
   const header = `│ ${padHomeTeamName('Home')}${center(
     emoji.get('basketball'),
@@ -140,4 +140,4 @@ const createGameSchedule = async gamesData => {
   return answer;
 };
 
-export default createGameSchedule;
+export default schedule;

@@ -10,11 +10,12 @@ import delay from 'delay';
 import ora from 'ora';
 import format from 'date-fns/format';
 
-import createGameSchedule from './createGameSchedule';
-import createGamePreview from './createGamePreview';
-import createGameScoreboard from './createGameScoreboard';
-import createGameBoxScore from './createGameBoxScore';
-import createGameLive from './createGameLive';
+import schedule from './schedule';
+import preview from './preview';
+import scoreboard from './scoreboard';
+import boxScore from './boxScore';
+import live from './live';
+
 import { error, bold } from '../../utils/log';
 import { cfontsDate } from '../../utils/cfonts';
 import getBlessed from '../../utils/blessed';
@@ -41,9 +42,9 @@ const game = async option => {
     sports_content: { games: { game: gamesData } },
   } = await NBA_client.getGamesFromDate(parse(_date));
 
-  const {
-    game: { homeTeam, visitorTeam, gameData },
-  } = await createGameSchedule(gamesData);
+  const { game: { homeTeam, visitorTeam, gameData } } = await schedule(
+    gamesData
+  );
 
   const {
     sports_content: {
@@ -98,7 +99,7 @@ const game = async option => {
 
       spinner.stop();
 
-      createGamePreview(homeTeam, visitorTeam, {
+      preview(homeTeam, visitorTeam, {
         ...seasonMetaData,
         ...gameBoxScoreData,
         homeTeamDashboardData,
@@ -145,7 +146,7 @@ const game = async option => {
           lastPlay.description === 'End Period' &&
           lastPlay.home_score !== lastPlay.visitor_score;
 
-        createGameLive(
+        live(
           homeTeam,
           visitorTeam,
           {
@@ -180,12 +181,12 @@ const game = async option => {
     default: {
       screen.destroy();
       console.log('');
-      createGameScoreboard(homeTeam, visitorTeam, {
+      scoreboard(homeTeam, visitorTeam, {
         ...gameBoxScoreData,
         ...seasonMetaData,
       });
       console.log('');
-      createGameBoxScore(homeTeam, visitorTeam);
+      boxScore(homeTeam, visitorTeam);
     }
   }
 };

@@ -53,7 +53,7 @@ const createTeamStatsColumns = (
   `${plusMinus}`,
 ];
 
-const createGamePreview = (
+const preview = (
   homeTeam,
   visitorTeam,
   {
@@ -133,4 +133,4 @@ const createGamePreview = (
   console.log(gamePreviewTable.toString());
 };
 
-export default createGamePreview;
+export default preview;

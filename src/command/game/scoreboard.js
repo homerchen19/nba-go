@@ -49,7 +49,7 @@ const teamGameLeaders = (homeTeam, visitorTeam, field) =>
     },
   ]);
 
-const createGameScorebaord = (
+const scorebaord = (
   homeTeam,
   visitorTeam,
   { date, time, arena, city, state, display_year, display_season }
@@ -234,4 +234,4 @@ const createGameScorebaord = (
   console.log(scoreboardTable.toString());
 };
 
-export default createGameScorebaord;
+export default scorebaord;

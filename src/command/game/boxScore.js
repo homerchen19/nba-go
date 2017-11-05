@@ -124,10 +124,10 @@ const createTeamBoxScore = team => {
   console.log(boxScoreTable.toString());
 };
 
-const createGameBoxScore = (homeTeam, visitorTeam) => {
+const boxScore = (homeTeam, visitorTeam) => {
   createTeamBoxScore(homeTeam);
   console.log('');
   createTeamBoxScore(visitorTeam);
 };
 
-export default createGameBoxScore;
+export default boxScore;
