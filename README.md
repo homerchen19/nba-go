@@ -104,7 +104,7 @@ Btw, play-by-play is scrollable!.
 ⭐️⭐️  
 Check two teams' detailed scoreboard and box score.
 
-![final](https://user-images.githubusercontent.com/12113222/32416603-e3c5f5ec-c286-11e7-9a81-595578f03893.gif)
+![final](https://user-images.githubusercontent.com/12113222/32436783-1e7ad7b8-c320-11e7-97af-29d95732581c.gif)
 
 
 ### Player
