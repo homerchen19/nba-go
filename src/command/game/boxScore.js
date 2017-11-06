@@ -1,8 +1,11 @@
 import { basicTable } from '../../utils/table';
-import { bold, neonGreen } from '../../utils/log';
+import { nbaRed, bold, neonGreen } from '../../utils/log';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'left', vAlign: 'center' }));
+
+const checkOverStandard = (record, standard) =>
+  +record >= standard ? nbaRed(record) : record;
 
 const createTeamBoxScore = team => {
   const players = team.getPlayers();
@@ -61,24 +64,26 @@ const createTeamBoxScore = team => {
       points,
     } = player;
 
+    const totalRebounds = +rebounds_offensive + +rebounds_defensive;
+
     boxScoreTable.push(
       alignCenter([
         bold(`${first_name} ${last_name}`),
         position_short,
-        minutes,
+        checkOverStandard(minutes, 35),
         `${field_goals_made}-${field_goals_attempted}`,
         `${three_pointers_made}-${three_pointers_attempted}`,
         `${free_throws_made}-${free_throws_attempted}`,
-        plus_minus,
-        rebounds_offensive,
-        rebounds_defensive,
-        parseInt(rebounds_offensive, 10) + parseInt(rebounds_defensive, 10),
-        assists,
-        steals,
-        blocks,
-        turnovers,
-        fouls,
-        points,
+        checkOverStandard(plus_minus, 15),
+        checkOverStandard(rebounds_offensive, 10),
+        checkOverStandard(rebounds_defensive, 10),
+        checkOverStandard(totalRebounds, 10),
+        checkOverStandard(assists, 10),
+        checkOverStandard(steals, 5),
+        checkOverStandard(blocks, 5),
+        checkOverStandard(turnovers, 5),
+        checkOverStandard(fouls, 6),
+        checkOverStandard(points, 20),
       ])
     );
   });

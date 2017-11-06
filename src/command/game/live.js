@@ -3,7 +3,10 @@ import { left, right } from 'wide-align';
 import get from 'lodash/get';
 import emoji from 'node-emoji';
 
-import { bold, neonGreen, colorTeamName } from '../../utils/log';
+import { bold, nbaRed, neonGreen, colorTeamName } from '../../utils/log';
+
+const checkOverStandard = (record, standard) =>
+  +record >= standard ? nbaRed(record) : record;
 
 const updateTeamQuarterScores = (team, latestPeriod, teamPeriod) => {
   // eslint-disable-next-line no-param-reassign
@@ -116,9 +119,15 @@ const getTeamBoxscore = (team, playersData) => {
   mainPlayers.forEach(player => {
     teamBoxscoreRows.push([
       bold(left(player.last_name, 14)),
-      left(player.points, 3),
-      left(player.assists, 3),
-      left(`${+player.rebounds_offensive + +player.rebounds_defensive}`, 3),
+      left(checkOverStandard(player.points, 20), 3),
+      left(checkOverStandard(player.assists, 10), 3),
+      left(
+        `${checkOverStandard(
+          +player.rebounds_offensive + +player.rebounds_defensive,
+          10
+        )}`,
+        3
+      ),
     ]);
   });
 

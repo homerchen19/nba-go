@@ -6,7 +6,7 @@ import isAsyncSupported from 'is-async-supported';
 import chalk from 'chalk';
 
 import nbaGo from './command';
-import { error, bold, neonGreen } from './utils/log';
+import { error, bold, nbaRed, neonGreen } from './utils/log';
 
 import pkg from '../package.json';
 
@@ -102,7 +102,7 @@ program.on('--help', () => {
   console.log('');
   console.log('');
   console.log(
-    `  Welcome to ${chalk`{bold.hex('#0069b9') NBA}`} ${chalk`{bold.hex('#f00b47') GO}`} !`
+    `  Welcome to ${chalk`{bold.hex('#0069b9') NBA}`} ${nbaRed('GO')} !`
   );
   console.log('');
   console.log(

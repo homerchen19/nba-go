@@ -2,7 +2,7 @@ import format from 'date-fns/format';
 import emoji from 'node-emoji';
 import { center } from 'wide-align';
 
-import { bold, neonGreen } from '../../utils/log';
+import { bold, nbaRed, neonGreen } from '../../utils/log';
 import { basicTable } from '../../utils/table';
 
 const vAlignCenter = columns =>
@@ -35,13 +35,13 @@ const teamGameLeaders = (homeTeam, visitorTeam, field) =>
       ),
       hAlign: 'right',
     },
-    bold(homeTeam.getGameLeaders(field).StatValue),
+    nbaRed(homeTeam.getGameLeaders(field).StatValue),
     {
       colSpan: 2,
       content: field,
       hAlign: 'center',
     },
-    bold(visitorTeam.getGameLeaders(field).StatValue),
+    nbaRed(visitorTeam.getGameLeaders(field).StatValue),
     {
       colSpan: 3,
       content: bold(

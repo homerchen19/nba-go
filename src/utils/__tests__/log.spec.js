@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { error, bold, neonGreen, colorTeamName } from '../log';
+import { error, bold, nbaRed, neonGreen, colorTeamName } from '../log';
 
 const _log = console.log;
 
@@ -19,6 +19,10 @@ describe('console', () => {
 
   it('bold', () => {
     expect(bold('bold!')).toEqual(chalk`{white.bold bold!}`);
+  });
+
+  it('nbaRed', () => {
+    expect(nbaRed('nbaRed!')).toEqual(chalk`{bold.hex('#f00b47') nbaRed!}`);
   });
 
   it('neonGreen', () => {
