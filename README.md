@@ -47,12 +47,12 @@ Status              | Example | Description
 
 
 #### Check schedule
-In order to show the schedule at some day. `nba-go` provides the command `nba-go game` with some options.  
+In order to show the schedule on some day. `nba-go` provides the command `nba-go game` with some options.  
 
 #### Options
 
 ##### `-d <date>` or `--date <date>`
-Enter a specific date to check the schedule at that day.  
+Enter a specific date to check the schedule on that day.  
 
 ```
 $ nba-go game -d 2017/11/02
