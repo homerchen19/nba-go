@@ -1,16 +1,17 @@
 {
   "name": "nba-go",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "lib/cli.js",
   "bin": {
     "nba-go": "lib/cli.js",
     "ng": "lib/cli.js"
   },
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "build":
-      "npm run clean && babel src -d lib --copy-files --ignore '**/*.spec.js'",
+    "build": "npm run clean && babel src -d lib --copy-files --ignore '**/*.spec.js'",
     "clean": "rimraf lib",
     "precommit": "lint-staged",
     "lint": "eslint src",
@@ -25,7 +26,10 @@
     "type": "git",
     "url": "git+https://github.com/xxhomey19/nba-go.git"
   },
-  "keywords": ["NBA", "cli"],
+  "keywords": [
+    "NBA",
+    "cli"
+  ],
   "author": "xxhomey19",
   "license": "MIT",
   "bugs": {
@@ -79,11 +83,21 @@
     "rimraf": "^2.6.2"
   },
   "lint-staged": {
-    "*.js": ["eslint --fix", "git add"]
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "jest": {
-    "collectCoverageFrom": ["src/**/*.js"],
-    "coveragePathIgnorePatterns": ["/node_modules/", "/__tests__/"],
-    "testPathIgnorePatterns": ["node_modules/"]
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/__tests__/"
+    ],
+    "testPathIgnorePatterns": [
+      "node_modules/"
+    ]
   }
 }
