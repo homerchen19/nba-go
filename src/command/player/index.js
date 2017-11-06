@@ -52,7 +52,7 @@ const player = async (playerName, option) => {
 
         if (careerTotalsPostSeason.length === 0) {
           console.log(
-            `Sorry, ${_player.firstName} ${_player.firstName} doesn't have any playoffs data. ${emoji.get(
+            `Sorry, ${_player.firstName} ${_player.lastName} doesn't have any playoffs data ${emoji.get(
               'confused'
             )}`
           );
