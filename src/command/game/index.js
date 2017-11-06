@@ -171,8 +171,8 @@ const game = async option => {
         gameBoxScoreData = updatedGameBoxScoreData;
 
         const lastPlay = gamePlayByPlayData.play.slice(-1).pop();
-        homeTeam.setGameScore(lastPlay.home_score);
-        visitorTeam.setGameScore(lastPlay.visitor_score);
+        homeTeam.setScore(lastPlay.home_score);
+        visitorTeam.setScore(lastPlay.visitor_score);
 
         const isFinal =
           (lastPlay.period === '4' || +lastPlay.period > 4) &&

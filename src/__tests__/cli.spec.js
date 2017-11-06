@@ -89,6 +89,13 @@ describe('cli', () => {
   });
 
   describe('game command', () => {
+    it('should call nbaGo with option -t when user did not enter any option', () => {
+      process.argv = ['node', 'bin/cli.js', 'game'];
+      setup();
+
+      expect(nbaGo.game.mock.calls[0][0].today).toBe(true);
+    });
+
     it('should call nbaGo with option -d and date', () => {
       process.argv = ['node', 'bin/cli.js', 'game', '-d', '2017/11/11'];
       setup();

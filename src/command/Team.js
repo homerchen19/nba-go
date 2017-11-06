@@ -102,24 +102,24 @@ export default class Team {
   }
 
   getGameLeaders(sector) {
-    return this.gameLeaders
-      ? this.gameLeaders[sector]
-      : {
-          StatValue: '-',
-          leader: [
-            {
-              FirstName: '',
-              LastName: '',
-            },
-          ],
-        };
+    return (
+      this.gameLeaders[sector] || {
+        StatValue: '-',
+        leader: [
+          {
+            FirstName: '',
+            LastName: '',
+          },
+        ],
+      }
+    );
   }
 
   getIsHomeTeam() {
     return this.isHomeTeam;
   }
 
-  setGameScore(score) {
+  setScore(score) {
     this.score = score;
   }
 
