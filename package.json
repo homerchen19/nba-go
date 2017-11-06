@@ -1,6 +1,6 @@
 {
   "name": "nba-go",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "lib/cli.js",
   "bin": {
@@ -19,12 +19,14 @@
     "testonly": "NODE_ENV=test jest",
     "testonly:cov": "jest --coverage --runInBand --forceExit --no-cache",
     "testonly:watch": "jest --watch",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly":
+      "npm run build && echo '#!/usr/bin/env node' | cat - lib/cli.js > temp && mv temp lib/cli.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xxhomey19/nba-go.git"
   },
+  "engines": { "node": ">=6.0.0" },
   "keywords": ["NBA", "cli"],
   "author": "xxhomey19",
   "license": "MIT",
