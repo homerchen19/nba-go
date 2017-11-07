@@ -113,7 +113,7 @@ program.on('--help', () => {
   );
   console.log('');
   console.log(
-    `  Wanna watch NBA game plaease enter: ${neonGreen('nba-go game')}`
+    `  Wanna watch NBA game please enter: ${neonGreen('nba-go game')}`
   );
   console.log(
     `  Wanna check NBA player information please enter: ${neonGreen(
