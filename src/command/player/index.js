@@ -5,6 +5,18 @@ import emoji from 'node-emoji';
 import playerInfo from './info';
 import seasonStats from './seasonStats';
 
+import { error } from '../../utils/log';
+
+const catchError = (err, apiName) => {
+  error(err);
+  console.log('');
+  error(`Oops, ${apiName} goes wrong.`);
+  error(
+    'Please run nba-go again.\nIf it still not works, feel free to open issue on https://github.com/xxhomey19/nba-go/issues'
+  );
+  process.exit(1);
+};
+
 const player = async (playerName, option) => {
   await NBA.updatePlayers();
 
@@ -13,24 +25,45 @@ const player = async (playerName, option) => {
   pMap(
     _players,
     async _player => {
-      const {
-        commonPlayerInfo,
-        playerHeadlineStats,
-      } = await NBA.stats.playerInfo({
-        PlayerID: _player.playerId,
-      });
+      let commonPlayerInfo;
+      let playerHeadlineStats;
+
+      try {
+        const {
+          commonPlayerInfo: _commonPlayerInfo,
+          playerHeadlineStats: _playerHeadlineStats,
+        } = await NBA.stats.playerInfo({
+          PlayerID: _player.playerId,
+        });
+
+        commonPlayerInfo = _commonPlayerInfo;
+        playerHeadlineStats = _playerHeadlineStats;
+      } catch (err) {
+        catchError(err, 'NBA.stats.playerInfo()');
+      }
 
       if (option.info) {
         playerInfo({ ...commonPlayerInfo[0], ...playerHeadlineStats[0] });
       }
 
       if (option.regular) {
-        const {
-          seasonTotalsRegularSeason,
-          careerTotalsRegularSeason,
-        } = await NBA.stats.playerProfile({
-          PlayerID: _player.playerId,
-        });
+        let seasonTotalsRegularSeason;
+        let careerTotalsRegularSeason;
+
+        try {
+          const {
+            seasonTotalsRegularSeason: _seasonTotalsRegularSeason,
+            careerTotalsRegularSeason: _careerTotalsRegularSeason,
+          } = await NBA.stats.playerProfile({
+            PlayerID: _player.playerId,
+          });
+
+          seasonTotalsRegularSeason = _seasonTotalsRegularSeason;
+          careerTotalsRegularSeason = _careerTotalsRegularSeason;
+        } catch (err) {
+          catchError(err, 'NBA.stats.playerProfile()');
+        }
+
         commonPlayerInfo[0].nowTeamAbbreviation =
           commonPlayerInfo[0].teamAbbreviation;
 
@@ -43,12 +76,21 @@ const player = async (playerName, option) => {
       }
 
       if (option.playoffs) {
-        const {
-          seasonTotalsPostSeason,
-          careerTotalsPostSeason,
-        } = await NBA.stats.playerProfile({
-          PlayerID: _player.playerId,
-        });
+        let seasonTotalsPostSeason;
+        let careerTotalsPostSeason;
+        try {
+          const {
+            seasonTotalsPostSeason: _seasonTotalsPostSeason,
+            careerTotalsPostSeason: _careerTotalsPostSeason,
+          } = await NBA.stats.playerProfile({
+            PlayerID: _player.playerId,
+          });
+
+          seasonTotalsPostSeason = _seasonTotalsPostSeason;
+          careerTotalsPostSeason = _careerTotalsPostSeason;
+        } catch (err) {
+          catchError(err, 'NBA.stats.playerProfile()');
+        }
 
         if (careerTotalsPostSeason.length === 0) {
           console.log(
