@@ -23,6 +23,16 @@ import { error, bold } from '../../utils/log';
 import { cfontsDate } from '../../utils/cfonts';
 import getBlessed from '../../utils/blessed';
 
+const catchError = (err, apiName) => {
+  error(err);
+  console.log('');
+  error(`Oops, ${apiName} goes wrong.`);
+  error(
+    'Please run nba-go again.\nIf it still not works, feel free to open issue on https://github.com/xxhomey19/nba-go/issues'
+  );
+  process.exit(1);
+};
+
 const getSeason = date => {
   const year = getYear(new Date(date));
   const month = getMonth(new Date(date));
@@ -45,6 +55,9 @@ const getSeason = date => {
 
 const game = async option => {
   let _date;
+  let gamesData;
+  let gameBoxScoreData;
+  let seasonMetaData;
 
   if (option.date) {
     if (isValid(new Date(option.date))) {
@@ -68,22 +81,32 @@ const game = async option => {
 
   cfontsDate(_date);
 
-  const {
-    sports_content: { games: { game: gamesData } },
-  } = await NBA_client.getGamesFromDate(new Date(_date));
+  try {
+    const {
+      sports_content: { games: { game: _gamesData } },
+    } = await NBA_client.getGamesFromDate(new Date(_date));
+    gamesData = _gamesData;
+  } catch (err) {
+    catchError(err, 'NBA_client.getGamesFromDate()');
+  }
 
   const { game: { homeTeam, visitorTeam, gameData } } = await schedule(
     gamesData
   );
 
-  const {
-    sports_content: {
-      game: _gameBoxScoreData,
-      sports_meta: { season_meta: seasonMetaData },
-    },
-  } = await NBA_client.getBoxScoreFromDate(new Date(_date), gameData.id);
+  try {
+    const {
+      sports_content: {
+        game: _gameBoxScoreData,
+        sports_meta: { season_meta: _seasonMetaData },
+      },
+    } = await NBA_client.getBoxScoreFromDate(new Date(_date), gameData.id);
 
-  let gameBoxScoreData = _gameBoxScoreData;
+    gameBoxScoreData = _gameBoxScoreData;
+    seasonMetaData = _seasonMetaData;
+  } catch (err) {
+    catchError(err, 'NBA_client.getBoxScoreFromDate()');
+  }
 
   const { home, visitor } = gameBoxScoreData;
 
@@ -114,18 +137,28 @@ const game = async option => {
 
       const spinner = ora('Loading Game Preview').start();
 
-      const {
-        overallTeamDashboard: [homeTeamDashboardData],
-      } = await NBA.stats.teamSplits({
-        Season: process.env.season,
-        TeamID: homeTeam.getID(),
-      });
-      const {
-        overallTeamDashboard: [visitorTeamDashboardData],
-      } = await NBA.stats.teamSplits({
-        Season: process.env.season,
-        TeamID: visitorTeam.getID(),
-      });
+      let homeTeamDashboardData;
+      let visitorTeamDashboardData;
+
+      try {
+        const {
+          overallTeamDashboard: [_homeTeamDashboardData],
+        } = await NBA.stats.teamSplits({
+          Season: process.env.season,
+          TeamID: homeTeam.getID(),
+        });
+        const {
+          overallTeamDashboard: [_visitorTeamDashboardData],
+        } = await NBA.stats.teamSplits({
+          Season: process.env.season,
+          TeamID: visitorTeam.getID(),
+        });
+
+        homeTeamDashboardData = _homeTeamDashboardData;
+        visitorTeamDashboardData = _visitorTeamDashboardData;
+      } catch (err) {
+        catchError(err, 'NBA.stats.teamSplits()');
+      }
 
       spinner.stop();
 
@@ -140,6 +173,9 @@ const game = async option => {
 
     case 'Halftime':
     case '2': {
+      let updatedPlayByPlayData;
+      let updatedGameBoxScoreData;
+
       seasonText.setContent(
         bold(`${seasonMetaData.display_year} ${seasonMetaData.display_season}`)
       );
@@ -157,15 +193,31 @@ const game = async option => {
       while (true) {
         let gamePlayByPlayData = {};
 
-        const {
-          sports_content: { game: updatedPlayByPlayData },
-        } = await NBA_client.getPlayByPlayFromDate(
-          new Date(_date),
-          gameData.id
-        );
-        const {
-          sports_content: { game: updatedGameBoxScoreData },
-        } = await NBA_client.getBoxScoreFromDate(new Date(_date), gameData.id);
+        try {
+          const {
+            sports_content: { game: _updatedPlayByPlayData },
+          } = await NBA_client.getPlayByPlayFromDate(
+            new Date(_date),
+            gameData.id
+          );
+
+          updatedPlayByPlayData = _updatedPlayByPlayData;
+        } catch (err) {
+          catchError(err, 'NBA_client.getPlayByPlayFromDate()');
+        }
+
+        try {
+          const {
+            sports_content: { game: _updatedGameBoxScoreData },
+          } = await NBA_client.getBoxScoreFromDate(
+            new Date(_date),
+            gameData.id
+          );
+
+          updatedGameBoxScoreData = _updatedGameBoxScoreData;
+        } catch (err) {
+          catchError(err, 'NBA_client.getBoxScoreFromDate()');
+        }
 
         gamePlayByPlayData = updatedPlayByPlayData;
         gameBoxScoreData = updatedGameBoxScoreData;
