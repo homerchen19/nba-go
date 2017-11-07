@@ -4,6 +4,7 @@ import program from 'commander';
 import didYouMean from 'didyoumean';
 import isAsyncSupported from 'is-async-supported';
 import chalk from 'chalk';
+import updateNotifier from 'update-notifier';
 
 import nbaGo from './command';
 import { error, bold, nbaRed, neonGreen } from './utils/log';
@@ -13,6 +14,12 @@ import pkg from '../package.json';
 if (!isAsyncSupported()) {
   require('async-to-gen/register');
 }
+
+(async () => {
+  await updateNotifier({
+    pkg,
+  }).notify({ defer: false });
+})();
 
 program.version(pkg.version);
 
