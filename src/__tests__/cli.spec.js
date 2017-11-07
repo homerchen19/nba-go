@@ -1,3 +1,5 @@
+jest.mock('update-notifier');
+
 jest.mock('../command');
 jest.mock('../utils/log');
 
@@ -5,8 +7,11 @@ const _exit = process.exit;
 
 let log;
 let nbaGo;
+let updateNotifier;
 
 const setup = () => {
+  updateNotifier = require('update-notifier');
+  updateNotifier.mockReturnValue({ notify: jest.fn() });
   log = require('../utils/log');
   log.error = jest.fn();
   log.bold = jest.fn(s => s);
@@ -22,6 +27,13 @@ describe('cli', () => {
   afterEach(() => {
     process.exit = _exit;
     jest.resetModules();
+  });
+
+  it('should call updateNotifier at first', () => {
+    process.argv = ['node', 'bin/cli.js', 'games'];
+    setup();
+
+    expect(updateNotifier).toBeCalled();
   });
 
   it('should call error when the command not matched', () => {

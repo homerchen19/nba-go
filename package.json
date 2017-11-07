@@ -62,6 +62,7 @@
     "p-map": "^1.2.0",
     "path": "^0.12.7",
     "stringz": "^0.2.3",
+    "update-notifier": "^2.3.0",
     "wide-align": "^1.1.2"
   },
   "devDependencies": {
