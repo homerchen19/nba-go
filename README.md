@@ -23,6 +23,20 @@ All data comes from [stats.nba.com](http://stats.nba.com/) APIs.
 $ npm install -g nba-go
 ```
 
+Or in a Docker Container:
+
+```
+$ docker build -t nba-go:latest .
+$ docker run -it nba-go:latest
+```
+
+By default, the docker container will run `nba-go game -t`, but you can
+override this command at run time. For example:
+
+```
+$ docker run -it nba-go:latest nba-go player Curry -i
+```
+
 ## Usage
 
 `nba-go` provides two main commands.  
