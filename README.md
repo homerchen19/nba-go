@@ -137,7 +137,7 @@ Get player's basic information.
 ```
 $ nba-go player Curry -p
 ```
-![player -p gif](https://user-images.githubusercontent.com/12113222/32416909-03e46ea8-c28c-11e7-84af-4b40895d2054.gif)
+![player -p gif](https://user-images.githubusercontent.com/12113222/32500032-234e8fba-c40f-11e7-87c0-6e42a66a52dc.gif)
 
 #### Mixed them all
 Get all data at the same time.
