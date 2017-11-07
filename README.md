@@ -13,7 +13,7 @@
 > The finest NBA CLI.  
 
 Watch NBA live play-by-play, game preview, box score and player information on your console.  
-Best CLI tool for who is both a **NBA fans** and **Engineer**.
+Best CLI tool for those who are both **NBA fans** and **Engineers**.
 
 All data comes from [stats.nba.com](http://stats.nba.com/) APIs.
 
