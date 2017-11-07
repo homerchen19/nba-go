@@ -78,7 +78,7 @@ const getPlayByPlayRows = allPlays => {
       ? overtimePeriod
       : period} ${clock !== '' ? clock : '12:00'}`;
 
-    const sroceboard = `${right(
+    const scoreboard = `${right(
       home_score > get(allPlays[i + 1], 'home_score')
         ? bold(neonGreen(home_score))
         : bold(home_score),
@@ -97,7 +97,7 @@ const getPlayByPlayRows = allPlays => {
       3
     )} ${eventDescription.replace(/\[.*\]/i, '')}\n`;
 
-    playByPlayRows.push([time, sroceboard, description].join(' │ '));
+    playByPlayRows.push([time, scoreboard, description].join(' │ '));
   }
 
   return playByPlayRows.join('\n');
