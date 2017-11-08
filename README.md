@@ -19,6 +19,8 @@ All data comes from [stats.nba.com](http://stats.nba.com/) APIs.
 
 ## Install
 
+In order to use nba-go, make sure that you have [Node](https://nodejs.org/) version 6.0.0 or higher.
+
 ```
 $ npm install -g nba-go
 ```
