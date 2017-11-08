@@ -146,6 +146,18 @@ $ nba-go player Curry -i -r -p
 ```
 ![player mixed gif](https://user-images.githubusercontent.com/12113222/32416928-5054d48a-c28c-11e7-84d3-bc17681e1a5e.gif)
 
+## Development
+
+It's simple to run `nba-go` on your local computer.  
+The following is step-by-step instruction.
+
+```
+$ git clone https://github.com/xxhomey19/nba-go.git
+$ cd nba-go
+$ yarn
+$ NODE_ENV=development node bin/cli.js <command>
+```
+
 ## Related repo:
  - [watch-nba](https://github.com/chentsulin/watch-nba)
  - [nba-color](https://github.com/xxhomey19/nba-color)
