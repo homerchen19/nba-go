@@ -11,7 +11,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "npm run clean && babel src -d lib --copy-files --ignore '**/*.spec.js'",
+    "build": "npm run clean && babel src -d lib --copy-files --ignore '**/*.spec.js' -s",
     "clean": "rimraf lib",
     "precommit": "lint-staged",
     "lint": "eslint src",
