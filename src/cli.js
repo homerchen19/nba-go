@@ -26,7 +26,7 @@ program.version(pkg.version);
 program
   .command('player <name>')
   .alias('p')
-  .option('-i, --info', "Check the player's basic iniformation")
+  .option('-i, --info', "Check the player's basic information")
   .option('-r, --regular', "Check the player's career regular season data")
   .option('-p, --playoffs', "Check the player's career playoffs data")
   .on('--help', () => {
@@ -47,7 +47,7 @@ program
       )} => Show both Seth Curry's and Stephen Curry's regular season data.`
     );
     console.log('');
-    console.log(`  For more detailed information, please check github page: ${neonGreen(
+    console.log(`  For more detailed information, please check the GitHub page: ${neonGreen(
       'https://github.com/xxhomey19/nba-go#player'
     )}
   `);
@@ -88,7 +88,7 @@ program
       )}            => Show today's game schedule.`
     );
     console.log('');
-    console.log(`  For more detailed information, please check github page: ${neonGreen(
+    console.log(`  For more detailed information, please check the GitHub page: ${neonGreen(
       'https://github.com/xxhomey19/nba-go#game'
     )}
   `);
@@ -122,7 +122,7 @@ program.on('--help', () => {
   );
   console.log('');
   console.log(
-    `  For more detailed information please check github page: ${neonGreen(
+    `  For more detailed information please check the GitHub page: ${neonGreen(
       'https://github.com/xxhomey19/nba-go'
     )}`
   );

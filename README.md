@@ -19,6 +19,8 @@ All data comes from [stats.nba.com](http://stats.nba.com/) APIs.
 
 ## Install
 
+In order to use nba-go, make sure that you have [Node](https://nodejs.org/) version 6.0.0 or higher.
+
 ```
 $ npm install -g nba-go
 ```
@@ -36,7 +38,7 @@ There are two things to do.
 1. [**Check schedule**](#check-schedule).  
 2. Choose one game which you want to watch.  
 
-Depends on the status of the game you chose, it shows different result for you. There are three kinds of status may happened.  
+Depending on the status of the game you chose, a different result will be shown. There are three kinds of statuses that may be displayed.
 
 Status              | Example | Description
 ------------------- | ------- |-----------
@@ -47,7 +49,7 @@ Status              | Example | Description
 
 
 #### Check schedule
-In order to show the schedule on some day. `nba-go` provides the command `nba-go game` with some options.  
+In order to show the schedule on some days, `nba-go` provides the command `nba-go game` with some options.
 
 #### Options
 
