@@ -3354,7 +3354,7 @@ nba-client-template@3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/nba-client-template/-/nba-client-template-3.4.0.tgz#b3ff099d6d16fc16d87a86263b741a81f6c93d27"
 
-nba-color@^1.0.0:
+nba-color@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/nba-color/-/nba-color-1.2.2.tgz#037c48d129a84a0a0fa7e92e24869bc2eca11b94"
   dependencies:
