@@ -33,10 +33,18 @@ $ docker run -it nba-go:latest
 ```
 
 By default, the docker container will run `nba-go game -t`, but you can
-override this command at run time. For example:
+override this command at run time.  
+For example:
 
 ```
 $ docker run -it nba-go:latest nba-go player Curry -i
+```
+
+Or download the latest version [pkg](https://github.com/zeit/pkg) binaries in [releases](https://github.com/xxhomey19/nba-go/releases). It can be run on Linux, macOs and Windows.  
+For example:
+
+```
+./nba-go-macos game -h
 ```
 
 ## Usage
