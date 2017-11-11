@@ -145,5 +145,12 @@ describe('cli', () => {
       expect(nbaGo.player.mock.calls[0][0]).toBe('Curry');
       expect(nbaGo.player.mock.calls[0][1].info).toBe(true);
     });
+
+    it('should call nbaGo with option to view specific team', () => {
+      process.argv = ['node', 'bin/cli.js', 'game', '--filter', 'team=Pistons'];
+      setup();
+
+      expect(nbaGo.game.mock.calls[0][0].filter).toBe('team=Pistons');
+    });
   });
 });

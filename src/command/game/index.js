@@ -13,7 +13,7 @@ import emoji from 'node-emoji';
 import delay from 'delay';
 import ora from 'ora';
 
-import schedule from './schedule';
+import chooseGameFromSchedule from './schedule';
 import preview from './preview';
 import scoreboard from './scoreboard';
 import boxScore from './boxScore';
@@ -90,9 +90,24 @@ const game = async option => {
     catchError(err, 'NBA_client.getGamesFromDate()');
   }
 
-  const { game: { homeTeam, visitorTeam, gameData } } = await schedule(
-    gamesData
-  );
+  if (option.filter && option.filter.split('='[0] === 'team')) {
+    // TODO: Add more robust filtering but use team as proof of concept
+    const components = option.filter.split('=');
+    const team = components[1];
+    const potentialGames = gamesData.filter(
+      data =>
+        `${data.home.city} ${data.home.nickname}`.indexOf(team) !== -1 ||
+        `${data.visitor.city} ${data.visitor.nickname}`.indexOf(team) !== -1
+    );
+
+    // Default to all games if filter did not apply ? Or just show error
+    gamesData = potentialGames.length ? potentialGames : gamesData;
+  }
+
+  // Go directly to game ? Or choose potential games from schedule in the case of multiple possibilities
+  const {
+    game: { homeTeam, visitorTeam, gameData },
+  } = await chooseGameFromSchedule(gamesData);
 
   try {
     const {
