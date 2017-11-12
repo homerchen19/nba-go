@@ -100,8 +100,9 @@ const game = async option => {
         `${data.visitor.city} ${data.visitor.nickname}`.indexOf(team) !== -1
     );
 
-    // Default to all games if filter did not apply ? Or just show error
-    gamesData = potentialGames.length ? potentialGames : gamesData;
+    if (!potentialGames.length)
+      error(`Can't find any teams that match ${team}`);
+    else gamesData = potentialGames;
   }
 
   // Go directly to game ? Or choose potential games from schedule in the case of multiple possibilities
