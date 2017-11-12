@@ -29,9 +29,9 @@ const info = playerInfo => {
   } = playerInfo;
 
   const teamMainColor = getMainColor(teamAbbreviation);
-  const playerName = chalk`{bold.white.bgHex('${teamMainColor
-    ? teamMainColor.hex
-    : '#000'}') ${teamAbbreviation}} {bold.white #${jersey} ${displayFirstLast}}`;
+  const playerName = chalk`{bold.white.bgHex('${
+    teamMainColor ? teamMainColor.hex : '#000'
+  }') ${teamAbbreviation}} {bold.white #${jersey} ${displayFirstLast}}`;
 
   const draft =
     draftYear !== 'Undrafted'
