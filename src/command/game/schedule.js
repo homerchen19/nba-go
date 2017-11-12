@@ -131,3 +131,4 @@ const chooseGameFromSchedule = async gamesData => {
 };
 
 export default chooseGameFromSchedule;
+export { getTeamInfo };

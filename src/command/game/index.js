@@ -13,7 +13,7 @@ import emoji from 'node-emoji';
 import delay from 'delay';
 import ora from 'ora';
 
-import chooseGameFromSchedule from './schedule';
+import chooseGameFromSchedule, { getTeamInfo } from './schedule';
 import preview from './preview';
 import scoreboard from './scoreboard';
 import boxScore from './boxScore';
@@ -53,6 +53,29 @@ const getSeason = date => {
   }
 };
 
+const getGameWithOptionalFilter = async (games, filter) => {
+  if (filter && filter.split('=')[0] === 'team') {
+    // TODO: Add more robust filtering but use team as proof of concept
+    const components = filter.split('=');
+    const team = components[1];
+    const potentialGames = games.filter(
+      data =>
+        `${data.home.city} ${data.home.nickname}`.indexOf(team) !== -1 ||
+        `${data.visitor.city} ${data.visitor.nickname}`.indexOf(team) !== -1
+    );
+
+    if (!potentialGames.length)
+      error(`Can't find any teams that match ${team}`);
+    else if (potentialGames.length === 1) {
+      const homeTeam = await getTeamInfo(potentialGames[0].home);
+      const visitorTeam = await getTeamInfo(potentialGames[0].visitor);
+      return { game: { gameData: potentialGames[0], homeTeam, visitorTeam } };
+    } else return chooseGameFromSchedule(potentialGames);
+  }
+
+  return chooseGameFromSchedule(games);
+};
+
 const game = async option => {
   let _date;
   let gamesData;
@@ -90,25 +113,9 @@ const game = async option => {
     catchError(err, 'NBA_client.getGamesFromDate()');
   }
 
-  if (option.filter && option.filter.split('='[0] === 'team')) {
-    // TODO: Add more robust filtering but use team as proof of concept
-    const components = option.filter.split('=');
-    const team = components[1];
-    const potentialGames = gamesData.filter(
-      data =>
-        `${data.home.city} ${data.home.nickname}`.indexOf(team) !== -1 ||
-        `${data.visitor.city} ${data.visitor.nickname}`.indexOf(team) !== -1
-    );
-
-    if (!potentialGames.length)
-      error(`Can't find any teams that match ${team}`);
-    else gamesData = potentialGames;
-  }
-
-  // Go directly to game ? Or choose potential games from schedule in the case of multiple possibilities
   const {
     game: { homeTeam, visitorTeam, gameData },
-  } = await chooseGameFromSchedule(gamesData);
+  } = await getGameWithOptionalFilter(gamesData, option.filter);
 
   try {
     const {
