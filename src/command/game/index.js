@@ -57,11 +57,15 @@ const getGameWithOptionalFilter = async (games, filter) => {
   if (filter && filter.split('=')[0] === 'team') {
     // TODO: Add more robust filtering but use team as proof of concept
     const components = filter.split('=');
-    const team = components[1];
+    const team = components[1].toLowerCase();
     const potentialGames = games.filter(
       data =>
-        `${data.home.city} ${data.home.nickname}`.indexOf(team) !== -1 ||
-        `${data.visitor.city} ${data.visitor.nickname}`.indexOf(team) !== -1
+        `${data.home.city.toLowerCase()} ${data.home.nickname.toLowerCase()}`.indexOf(
+          team
+        ) !== -1 ||
+        `${data.visitor.city.toLowerCase()} ${data.visitor.nickname.toLowerCase()}`.indexOf(
+          team
+        ) !== -1
     );
 
     if (!potentialGames.length)
