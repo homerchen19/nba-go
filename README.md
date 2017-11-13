@@ -132,10 +132,12 @@ Check two teams' detailed scoreboard and box score.
 
 #### Filter
 
+Filter results to quickly jump to the info you care about
+
 #### Options
 ##### `-f` or `--filter`
 
-Currently supports filtering the results by team to quickly jump to a game
+Currently only supports filtering the results by team but more options on the way
 
 #### `nba-go game --filter team=Detroit`
 
