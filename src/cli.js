@@ -149,4 +149,6 @@ program.command('*').action(command => {
   process.exit(1);
 });
 
+if (process.argv.length === 2) program.help();
+
 program.parse(process.argv);
