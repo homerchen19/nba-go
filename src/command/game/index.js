@@ -58,6 +58,7 @@ const game = async option => {
   let gamesData;
   let gameBoxScoreData;
   let seasonMetaData;
+  const off_t_est = 18000000; // This is the difference (five hours), in milliseconds, between UTC and EST.
 
   if (option.date) {
     if (isValid(new Date(option.date))) {
@@ -77,6 +78,7 @@ const game = async option => {
     process.exit(1);
   }
 
+  _date -= off_t_est; // Ensure the date used is Eastern Time.
   getSeason(_date);
 
   cfontsDate(_date);
