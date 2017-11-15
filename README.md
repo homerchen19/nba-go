@@ -139,7 +139,9 @@ Filter results to quickly jump to the info you care about
 
 Currently only supports filtering the results by team but more options on the way
 
-#### `nba-go game --filter team=Detroit`
+```
+nba-go game --filter team=Detroit
+```
 
 ### Player
 
