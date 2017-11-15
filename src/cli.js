@@ -66,6 +66,7 @@ program
   .option('-y, --yesterday', "Watch yesterday's games")
   .option('-t, --today', "Watch today's games")
   .option('-T, --tomorrow', "Watch tomorrow's games")
+  .option('-f, --filter <filter>', 'Filter game choices to watch')
   .on('--help', () => {
     console.log('');
     console.log('  Watch NBA live play-by-play, game preview and box score.');

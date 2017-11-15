@@ -13,7 +13,7 @@ import emoji from 'node-emoji';
 import delay from 'delay';
 import ora from 'ora';
 
-import schedule from './schedule';
+import chooseGameFromSchedule, { getTeamInfo } from './schedule';
 import preview from './preview';
 import scoreboard from './scoreboard';
 import boxScore from './boxScore';
@@ -53,6 +53,33 @@ const getSeason = date => {
   }
 };
 
+const getGameWithOptionalFilter = async (games, filter) => {
+  if (filter && filter.split('=')[0] === 'team') {
+    // TODO: Add more robust filtering but use team as proof of concept
+    const components = filter.split('=');
+    const team = components[1].toLowerCase();
+    const potentialGames = games.filter(
+      data =>
+        `${data.home.city.toLowerCase()} ${data.home.nickname.toLowerCase()}`.indexOf(
+          team
+        ) !== -1 ||
+        `${data.visitor.city.toLowerCase()} ${data.visitor.nickname.toLowerCase()}`.indexOf(
+          team
+        ) !== -1
+    );
+
+    if (!potentialGames.length)
+      error(`Can't find any teams that match ${team}`);
+    else if (potentialGames.length === 1) {
+      const homeTeam = await getTeamInfo(potentialGames[0].home);
+      const visitorTeam = await getTeamInfo(potentialGames[0].visitor);
+      return { game: { gameData: potentialGames[0], homeTeam, visitorTeam } };
+    } else return chooseGameFromSchedule(potentialGames);
+  }
+
+  return chooseGameFromSchedule(games);
+};
+
 const game = async option => {
   let _date;
   let gamesData;
@@ -90,9 +117,9 @@ const game = async option => {
     catchError(err, 'NBA_client.getGamesFromDate()');
   }
 
-  const { game: { homeTeam, visitorTeam, gameData } } = await schedule(
-    gamesData
-  );
+  const {
+    game: { homeTeam, visitorTeam, gameData },
+  } = await getGameWithOptionalFilter(gamesData, option.filter);
 
   try {
     const {

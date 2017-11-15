@@ -94,9 +94,9 @@ const player = async (playerName, option) => {
 
         if (careerTotalsPostSeason.length === 0) {
           console.log(
-            `Sorry, ${_player.firstName} ${_player.lastName} doesn't have any playoffs data ${emoji.get(
-              'confused'
-            )}`
+            `Sorry, ${_player.firstName} ${
+              _player.lastName
+            } doesn't have any playoffs data ${emoji.get('confused')}`
           );
         } else {
           commonPlayerInfo[0].nowTeamAbbreviation =

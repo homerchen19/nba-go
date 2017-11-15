@@ -17,9 +17,11 @@ const seasonStats = ({
 }) => {
   const nowTeamMainColor = getMainColor(nowTeamAbbreviation);
   const seasonTable = table.basicTable();
-  const playerName = chalk`{bold.white.bgHex('${nowTeamMainColor
-    ? nowTeamMainColor.hex
-    : '#000'}') ${nowTeamAbbreviation}} {bold.white #${jersey} ${displayFirstLast} │ ${seasonTtpe}}`;
+  const playerName = chalk`{bold.white.bgHex('${
+    nowTeamMainColor ? nowTeamMainColor.hex : '#000'
+  }') ${nowTeamAbbreviation}} {bold.white #${jersey} ${displayFirstLast} │ ${
+    seasonTtpe
+  }}`;
   seasonTable.push([{ colSpan: 14, content: playerName, hAlign: 'center' }]);
   seasonTable.push(
     alignCenter([
@@ -62,9 +64,9 @@ const seasonStats = ({
     seasonTable.push(
       alignCenter([
         bold(seasonId),
-        chalk`{bold.white.bgHex('${teamMainColor
-          ? teamMainColor.hex
-          : '#000'}') ${teamAbbreviation}}`,
+        chalk`{bold.white.bgHex('${
+          teamMainColor ? teamMainColor.hex : '#000'
+        }') ${teamAbbreviation}}`,
         playerAge,
         gp,
         min,

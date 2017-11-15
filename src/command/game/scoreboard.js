@@ -30,8 +30,9 @@ const teamGameLeaders = (homeTeam, visitorTeam, field) =>
     {
       colSpan: 3,
       content: bold(
-        `${homeTeam.getGameLeaders(field).leader[0]
-          .FirstName} ${homeTeam.getGameLeaders(field).leader[0].LastName}`
+        `${homeTeam.getGameLeaders(field).leader[0].FirstName} ${
+          homeTeam.getGameLeaders(field).leader[0].LastName
+        }`
       ),
       hAlign: 'right',
     },
@@ -45,8 +46,9 @@ const teamGameLeaders = (homeTeam, visitorTeam, field) =>
     {
       colSpan: 3,
       content: bold(
-        `${visitorTeam.getGameLeaders(field).leader[0]
-          .FirstName} ${visitorTeam.getGameLeaders(field).leader[0].LastName}`
+        `${visitorTeam.getGameLeaders(field).leader[0].FirstName} ${
+          visitorTeam.getGameLeaders(field).leader[0].LastName
+        }`
       ),
       hAlign: 'left',
     },
@@ -184,10 +186,9 @@ const scoreboard = (
       {
         colSpan: 6,
         content: bold(
-          `${emoji.get('calendar')}  ${format(
-            date,
-            'YYYY/MM/DD'
-          )} ${formatedTime}`
+          `${emoji.get('calendar')}  ${format(date, 'YYYY/MM/DD')} ${
+            formatedTime
+          }`
         ),
         hAlign: 'center',
       },

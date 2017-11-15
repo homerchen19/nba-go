@@ -130,6 +130,18 @@ Check two teams' detailed scoreboard and box score.
 
 ![final](https://user-images.githubusercontent.com/12113222/32436783-1e7ad7b8-c320-11e7-97af-29d95732581c.gif)
 
+#### Filter
+
+Filter results to quickly jump to the info you care about
+
+#### Options
+##### `-f` or `--filter`
+
+Currently only supports filtering the results by team but more options on the way
+
+```
+nba-go game --filter team=Detroit
+```
 
 ### Player
 

@@ -74,9 +74,9 @@ const getPlayByPlayRows = allPlays => {
     } = allPlays[i];
 
     const overtimePeriod = getOvertimePeriod(period);
-    const time = `${+overtimePeriod > 1 ? 'OT' : 'Q'}${+overtimePeriod > 1
-      ? overtimePeriod
-      : period} ${clock !== '' ? clock : '12:00'}`;
+    const time = `${+overtimePeriod > 1 ? 'OT' : 'Q'}${
+      +overtimePeriod > 1 ? overtimePeriod : period
+    } ${clock !== '' ? clock : '12:00'}`;
 
     const scoreboard = `${right(
       home_score > get(allPlays[i + 1], 'home_score')
@@ -181,11 +181,9 @@ const live = (
     const overtimePeriod = getOvertimePeriod(latestPeriod);
     timeText.setContent(
       bold(
-        `${emoji.get('stopwatch')}  ${+overtimePeriod > 1
-          ? 'OT'
-          : 'Q'}${+overtimePeriod > 1
-          ? overtimePeriod
-          : latestPeriod} ${latestClock}`
+        `${emoji.get('stopwatch')}  ${+overtimePeriod > 1 ? 'OT' : 'Q'}${
+          +overtimePeriod > 1 ? overtimePeriod : latestPeriod
+        } ${latestClock}`
       )
     );
   }

@@ -40,10 +40,9 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime) => {
       ? visitorTeam.getWinnerName('right')
       : visitorTeam.getName({ color: true })
   );
-  const match = `${homeTeamName}${center(
-    emoji.get('basketball'),
-    8
-  )}${visitorTeamName}`;
+  const match = `${homeTeamName}${center(emoji.get('basketball'), 8)}${
+    visitorTeamName
+  }`;
   const homeTeamScore =
     winner === 'home'
       ? right(bold(neonGreen(homeTeam.getScore())), 4)
@@ -59,7 +58,21 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime) => {
   )}│`;
 };
 
-const schedule = async gamesData => {
+const getTeamInfo = async (team, seasonId) => {
+  const { teamInfoCommon: teamInfo } = await NBA.stats.teamInfoCommon({
+    TeamID: team.id,
+    Season: seasonId,
+  });
+
+  return new Team({
+    ...teamInfo[0],
+    score: team.score,
+    linescores: team.linescores,
+    isHomeTeam: true,
+  });
+};
+
+const chooseGameFromSchedule = async gamesData => {
   const spinner = ora('Loading Game Schedule').start();
   const header = `│ ${padHomeTeamName('Home')}${center(
     emoji.get('basketball'),
@@ -89,31 +102,8 @@ const schedule = async gamesData => {
     async (gameData, index) => {
       const { home, visitor, period_time } = gameData;
 
-      const {
-        teamInfoCommon: homeTeamInfoCommon,
-      } = await NBA.stats.teamInfoCommon({
-        TeamID: home.id,
-        Season: process.env.season,
-      });
-      const {
-        teamInfoCommon: visitorTeamInfoCommon,
-      } = await NBA.stats.teamInfoCommon({
-        TeamID: visitor.id,
-        Season: process.env.season,
-      });
-
-      const homeTeam = new Team({
-        ...homeTeamInfoCommon[0],
-        score: home.score,
-        linescores: home.linescores,
-        isHomeTeam: true,
-      });
-      const visitorTeam = new Team({
-        ...visitorTeamInfoCommon[0],
-        score: visitor.score,
-        linescores: visitor.linescores,
-        isHomeTeam: false,
-      });
+      const homeTeam = await getTeamInfo(home, process.env.season);
+      const visitorTeam = await getTeamInfo(visitor, process.env.season);
 
       questions[0].choices.push({
         name: createGameChoice(homeTeam, visitorTeam, period_time),
@@ -140,4 +130,5 @@ const schedule = async gamesData => {
   return answer;
 };
 
-export default schedule;
+export default chooseGameFromSchedule;
+export { getTeamInfo };
