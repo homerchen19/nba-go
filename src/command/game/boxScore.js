@@ -1,11 +1,16 @@
 import { basicTable } from '../../utils/table';
-import { nbaRed, bold, neonGreen } from '../../utils/log';
+import { bold, neonGreen } from '../../utils/log';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'left', vAlign: 'center' }));
 
 const checkOverStandard = (record, standard) =>
-  +record >= standard ? nbaRed(record) : record;
+  +record >= standard ? neonGreen(record) : record;
+
+const checkGameHigh = (players, record, recordVal) => {
+  const recordArr = players.map(player => Number.parseInt(player[record], 10));
+  return recordVal >= Math.max(...recordArr) ? neonGreen(recordVal) : recordVal;
+};
 
 const createTeamBoxScore = team => {
   const players = team.getPlayers();
@@ -23,7 +28,7 @@ const createTeamBoxScore = team => {
     ],
     alignCenter([
       bold('PLAYER'),
-      bold(''),
+      bold('POS'),
       bold('MIN'),
       bold('FG'),
       bold('3FG'),
@@ -69,21 +74,21 @@ const createTeamBoxScore = team => {
     boxScoreTable.push(
       alignCenter([
         bold(`${first_name} ${last_name}`),
-        position_short,
-        checkOverStandard(minutes, 35),
+        bold(position_short),
+        checkGameHigh(players, 'minutes', minutes),
         `${field_goals_made}-${field_goals_attempted}`,
         `${three_pointers_made}-${three_pointers_attempted}`,
         `${free_throws_made}-${free_throws_attempted}`,
-        checkOverStandard(plus_minus, 15),
-        checkOverStandard(rebounds_offensive, 10),
-        checkOverStandard(rebounds_defensive, 10),
+        checkGameHigh(players, 'plus_minus', plus_minus),
+        checkGameHigh(players, 'rebounds_offensive', rebounds_offensive),
+        checkGameHigh(players, 'rebounds_defensive', rebounds_defensive),
         checkOverStandard(totalRebounds, 10),
-        checkOverStandard(assists, 10),
-        checkOverStandard(steals, 5),
-        checkOverStandard(blocks, 5),
-        checkOverStandard(turnovers, 5),
-        checkOverStandard(fouls, 6),
-        checkOverStandard(points, 20),
+        checkGameHigh(players, 'assists', assists),
+        checkGameHigh(players, 'steals', steals),
+        checkGameHigh(players, 'blocks', blocks),
+        checkGameHigh(players, 'turnovers', turnovers),
+        checkGameHigh(players, 'fouls', fouls),
+        checkGameHigh(players, 'points', points),
       ])
     );
   });
