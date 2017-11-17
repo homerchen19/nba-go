@@ -53,7 +53,6 @@
     "didyoumean": "^1.2.1",
     "inquirer": "^4.0.0",
     "is-async-supported": "^1.2.0",
-    "lodash": "^4.17.4",
     "log-update": "^2.2.0",
     "nba": "^4.0.0",
     "nba-color": "^1.2.2",
@@ -62,6 +61,7 @@
     "ora": "^1.3.0",
     "p-map": "^1.2.0",
     "path": "^0.12.7",
+    "ramda": "^0.25.0",
     "stringz": "^0.2.3",
     "update-notifier": "^2.3.0",
     "wide-align": "^1.1.2"
@@ -113,7 +113,9 @@
     ],
     "assets": "lib/data/fonts/*",
     "targets": [
-      "node8"
+      "node8-macos",
+      "node8-linux",
+      "node8-win"
     ]
   }
 }
