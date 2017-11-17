@@ -73,49 +73,26 @@ const createTeamBoxScore = team => {
 
     const totalRebounds = +rebounds_offensive + +rebounds_defensive;
 
-    if (player.plus_minus === '0') {
-      boxScoreTable.push(
-        alignCenter([
-          bold(`${first_name} ${last_name}`),
-          bold(position_short),
-          checkGameHigh(players, 'minutes', minutes, 35),
-          `${field_goals_made}-${field_goals_attempted}`,
-          `${three_pointers_made}-${three_pointers_attempted}`,
-          `${free_throws_made}-${free_throws_attempted}`,
-          checkOverStandard(plus_minus, 15),
-          checkGameHigh(players, 'rebounds_offensive', rebounds_offensive, 10),
-          checkGameHigh(players, 'rebounds_defensive', rebounds_defensive, 10),
-          checkGameHigh(players, 'totalRebounds', totalRebounds, 10),
-          checkGameHigh(players, 'assists', assists, 10),
-          checkGameHigh(players, 'steals', steals, 5),
-          checkGameHigh(players, 'blocks', blocks, 5),
-          checkGameHigh(players, 'turnovers', turnovers, 5),
-          checkGameHigh(players, 'fouls', fouls, 6),
-          checkGameHigh(players, 'points', points, 20),
-        ])
-      );
-    } else {
-      boxScoreTable.push(
-        alignCenter([
-          bold(`${first_name} ${last_name}`),
-          bold(position_short),
-          checkGameHigh(players, 'minutes', minutes, 35),
-          `${field_goals_made}-${field_goals_attempted}`,
-          `${three_pointers_made}-${three_pointers_attempted}`,
-          `${free_throws_made}-${free_throws_attempted}`,
-          checkGameHigh(players, 'plus_minus', plus_minus, 15),
-          checkGameHigh(players, 'rebounds_offensive', rebounds_offensive, 10),
-          checkGameHigh(players, 'rebounds_defensive', rebounds_defensive, 10),
-          checkGameHigh(players, 'totalRebounds', totalRebounds, 10),
-          checkGameHigh(players, 'assists', assists, 10),
-          checkGameHigh(players, 'steals', steals, 5),
-          checkGameHigh(players, 'blocks', blocks, 5),
-          checkGameHigh(players, 'turnovers', turnovers, 5),
-          checkGameHigh(players, 'fouls', fouls, 6),
-          checkGameHigh(players, 'points', points, 20),
-        ])
-      );
-    }
+    boxScoreTable.push(
+      alignCenter([
+        bold(`${first_name} ${last_name}`),
+        bold(position_short),
+        checkGameHigh(players, 'minutes', minutes, 35),
+        `${field_goals_made}-${field_goals_attempted}`,
+        `${three_pointers_made}-${three_pointers_attempted}`,
+        `${free_throws_made}-${free_throws_attempted}`,
+        checkGameHigh(players, 'plus_minus', plus_minus, 15),
+        checkGameHigh(players, 'rebounds_offensive', rebounds_offensive, 10),
+        checkGameHigh(players, 'rebounds_defensive', rebounds_defensive, 10),
+        checkGameHigh(players, 'totalRebounds', totalRebounds, 10),
+        checkGameHigh(players, 'assists', assists, 10),
+        checkGameHigh(players, 'steals', steals, 5),
+        checkGameHigh(players, 'blocks', blocks, 5),
+        checkGameHigh(players, 'turnovers', turnovers, 5),
+        checkGameHigh(players, 'fouls', fouls, 6),
+        checkGameHigh(players, 'points', points, 20),
+      ])
+    );
   });
 
   const {
