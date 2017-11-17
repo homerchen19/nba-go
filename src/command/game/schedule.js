@@ -1,4 +1,3 @@
-import NBA from 'nba';
 import inquirer from 'inquirer';
 import emoji from 'node-emoji';
 import { limit } from 'stringz';
@@ -8,6 +7,7 @@ import ora from 'ora';
 
 import Team from '../Team';
 
+import NBA from '../../utils/nba';
 import { bold, neonGreen } from '../../utils/log';
 
 const MAX_WIDTH = 81;
@@ -59,7 +59,7 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime) => {
 };
 
 const getTeamInfo = async (team, seasonId) => {
-  const { teamInfoCommon: teamInfo } = await NBA.stats.teamInfoCommon({
+  const { teamInfoCommon: teamInfo } = await NBA.teamInfoCommon({
     TeamID: team.id,
     Season: seasonId,
   });

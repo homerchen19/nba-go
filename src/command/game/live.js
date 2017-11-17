@@ -1,6 +1,6 @@
 import { getMainColor } from 'nba-color';
 import { left, right } from 'wide-align';
-import get from 'lodash/get';
+import R from 'ramda';
 import emoji from 'node-emoji';
 
 import { bold, nbaRed, neonGreen, colorTeamName } from '../../utils/log';
@@ -79,12 +79,12 @@ const getPlayByPlayRows = allPlays => {
     } ${clock !== '' ? clock : '12:00'}`;
 
     const scoreboard = `${right(
-      home_score > get(allPlays[i + 1], 'home_score')
+      home_score > R.prop('home_score', allPlays[i + 1])
         ? bold(neonGreen(home_score))
         : bold(home_score),
       3
     )} - ${left(
-      visitor_score > get(allPlays[i + 1], 'visitor_score')
+      visitor_score > R.prop('visitor_score', allPlays[i + 1])
         ? bold(neonGreen(visitor_score))
         : bold(visitor_score),
       3
