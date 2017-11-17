@@ -111,6 +111,9 @@
       "lib/**/*.js",
       "node_modules/blessed/lib/**/*.js"
     ],
-    "assets": "lib/data/fonts/*"
+    "assets": "lib/data/fonts/*",
+    "targets": [
+      "node8"
+    ]
   }
 }
