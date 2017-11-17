@@ -1,15 +1,17 @@
 import { basicTable } from '../../utils/table';
-import { bold, neonGreen } from '../../utils/log';
+import { bold, neonGreen, nbaRed } from '../../utils/log';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'left', vAlign: 'center' }));
 
 const checkOverStandard = (record, standard) =>
-  +record >= standard ? neonGreen(record) : record;
+  +record >= standard ? nbaRed(record) : record;
 
-const checkGameHigh = (players, record, recordVal) => {
+const checkGameHigh = (players, record, recordVal, standard) => {
   const recordArr = players.map(player => Number.parseInt(player[record], 10));
-  return recordVal >= Math.max(...recordArr) ? neonGreen(recordVal) : recordVal;
+  return recordVal >= Math.max(...recordArr)
+    ? neonGreen(recordVal)
+    : checkOverStandard(recordVal, standard);
 };
 
 const createTeamBoxScore = team => {
@@ -71,26 +73,49 @@ const createTeamBoxScore = team => {
 
     const totalRebounds = +rebounds_offensive + +rebounds_defensive;
 
-    boxScoreTable.push(
-      alignCenter([
-        bold(`${first_name} ${last_name}`),
-        bold(position_short),
-        checkGameHigh(players, 'minutes', minutes),
-        `${field_goals_made}-${field_goals_attempted}`,
-        `${three_pointers_made}-${three_pointers_attempted}`,
-        `${free_throws_made}-${free_throws_attempted}`,
-        checkGameHigh(players, 'plus_minus', plus_minus),
-        checkGameHigh(players, 'rebounds_offensive', rebounds_offensive),
-        checkGameHigh(players, 'rebounds_defensive', rebounds_defensive),
-        checkOverStandard(totalRebounds, 10),
-        checkGameHigh(players, 'assists', assists),
-        checkGameHigh(players, 'steals', steals),
-        checkGameHigh(players, 'blocks', blocks),
-        checkGameHigh(players, 'turnovers', turnovers),
-        checkGameHigh(players, 'fouls', fouls),
-        checkGameHigh(players, 'points', points),
-      ])
-    );
+    if (player.plus_minus === '0') {
+      boxScoreTable.push(
+        alignCenter([
+          bold(`${first_name} ${last_name}`),
+          bold(position_short),
+          checkGameHigh(players, 'minutes', minutes, 35),
+          `${field_goals_made}-${field_goals_attempted}`,
+          `${three_pointers_made}-${three_pointers_attempted}`,
+          `${free_throws_made}-${free_throws_attempted}`,
+          checkOverStandard(plus_minus, 15),
+          checkGameHigh(players, 'rebounds_offensive', rebounds_offensive, 10),
+          checkGameHigh(players, 'rebounds_defensive', rebounds_defensive, 10),
+          checkGameHigh(players, 'totalRebounds', totalRebounds, 10),
+          checkGameHigh(players, 'assists', assists, 10),
+          checkGameHigh(players, 'steals', steals, 5),
+          checkGameHigh(players, 'blocks', blocks, 5),
+          checkGameHigh(players, 'turnovers', turnovers, 5),
+          checkGameHigh(players, 'fouls', fouls, 6),
+          checkGameHigh(players, 'points', points, 20),
+        ])
+      );
+    } else {
+      boxScoreTable.push(
+        alignCenter([
+          bold(`${first_name} ${last_name}`),
+          bold(position_short),
+          checkGameHigh(players, 'minutes', minutes, 35),
+          `${field_goals_made}-${field_goals_attempted}`,
+          `${three_pointers_made}-${three_pointers_attempted}`,
+          `${free_throws_made}-${free_throws_attempted}`,
+          checkGameHigh(players, 'plus_minus', plus_minus, 15),
+          checkGameHigh(players, 'rebounds_offensive', rebounds_offensive, 10),
+          checkGameHigh(players, 'rebounds_defensive', rebounds_defensive, 10),
+          checkGameHigh(players, 'totalRebounds', totalRebounds, 10),
+          checkGameHigh(players, 'assists', assists, 10),
+          checkGameHigh(players, 'steals', steals, 5),
+          checkGameHigh(players, 'blocks', blocks, 5),
+          checkGameHigh(players, 'turnovers', turnovers, 5),
+          checkGameHigh(players, 'fouls', fouls, 6),
+          checkGameHigh(players, 'points', points, 20),
+        ])
+      );
+    }
   });
 
   const {
