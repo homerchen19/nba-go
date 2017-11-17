@@ -1,7 +1,5 @@
 /* eslint-disable no-await-in-loop, no-constant-condition */
 
-import NBA from 'nba';
-import NBA_client from 'nba-stats-client';
 import parse from 'date-fns/parse';
 import addDays from 'date-fns/add_days';
 import subDays from 'date-fns/sub_days';
@@ -19,6 +17,7 @@ import scoreboard from './scoreboard';
 import boxScore from './boxScore';
 import live from './live';
 
+import NBA from '../../utils/nba';
 import { error, bold } from '../../utils/log';
 import { cfontsDate } from '../../utils/cfonts';
 import getBlessed from '../../utils/blessed';
@@ -111,10 +110,10 @@ const game = async option => {
   try {
     const {
       sports_content: { games: { game: _gamesData } },
-    } = await NBA_client.getGamesFromDate(new Date(_date));
+    } = await NBA.getGamesFromDate(new Date(_date));
     gamesData = _gamesData;
   } catch (err) {
-    catchError(err, 'NBA_client.getGamesFromDate()');
+    catchError(err, 'NBA.getGamesFromDate()');
   }
 
   const {
@@ -127,12 +126,12 @@ const game = async option => {
         game: _gameBoxScoreData,
         sports_meta: { season_meta: _seasonMetaData },
       },
-    } = await NBA_client.getBoxScoreFromDate(new Date(_date), gameData.id);
+    } = await NBA.getBoxScoreFromDate(new Date(_date), gameData.id);
 
     gameBoxScoreData = _gameBoxScoreData;
     seasonMetaData = _seasonMetaData;
   } catch (err) {
-    catchError(err, 'NBA_client.getBoxScoreFromDate()');
+    catchError(err, 'NBA.getBoxScoreFromDate()');
   }
 
   const { home, visitor } = gameBoxScoreData;
@@ -170,13 +169,13 @@ const game = async option => {
       try {
         const {
           overallTeamDashboard: [_homeTeamDashboardData],
-        } = await NBA.stats.teamSplits({
+        } = await NBA.teamSplits({
           Season: process.env.season,
           TeamID: homeTeam.getID(),
         });
         const {
           overallTeamDashboard: [_visitorTeamDashboardData],
-        } = await NBA.stats.teamSplits({
+        } = await NBA.teamSplits({
           Season: process.env.season,
           TeamID: visitorTeam.getID(),
         });
@@ -184,7 +183,7 @@ const game = async option => {
         homeTeamDashboardData = _homeTeamDashboardData;
         visitorTeamDashboardData = _visitorTeamDashboardData;
       } catch (err) {
-        catchError(err, 'NBA.stats.teamSplits()');
+        catchError(err, 'NBA.teamSplits()');
       }
 
       spinner.stop();
@@ -223,27 +222,21 @@ const game = async option => {
         try {
           const {
             sports_content: { game: _updatedPlayByPlayData },
-          } = await NBA_client.getPlayByPlayFromDate(
-            new Date(_date),
-            gameData.id
-          );
+          } = await NBA.getPlayByPlayFromDate(new Date(_date), gameData.id);
 
           updatedPlayByPlayData = _updatedPlayByPlayData;
         } catch (err) {
-          catchError(err, 'NBA_client.getPlayByPlayFromDate()');
+          catchError(err, 'NBA.getPlayByPlayFromDate()');
         }
 
         try {
           const {
             sports_content: { game: _updatedGameBoxScoreData },
-          } = await NBA_client.getBoxScoreFromDate(
-            new Date(_date),
-            gameData.id
-          );
+          } = await NBA.getBoxScoreFromDate(new Date(_date), gameData.id);
 
           updatedGameBoxScoreData = _updatedGameBoxScoreData;
         } catch (err) {
-          catchError(err, 'NBA_client.getBoxScoreFromDate()');
+          catchError(err, 'NBA.getBoxScoreFromDate()');
         }
 
         gamePlayByPlayData = updatedPlayByPlayData;

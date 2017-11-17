@@ -1,10 +1,10 @@
-import NBA from 'nba';
 import pMap from 'p-map';
 import emoji from 'node-emoji';
 
 import playerInfo from './info';
 import seasonStats from './seasonStats';
 
+import NBA from '../../utils/nba';
 import { error } from '../../utils/log';
 
 const catchError = (err, apiName) => {
@@ -32,14 +32,14 @@ const player = async (playerName, option) => {
         const {
           commonPlayerInfo: _commonPlayerInfo,
           playerHeadlineStats: _playerHeadlineStats,
-        } = await NBA.stats.playerInfo({
+        } = await NBA.playerInfo({
           PlayerID: _player.playerId,
         });
 
         commonPlayerInfo = _commonPlayerInfo;
         playerHeadlineStats = _playerHeadlineStats;
       } catch (err) {
-        catchError(err, 'NBA.stats.playerInfo()');
+        catchError(err, 'NBA.playerInfo()');
       }
 
       if (option.info) {
@@ -54,14 +54,14 @@ const player = async (playerName, option) => {
           const {
             seasonTotalsRegularSeason: _seasonTotalsRegularSeason,
             careerTotalsRegularSeason: _careerTotalsRegularSeason,
-          } = await NBA.stats.playerProfile({
+          } = await NBA.playerProfile({
             PlayerID: _player.playerId,
           });
 
           seasonTotalsRegularSeason = _seasonTotalsRegularSeason;
           careerTotalsRegularSeason = _careerTotalsRegularSeason;
         } catch (err) {
-          catchError(err, 'NBA.stats.playerProfile()');
+          catchError(err, 'NBA.playerProfile()');
         }
 
         commonPlayerInfo[0].nowTeamAbbreviation =
@@ -82,14 +82,14 @@ const player = async (playerName, option) => {
           const {
             seasonTotalsPostSeason: _seasonTotalsPostSeason,
             careerTotalsPostSeason: _careerTotalsPostSeason,
-          } = await NBA.stats.playerProfile({
+          } = await NBA.playerProfile({
             PlayerID: _player.playerId,
           });
 
           seasonTotalsPostSeason = _seasonTotalsPostSeason;
           careerTotalsPostSeason = _careerTotalsPostSeason;
         } catch (err) {
-          catchError(err, 'NBA.stats.playerProfile()');
+          catchError(err, 'NBA.playerProfile()');
         }
 
         if (careerTotalsPostSeason.length === 0) {
