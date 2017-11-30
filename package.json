@@ -1,7 +1,17 @@
 {
   "name": "nba-go",
-  "version": "0.2.2",
   "description": "",
+  "author": "xxhomey19",
+  "license": "MIT",
+  "homepage": "https://github.com/xxhomey19/nba-go#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xxhomey19/nba-go.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xxhomey19/nba-go/issues"
+  },
+  "version": "0.2.2",
   "main": "lib/cli.js",
   "bin": {
     "nba-go": "lib/cli.js",
@@ -12,34 +22,17 @@
   ],
   "scripts": {
     "build": "npm run clean && babel src -d lib --copy-files --ignore '**/*.spec.js' -s && npm run pack",
-    "pack": "pkg . --out-path packed",
     "clean": "rimraf lib packed",
     "precommit": "lint-staged",
     "lint": "eslint src",
     "lint:fix": "npm run lint -- --fix",
+    "pack": "pkg . --out-path packed",
+    "prepublishOnly": "npm run build && echo '#!/usr/bin/env node' | cat - lib/cli.js > temp && mv temp lib/cli.js",
     "test": "npm run lint:fix && npm run testonly:cov",
     "testonly": "NODE_ENV=test jest",
     "testonly:cov": "jest --coverage --runInBand --forceExit --no-cache",
-    "testonly:watch": "jest --watch",
-    "prepublishOnly": "npm run build && echo '#!/usr/bin/env node' | cat - lib/cli.js > temp && mv temp lib/cli.js"
+    "testonly:watch": "jest --watch"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xxhomey19/nba-go.git"
-  },
-  "engines": {
-    "node": ">=6.0.0"
-  },
-  "keywords": [
-    "NBA",
-    "cli"
-  ],
-  "author": "xxhomey19",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/xxhomey19/nba-go/issues"
-  },
-  "homepage": "https://github.com/xxhomey19/nba-go#readme",
   "dependencies": {
     "async-to-gen": "^1.3.3",
     "babel-register": "^6.26.0",
@@ -87,13 +80,15 @@
     "lint-staged": "^5.0.0",
     "pkg": "^4.3.0-beta.1",
     "prettier": "^1.8.2",
+    "prettier-package-json": "^1.4.0",
     "rimraf": "^2.6.2"
   },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ]
+  "keywords": [
+    "NBA",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=6.0.0"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -105,6 +100,16 @@
     ],
     "testPathIgnorePatterns": [
       "node_modules/"
+    ]
+  },
+  "lint-staged": {
+    "package.json": [
+      "prettier-package-json --write",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "git add"
     ]
   },
   "pkg": {
