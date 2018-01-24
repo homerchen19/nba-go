@@ -21,7 +21,12 @@ if (!isAsyncSupported()) {
   }).notify({ defer: false });
 })();
 
-program.version(pkg.version);
+program.version(
+  `\n${chalk`{bold.hex('#0069b9') NBA}`} ${nbaRed('GO')} version: ${
+    pkg.version
+  }\n`,
+  '-v, --version'
+);
 
 program
   .command('player <name>')
@@ -134,8 +139,6 @@ program.on('--help', () => {
   );
   console.log('');
 });
-
-program.option('-v --version', pkg.version);
 
 program.command('*').action(command => {
   error(`Unknown command: ${bold(command)}`);

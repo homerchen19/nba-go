@@ -5,17 +5,7 @@ import playerInfo from './info';
 import seasonStats from './seasonStats';
 
 import NBA from '../../utils/nba';
-import { error } from '../../utils/log';
-
-const catchError = (err, apiName) => {
-  error(err);
-  console.log('');
-  error(`Oops, ${apiName} goes wrong.`);
-  error(
-    'Please run nba-go again.\nIf it still does not work, feel free to open an issue on https://github.com/xxhomey19/nba-go/issues'
-  );
-  process.exit(1);
-};
+import catchAPIError from '../../utils/catchAPIError';
 
 const player = async (playerName, option) => {
   await NBA.updatePlayers();
@@ -39,7 +29,7 @@ const player = async (playerName, option) => {
         commonPlayerInfo = _commonPlayerInfo;
         playerHeadlineStats = _playerHeadlineStats;
       } catch (err) {
-        catchError(err, 'NBA.playerInfo()');
+        catchAPIError(err, 'NBA.playerInfo()');
       }
 
       if (option.info) {
@@ -61,7 +51,7 @@ const player = async (playerName, option) => {
           seasonTotalsRegularSeason = _seasonTotalsRegularSeason;
           careerTotalsRegularSeason = _careerTotalsRegularSeason;
         } catch (err) {
-          catchError(err, 'NBA.playerProfile()');
+          catchAPIError(err, 'NBA.playerProfile()');
         }
 
         commonPlayerInfo[0].nowTeamAbbreviation =
@@ -89,7 +79,7 @@ const player = async (playerName, option) => {
           seasonTotalsPostSeason = _seasonTotalsPostSeason;
           careerTotalsPostSeason = _careerTotalsPostSeason;
         } catch (err) {
-          catchError(err, 'NBA.playerProfile()');
+          catchAPIError(err, 'NBA.playerProfile()');
         }
 
         if (careerTotalsPostSeason.length === 0) {

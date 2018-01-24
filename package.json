@@ -47,6 +47,7 @@
     "inquirer": "^4.0.0",
     "is-async-supported": "^1.2.0",
     "log-update": "^2.2.0",
+    "moment-timezone": "^0.5.14",
     "nba": "^4.0.0",
     "nba-color": "^1.2.2",
     "nba-stats-client": "^0.0.4",
