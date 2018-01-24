@@ -21,16 +21,7 @@ import NBA from '../../utils/nba';
 import { error, bold } from '../../utils/log';
 import { cfontsDate } from '../../utils/cfonts';
 import getBlessed from '../../utils/blessed';
-
-const catchError = (err, apiName) => {
-  error(err);
-  console.log('');
-  error(`Oops, ${apiName} goes wrong.`);
-  error(
-    'Please run nba-go again.\nIf it still does not work, feel free to open an issue on https://github.com/xxhomey19/nba-go/issues'
-  );
-  process.exit(1);
-};
+import catchAPIError from '../../utils/catchAPIError';
 
 const getSeason = date => {
   const year = getYear(new Date(date));
@@ -113,7 +104,7 @@ const game = async option => {
     } = await NBA.getGamesFromDate(new Date(_date));
     gamesData = _gamesData;
   } catch (err) {
-    catchError(err, 'NBA.getGamesFromDate()');
+    catchAPIError(err, 'NBA.getGamesFromDate()');
   }
 
   const {
@@ -131,7 +122,7 @@ const game = async option => {
     gameBoxScoreData = _gameBoxScoreData;
     seasonMetaData = _seasonMetaData;
   } catch (err) {
-    catchError(err, 'NBA.getBoxScoreFromDate()');
+    catchAPIError(err, 'NBA.getBoxScoreFromDate()');
   }
 
   const { home, visitor } = gameBoxScoreData;
@@ -183,7 +174,7 @@ const game = async option => {
         homeTeamDashboardData = _homeTeamDashboardData;
         visitorTeamDashboardData = _visitorTeamDashboardData;
       } catch (err) {
-        catchError(err, 'NBA.teamSplits()');
+        catchAPIError(err, 'NBA.teamSplits()');
       }
 
       spinner.stop();
@@ -226,7 +217,7 @@ const game = async option => {
 
           updatedPlayByPlayData = _updatedPlayByPlayData;
         } catch (err) {
-          catchError(err, 'NBA.getPlayByPlayFromDate()');
+          catchAPIError(err, 'NBA.getPlayByPlayFromDate()');
         }
 
         try {
@@ -236,7 +227,7 @@ const game = async option => {
 
           updatedGameBoxScoreData = _updatedGameBoxScoreData;
         } catch (err) {
-          catchError(err, 'NBA.getBoxScoreFromDate()');
+          catchAPIError(err, 'NBA.getBoxScoreFromDate()');
         }
 
         gamePlayByPlayData = updatedPlayByPlayData;
