@@ -1,5 +1,7 @@
 /* eslint-disable no-await-in-loop, no-constant-condition */
 
+import R from 'ramda';
+import moment from 'moment-timezone';
 import parse from 'date-fns/parse';
 import addDays from 'date-fns/add_days';
 import subDays from 'date-fns/sub_days';
@@ -23,9 +25,15 @@ import { cfontsDate } from '../../utils/cfonts';
 import getBlessed from '../../utils/blessed';
 import catchAPIError from '../../utils/catchAPIError';
 
+const getLosAngelesTimezone = date =>
+  moment
+    .tz(date, 'America/Los_Angeles')
+    .startOf('day')
+    .format();
+
 const getSeason = date => {
-  const year = getYear(new Date(date));
-  const month = getMonth(new Date(date));
+  const year = R.compose(getYear, parse)(date);
+  const month = R.compose(getMonth, parse)(date);
 
   if (year < 2012 || (year === 2012 && month < 5)) {
     error(
@@ -41,6 +49,8 @@ const getSeason = date => {
   } else {
     process.env.season = `${year - 1}-${year.toString().slice(-2)}`;
   }
+
+  return date;
 };
 
 const getGameWithOptionalFilter = async (games, filter) => {
@@ -77,8 +87,8 @@ const game = async option => {
   let seasonMetaData;
 
   if (option.date) {
-    if (isValid(new Date(option.date))) {
-      _date = format(parse(option.date), 'YYYY/MM/DD');
+    if (R.compose(isValid, parse)(option.date)) {
+      _date = format(option.date, 'YYYY-MM-DD');
     } else {
       error('Date is invalid');
       process.exit(1);
@@ -94,14 +104,14 @@ const game = async option => {
     process.exit(1);
   }
 
-  getSeason(_date);
+  R.compose(cfontsDate, getSeason)(_date);
 
-  cfontsDate(_date);
+  const LADate = getLosAngelesTimezone(_date);
 
   try {
     const {
       sports_content: { games: { game: _gamesData } },
-    } = await NBA.getGamesFromDate(new Date(_date));
+    } = await NBA.getGamesFromDate(LADate);
     gamesData = _gamesData;
   } catch (err) {
     catchAPIError(err, 'NBA.getGamesFromDate()');
@@ -117,7 +127,7 @@ const game = async option => {
         game: _gameBoxScoreData,
         sports_meta: { season_meta: _seasonMetaData },
       },
-    } = await NBA.getBoxScoreFromDate(new Date(_date), gameData.id);
+    } = await NBA.getBoxScoreFromDate(LADate, gameData.id);
 
     gameBoxScoreData = _gameBoxScoreData;
     seasonMetaData = _seasonMetaData;
@@ -213,7 +223,7 @@ const game = async option => {
         try {
           const {
             sports_content: { game: _updatedPlayByPlayData },
-          } = await NBA.getPlayByPlayFromDate(new Date(_date), gameData.id);
+          } = await NBA.getPlayByPlayFromDate(LADate, gameData.id);
 
           updatedPlayByPlayData = _updatedPlayByPlayData;
         } catch (err) {
@@ -223,7 +233,7 @@ const game = async option => {
         try {
           const {
             sports_content: { game: _updatedGameBoxScoreData },
-          } = await NBA.getBoxScoreFromDate(new Date(_date), gameData.id);
+          } = await NBA.getBoxScoreFromDate(LADate, gameData.id);
 
           updatedGameBoxScoreData = _updatedGameBoxScoreData;
         } catch (err) {
