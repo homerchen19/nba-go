@@ -70,8 +70,8 @@ const getBlessed = (homeTeam, visitorTeam) => {
   });
 
   const homeTeamScoreText = blessed.bigtext({
-    font: path.resolve(__filename, '../../data/fonts/ter-u12n.json'),
-    fontBold: path.resolve(__filename, '../../data/fonts/ter-u12b.json'),
+    font: path.join(__dirname, './fonts/ter-u12n.json'),
+    fontBold: path.join(__dirname, './fonts/ter-u12b.json'),
     top: 2,
     left: '33%-20',
     width: 15,
@@ -108,8 +108,8 @@ const getBlessed = (homeTeam, visitorTeam) => {
   });
 
   const visitorTeamScoreText = blessed.bigtext({
-    font: path.resolve(__filename, '../../data/fonts/ter-u12n.json'),
-    fontBold: path.resolve(__filename, '../../data/fonts/ter-u12n.json'),
+    font: path.join(__dirname, './fonts/ter-u12n.json'),
+    fontBold: path.join(__dirname, './fonts/ter-u12b.json'),
     top: 2,
     left: '66%+6',
     width: 15,
