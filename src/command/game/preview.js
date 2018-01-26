@@ -64,6 +64,7 @@ const preview = (
     state,
     display_year,
     display_season,
+    broadcasters,
     homeTeamDashboardData,
     visitorTeamDashboardData,
   }
@@ -96,6 +97,16 @@ const preview = (
       {
         colSpan: 16,
         content: bold(`${emoji.get('house')}  ${arena} ｜ ${city}, ${state}`),
+      },
+    ]),
+    alignCenter([
+      {
+        colSpan: 16,
+        content: bold(
+          `${broadcasters.tv.broadcaster[0].display_name} ${emoji.get('tv')}  ${
+            broadcasters.tv.broadcaster[1].display_name
+          }`
+        ),
       },
     ]),
     alignCenter(
