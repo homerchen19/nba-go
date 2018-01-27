@@ -10,17 +10,23 @@ import Team from '../Team';
 import NBA from '../../utils/nba';
 import { bold, neonGreen } from '../../utils/log';
 
-const MAX_WIDTH = 81;
+const MAX_WIDTH = 156;
 const TEAMNAME_WIDTH = 20;
 const STATUS_WIDTH = 18;
+const BROADCASTER_WIDTH = 35;
 
 const padHomeTeamName = name => bold(right(name, TEAMNAME_WIDTH));
 const padVisitorTeamName = name => bold(left(name, TEAMNAME_WIDTH));
 const padGameStatus = status => center(status, STATUS_WIDTH);
+const padHomeTeamBroadcast = broadcaster =>
+  bold(right(broadcaster, BROADCASTER_WIDTH));
+const padAwayTeamBroadcast = broadcaster =>
+  bold(left(broadcaster, BROADCASTER_WIDTH));
 
-const createGameChoice = (homeTeam, visitorTeam, periodTime) => {
+const createGameChoice = (homeTeam, visitorTeam, periodTime, broadcasters) => {
   let winner = '';
   const { period_status: periodStatus, game_clock: gameClock } = periodTime;
+  const broadcastersTV = broadcasters.tv.broadcaster;
 
   if (+homeTeam.getScore() > +visitorTeam.getScore()) {
     winner = 'home';
@@ -53,9 +59,25 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime) => {
       : left(bold(visitorTeam.getScore()), 4);
   const score = `${homeTeamScore} : ${visitorTeamScore}`;
 
+  let homeTeamBroadcast = broadcastersTV.filter(
+    broadcaster => broadcaster.home_visitor === 'home'
+  );
+  let visitorTeamBroadcast = broadcastersTV.filter(
+    broadcaster => broadcaster.home_visitor === 'visitor'
+  );
+  homeTeamBroadcast = padHomeTeamBroadcast(
+    !homeTeamBroadcast.length ? 'N/A' : homeTeamBroadcast[0].display_name
+  );
+  visitorTeamBroadcast = padAwayTeamBroadcast(
+    !visitorTeamBroadcast.length ? 'N/A' : visitorTeamBroadcast[0].display_name
+  );
+  const broadcast = `${homeTeamBroadcast} ${emoji.get('tv')}  ${
+    visitorTeamBroadcast
+  }`;
+
   return `│⌘${match}│${score}│${padGameStatus(
     `${bold(periodStatus)} ${gameClock}`
-  )}│`;
+  )}│${broadcast}|`;
 };
 
 const getTeamInfo = async (team, seasonId) => {
@@ -79,7 +101,9 @@ const chooseGameFromSchedule = async gamesData => {
     8
   )}${padVisitorTeamName('Away')}│${center('Score', 11)}│${padGameStatus(
     'Status'
-  )}│`;
+  )}│${padHomeTeamBroadcast('Home')} ${emoji.get('tv')}  ${padAwayTeamBroadcast(
+    'Away'
+  )}|`;
 
   const questions = [
     {
@@ -100,13 +124,17 @@ const chooseGameFromSchedule = async gamesData => {
   await pMap(
     gamesData,
     async (gameData, index) => {
-      const { home, visitor, period_time } = gameData;
-
+      const { home, visitor, period_time, broadcasters } = gameData;
       const homeTeam = await getTeamInfo(home, process.env.season);
       const visitorTeam = await getTeamInfo(visitor, process.env.season);
 
       questions[0].choices.push({
-        name: createGameChoice(homeTeam, visitorTeam, period_time),
+        name: createGameChoice(
+          homeTeam,
+          visitorTeam,
+          period_time,
+          broadcasters
+        ),
         value: { gameData, homeTeam, visitorTeam },
       });
 
