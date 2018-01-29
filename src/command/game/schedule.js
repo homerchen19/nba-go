@@ -65,11 +65,21 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime, broadcasters) => {
   let visitorTeamBroadcast = broadcastersTV.filter(
     broadcaster => broadcaster.home_visitor === 'visitor'
   );
+  let nationalBroadcast = broadcastersTV.filter(
+    broadcaster => broadcaster.home_visitor === 'natl'
+  );
+  nationalBroadcast = !nationalBroadcast.length
+    ? 'N/A'
+    : nationalBroadcast[0].display_name;
   homeTeamBroadcast = padHomeTeamBroadcast(
-    !homeTeamBroadcast.length ? 'N/A' : homeTeamBroadcast[0].display_name
+    !homeTeamBroadcast.length
+      ? nationalBroadcast
+      : homeTeamBroadcast[0].display_name
   );
   visitorTeamBroadcast = padAwayTeamBroadcast(
-    !visitorTeamBroadcast.length ? 'N/A' : visitorTeamBroadcast[0].display_name
+    !visitorTeamBroadcast.length
+      ? nationalBroadcast
+      : visitorTeamBroadcast[0].display_name
   );
   const broadcast = `${homeTeamBroadcast} ${emoji.get('tv')}  ${
     visitorTeamBroadcast
