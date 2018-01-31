@@ -1,6 +1,6 @@
 {
   "name": "nba-go",
-  "description": "",
+  "description": "The finest NBA CLI.",
   "author": "xxhomey19",
   "license": "MIT",
   "homepage": "https://github.com/xxhomey19/nba-go#readme",
@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/xxhomey19/nba-go/issues"
   },
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "lib/cli.js",
   "bin": {
     "nba-go": "lib/cli.js",
@@ -21,7 +21,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "npm run clean && babel src -d lib --copy-files --ignore '**/*.spec.js' -s && npm run pack",
+    "build": "npm run clean && webpack --config webpack.config.js -p",
     "clean": "rimraf lib packed",
     "precommit": "lint-staged",
     "lint": "eslint src",
@@ -47,6 +47,7 @@
     "inquirer": "^4.0.0",
     "is-async-supported": "^1.2.0",
     "log-update": "^2.2.0",
+    "moment-timezone": "^0.5.14",
     "nba": "^4.0.0",
     "nba-color": "^1.2.2",
     "nba-stats-client": "^0.0.4",
@@ -56,17 +57,21 @@
     "path": "^0.12.7",
     "ramda": "^0.25.0",
     "stringz": "^0.2.3",
+    "uglifyjs-webpack-plugin": "^1.1.6",
     "update-notifier": "^2.3.0",
+    "webpack": "^3.10.0",
     "wide-align": "^1.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-jest": "^21.2.0",
+    "babel-loader": "^7.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
+    "copy-webpack-plugin": "^4.3.1",
     "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-prettier": "^2.6.0",
@@ -81,7 +86,8 @@
     "pkg": "^4.3.0-beta.1",
     "prettier": "^1.8.2",
     "prettier-package-json": "^1.4.0",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "webpack-node-externals": "^1.6.0"
   },
   "keywords": [
     "NBA",
