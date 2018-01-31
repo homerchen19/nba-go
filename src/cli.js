@@ -142,9 +142,10 @@ program.on('--help', () => {
 
 program.command('*').action(command => {
   error(`Unknown command: ${bold(command)}`);
-  const commandNames = program.commands
-    .map(c => c._name)
-    .filter(name => name !== '*');
+  const commandNames = program.commands.reduce(
+    (p, c) => (c._name !== '*' ? [...p, c._name] : p),
+    []
+  );
 
   const closeMatch = didYouMean(command, commandNames);
   if (closeMatch) {
