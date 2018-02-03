@@ -53,10 +53,10 @@ const getSeason = date => {
   return date;
 };
 
-const getGameWithOptionalFilter = async (games, filter) => {
-  if (filter && filter.split('=')[0] === 'team') {
+const getGameWithOptionalFilter = async (games, option) => {
+  if (option.filter && option.filter.split('=')[0] === 'team') {
     // TODO: Add more robust filtering but use team as proof of concept
-    const components = filter.split('=');
+    const components = option.filter.split('=');
     const team = components[1].toLowerCase();
     const potentialGames = games.filter(
       data =>
@@ -77,7 +77,7 @@ const getGameWithOptionalFilter = async (games, filter) => {
     } else return chooseGameFromSchedule(potentialGames);
   }
 
-  return chooseGameFromSchedule(games);
+  return chooseGameFromSchedule(games, option);
 };
 
 const game = async option => {
@@ -103,7 +103,6 @@ const game = async option => {
     error(`Can't find any option ${emoji.get('confused')}`);
     process.exit(1);
   }
-
   R.compose(cfontsDate, getSeason)(_date);
 
   const LADate = getLosAngelesTimezone(_date);
@@ -116,11 +115,9 @@ const game = async option => {
   } catch (err) {
     catchAPIError(err, 'NBA.getGamesFromDate()');
   }
-
   const {
     game: { homeTeam, visitorTeam, gameData },
-  } = await getGameWithOptionalFilter(gamesData, option.filter);
-
+  } = await getGameWithOptionalFilter(gamesData, option);
   try {
     const {
       sports_content: {
