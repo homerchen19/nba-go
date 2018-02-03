@@ -149,9 +149,9 @@ const game = async option => {
     dateText,
     arenaText,
     homeTeamScoreText,
-    homeTeamBroadcastText,
+    homeTeamNetworkText,
     visitorTeamScoreText,
-    visitorTeamBroadcastText,
+    visitorTeamNetworkText,
     playByPlayBox,
     boxscoreTable,
   } = getBlessed(homeTeam, visitorTeam);
@@ -207,25 +207,25 @@ const game = async option => {
       );
       const { arena, city, state, date, time, broadcasters } = gameBoxScoreData;
 
-      const broadcastersTV = broadcasters.tv.broadcaster;
-      let homeTeamBroadcast = broadcastersTV.filter(
+      const televisionNetworks = broadcasters.tv.broadcaster;
+      let homeTeamNetwork = televisionNetworks.filter(
         broadcaster => broadcaster.home_visitor === 'home'
       );
-      let visitorTeamBroadcast = broadcastersTV.filter(
+      let visitorTeamNetwork = televisionNetworks.filter(
         broadcaster => broadcaster.home_visitor === 'visitor'
       );
-      let nationalBroadcast = broadcastersTV.filter(
+      let nationalNetwork = televisionNetworks.filter(
         broadcaster => broadcaster.home_visitor === 'natl'
       );
-      nationalBroadcast = !nationalBroadcast.length
+      nationalNetwork = !nationalNetwork.length
         ? 'N/A'
-        : nationalBroadcast[0].display_name;
-      homeTeamBroadcast = !homeTeamBroadcast.length
-        ? nationalBroadcast
-        : homeTeamBroadcast[0].display_name;
-      visitorTeamBroadcast = !visitorTeamBroadcast.length
-        ? nationalBroadcast
-        : visitorTeamBroadcast[0].display_name;
+        : nationalNetwork[0].display_name;
+      homeTeamNetwork = !homeTeamNetwork.length
+        ? nationalNetwork
+        : homeTeamNetwork[0].display_name;
+      visitorTeamNetwork = !visitorTeamNetwork.length
+        ? nationalNetwork
+        : visitorTeamNetwork[0].display_name;
 
       dateText.setContent(
         `${emoji.get('calendar')}  ${format(date, 'YYYY/MM/DD')} ${time.slice(
@@ -236,13 +236,10 @@ const game = async option => {
       arenaText.setContent(
         `${emoji.get('house')}  ${arena} | ${city}, ${state}`
       );
-      homeTeamBroadcastText.setContent(
-        `${homeTeamBroadcast}  ${emoji.get('tv')}`
-      );
-      homeTeamBroadcastText.position.left = `30%-${homeTeamBroadcast.length +
-        24}`;
-      visitorTeamBroadcastText.setContent(
-        `${emoji.get('tv')}  ${visitorTeamBroadcast}`
+      homeTeamNetworkText.setContent(`${homeTeamNetwork}  ${emoji.get('tv')}`);
+      homeTeamNetworkText.position.left = `30%-${homeTeamNetwork.length + 24}`;
+      visitorTeamNetworkText.setContent(
+        `${emoji.get('tv')}  ${visitorTeamNetwork}`
       );
       while (true) {
         let gamePlayByPlayData = {};

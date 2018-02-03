@@ -13,16 +13,14 @@ import { bold, neonGreen } from '../../utils/log';
 const MAX_WIDTH = 81;
 const TEAMNAME_WIDTH = 20;
 const STATUS_WIDTH = 18;
-const BROADCASTER_WIDTH = 35;
-const MAX_WIDTH_WITH_BROADCAST = 156;
+const NETWORK_WIDTH = 35;
+const MAX_WIDTH_WITH_NETWORKS = 156;
 
 const padHomeTeamName = name => bold(right(name, TEAMNAME_WIDTH));
 const padVisitorTeamName = name => bold(left(name, TEAMNAME_WIDTH));
 const padGameStatus = status => center(status, STATUS_WIDTH);
-const padHomeTeamBroadcast = broadcaster =>
-  bold(right(broadcaster, BROADCASTER_WIDTH));
-const padAwayTeamBroadcast = broadcaster =>
-  bold(left(broadcaster, BROADCASTER_WIDTH));
+const padHomeTeamNetwork = network => bold(right(network, NETWORK_WIDTH));
+const padAwayTeamNetwork = network => bold(left(network, NETWORK_WIDTH));
 
 const createGameChoice = (homeTeam, visitorTeam, periodTime, broadcasters) => {
   let winner = '';
@@ -60,35 +58,35 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime, broadcasters) => {
   const score = `${homeTeamScore} : ${visitorTeamScore}`;
 
   if (broadcasters) {
-    const broadcastersTV = broadcasters.tv.broadcaster;
-    let homeTeamBroadcast = broadcastersTV.filter(
+    const televisionNetworks = broadcasters.tv.broadcaster;
+    let homeTeamNetwork = televisionNetworks.filter(
       broadcaster => broadcaster.home_visitor === 'home'
     );
-    let visitorTeamBroadcast = broadcastersTV.filter(
+    let visitorTeamNetwork = televisionNetworks.filter(
       broadcaster => broadcaster.home_visitor === 'visitor'
     );
-    let nationalBroadcast = broadcastersTV.filter(
+    let nationalNetwork = televisionNetworks.filter(
       broadcaster => broadcaster.home_visitor === 'natl'
     );
-    nationalBroadcast = !nationalBroadcast.length
+    nationalNetwork = !nationalNetwork.length
       ? 'N/A'
-      : nationalBroadcast[0].display_name;
-    homeTeamBroadcast = padHomeTeamBroadcast(
-      !homeTeamBroadcast.length
-        ? nationalBroadcast
-        : homeTeamBroadcast[0].display_name
+      : nationalNetwork[0].display_name;
+    homeTeamNetwork = padHomeTeamNetwork(
+      !homeTeamNetwork.length
+        ? nationalNetwork
+        : homeTeamNetwork[0].display_name
     );
-    visitorTeamBroadcast = padAwayTeamBroadcast(
-      !visitorTeamBroadcast.length
-        ? nationalBroadcast
-        : visitorTeamBroadcast[0].display_name
+    visitorTeamNetwork = padAwayTeamNetwork(
+      !visitorTeamNetwork.length
+        ? nationalNetwork
+        : visitorTeamNetwork[0].display_name
     );
-    const broadcast = `${homeTeamBroadcast} ${emoji.get('tv')}  ${
-      visitorTeamBroadcast
+    const networks = `${homeTeamNetwork} ${emoji.get('tv')}  ${
+      visitorTeamNetwork
     }|`;
     return `│⌘${match}│${score}│${padGameStatus(
       `${bold(periodStatus)} ${gameClock}`
-    )}│${broadcast}`;
+    )}│${networks}`;
   }
   return `│⌘${match}│${score}│${padGameStatus(
     `${bold(periodStatus)} ${gameClock}`
@@ -111,19 +109,20 @@ const getTeamInfo = async (team, seasonId) => {
 
 const chooseGameFromSchedule = async (gamesData, option) => {
   const spinner = ora('Loading Game Schedule').start();
-  let broadcastHeader = '';
-  if (option.broadcasts) {
-    broadcastHeader = `${padHomeTeamBroadcast('Home')} ${emoji.get(
+  let networksHeader = '';
+  if (option.networks) {
+    networksHeader = `${padHomeTeamNetwork('Home')} ${emoji.get(
       'tv'
-    )}  ${padAwayTeamBroadcast('Away')}|`;
+    )}  ${padAwayTeamNetwork('Away')}|`;
   }
   const header = `│ ${padHomeTeamName('Home')}${center(
     emoji.get('basketball'),
     8
   )}${padVisitorTeamName('Away')}│${center('Score', 11)}│${padGameStatus(
     'Status'
-  )}│${broadcastHeader}`;
+  )}│${networksHeader}`;
 
+  const tableWidth = !option.networks ? MAX_WIDTH : MAX_WIDTH_WITH_NETWORKS;
   const questions = [
     {
       name: 'game',
@@ -131,19 +130,9 @@ const chooseGameFromSchedule = async (gamesData, option) => {
       type: 'list',
       pageSize: 30,
       choices: [
-        new inquirer.Separator(`
-          ${limit(
-            '',
-            !option.broadcasts ? MAX_WIDTH : MAX_WIDTH_WITH_BROADCAST,
-            '─'
-          )}`),
+        new inquirer.Separator(`${limit('', tableWidth, '─')}`),
         new inquirer.Separator(header),
-        new inquirer.Separator(`
-          ${limit(
-            '',
-            !option.broadcasts ? MAX_WIDTH : MAX_WIDTH_WITH_BROADCAST,
-            '─'
-          )}`),
+        new inquirer.Separator(`${limit('', tableWidth, '─')}`),
       ],
     },
   ];
@@ -162,30 +151,18 @@ const chooseGameFromSchedule = async (gamesData, option) => {
           homeTeam,
           visitorTeam,
           period_time,
-          !option.broadcasts ? null : broadcasters
+          !option.networks ? null : broadcasters
         ),
         value: { gameData, homeTeam, visitorTeam },
       });
 
       if (index !== last) {
         questions[0].choices.push(
-          new inquirer.Separator(
-            `${limit(
-              '',
-              !option.broadcasts ? MAX_WIDTH : MAX_WIDTH_WITH_BROADCAST,
-              '-'
-            )}`
-          )
+          new inquirer.Separator(`${limit('', tableWidth, '─')}`)
         );
       } else {
         questions[0].choices.push(
-          new inquirer.Separator(
-            `${limit(
-              '',
-              !option.broadcasts ? MAX_WIDTH : MAX_WIDTH_WITH_BROADCAST,
-              '-'
-            )}`
-          )
+          new inquirer.Separator(`${limit('', tableWidth, '─')}`)
         );
       }
     },
