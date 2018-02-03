@@ -152,7 +152,9 @@ const game = async option => {
     dateText,
     arenaText,
     homeTeamScoreText,
+    homeTeamBroadcastText,
     visitorTeamScoreText,
+    visitorTeamBroadcastText,
     playByPlayBox,
     boxscoreTable,
   } = getBlessed(homeTeam, visitorTeam);
@@ -206,7 +208,28 @@ const game = async option => {
       seasonText.setContent(
         bold(`${seasonMetaData.display_year} ${seasonMetaData.display_season}`)
       );
-      const { arena, city, state, date, time } = gameBoxScoreData;
+      const { arena, city, state, date, time, broadcasters } = gameBoxScoreData;
+
+      const broadcastersTV = broadcasters.tv.broadcaster;
+      let homeTeamBroadcast = broadcastersTV.filter(
+        broadcaster => broadcaster.home_visitor === 'home'
+      );
+      let visitorTeamBroadcast = broadcastersTV.filter(
+        broadcaster => broadcaster.home_visitor === 'visitor'
+      );
+      let nationalBroadcast = broadcastersTV.filter(
+        broadcaster => broadcaster.home_visitor === 'natl'
+      );
+      nationalBroadcast = !nationalBroadcast.length
+        ? 'N/A'
+        : nationalBroadcast[0].display_name;
+      homeTeamBroadcast = !homeTeamBroadcast.length
+        ? nationalBroadcast
+        : homeTeamBroadcast[0].display_name;
+      visitorTeamBroadcast = !visitorTeamBroadcast.length
+        ? nationalBroadcast
+        : visitorTeamBroadcast[0].display_name;
+
       dateText.setContent(
         `${emoji.get('calendar')}  ${format(date, 'YYYY/MM/DD')} ${time.slice(
           0,
@@ -216,7 +239,14 @@ const game = async option => {
       arenaText.setContent(
         `${emoji.get('house')}  ${arena} | ${city}, ${state}`
       );
-
+      homeTeamBroadcastText.setContent(
+        `${homeTeamBroadcast}  ${emoji.get('tv')}`
+      );
+      homeTeamBroadcastText.position.left = `30%-${homeTeamBroadcast.length +
+        24}`;
+      visitorTeamBroadcastText.setContent(
+        `${emoji.get('tv')}  ${visitorTeamBroadcast}`
+      );
       while (true) {
         let gamePlayByPlayData = {};
 

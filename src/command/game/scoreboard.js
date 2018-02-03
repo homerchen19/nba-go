@@ -57,7 +57,7 @@ const teamGameLeaders = (homeTeam, visitorTeam, field) =>
 const scoreboard = (
   homeTeam,
   visitorTeam,
-  { date, time, arena, city, state, display_year, display_season }
+  { date, time, arena, city, state, display_year, display_season, broadcasters }
 ) => {
   const scoreboardTable = basicTable();
 
@@ -65,6 +65,26 @@ const scoreboard = (
 
   const homeTeamStartingPlayers = getStartingPlayers(homeTeam);
   const visitorTeamStartingPlayers = getStartingPlayers(visitorTeam);
+
+  const broadcastersTV = broadcasters.tv.broadcaster;
+  let homeTeamBroadcast = broadcastersTV.filter(
+    broadcaster => broadcaster.home_visitor === 'home'
+  );
+  let visitorTeamBroadcast = broadcastersTV.filter(
+    broadcaster => broadcaster.home_visitor === 'visitor'
+  );
+  let nationalBroadcast = broadcastersTV.filter(
+    broadcaster => broadcaster.home_visitor === 'natl'
+  );
+  nationalBroadcast = !nationalBroadcast.length
+    ? 'N/A'
+    : nationalBroadcast[0].display_name;
+  homeTeamBroadcast = !homeTeamBroadcast.length
+    ? nationalBroadcast
+    : homeTeamBroadcast[0].display_name;
+  visitorTeamBroadcast = !visitorTeamBroadcast.length
+    ? nationalBroadcast
+    : visitorTeamBroadcast[0].display_name;
 
   scoreboardTable.push(
     vAlignCenter([
@@ -224,7 +244,15 @@ const scoreboard = (
         hAlign: 'left',
       },
     ]),
-    [],
+    vAlignCenter([
+      {
+        colSpan: 10,
+        content: bold(
+          `${homeTeamBroadcast}a ${emoji.get('tv')}  ${visitorTeamBroadcast}`
+        ),
+        hAlign: 'center',
+      },
+    ]),
     vAlignCenter([
       {
         colSpan: 10,

@@ -69,6 +69,15 @@ const getBlessed = (homeTeam, visitorTeam) => {
     },
   });
 
+  const homeTeamBroadcastText = blessed.text({
+    top: 9,
+    width: 40,
+    align: 'right',
+    style: {
+      fg: 'white',
+    },
+  });
+
   const homeTeamScoreText = blessed.bigtext({
     font: path.join(__dirname, './fonts/ter-u12n.json'),
     fontBold: path.join(__dirname, './fonts/ter-u12b.json'),
@@ -102,6 +111,16 @@ const getBlessed = (homeTeam, visitorTeam) => {
     width: 15,
     align: 'left',
     content: `(${visitorTeam.getWins()} - ${visitorTeam.getLoses()}) AWAY`,
+    style: {
+      fg: '#fbfbfb',
+    },
+  });
+
+  const visitorTeamBroadcastText = blessed.text({
+    top: 9,
+    left: '66%+28',
+    width: 40,
+    align: 'left',
     style: {
       fg: '#fbfbfb',
     },
@@ -208,9 +227,11 @@ const getBlessed = (homeTeam, visitorTeam) => {
   screen.append(arenaText);
   screen.append(homeTeamFullNameText);
   screen.append(homeTeamStandingsText);
+  screen.append(homeTeamBroadcastText);
   screen.append(homeTeamScoreText);
   screen.append(visitorTeamFullNameText);
   screen.append(visitorTeamStandingsText);
+  screen.append(visitorTeamBroadcastText);
   screen.append(visitorTeamScoreText);
   screen.append(scoreboardTable);
   screen.append(playByPlayBox);
@@ -225,7 +246,9 @@ const getBlessed = (homeTeam, visitorTeam) => {
     dateText,
     arenaText,
     homeTeamScoreText,
+    homeTeamBroadcastText,
     visitorTeamScoreText,
+    visitorTeamBroadcastText,
     playByPlayBox,
     boxscoreTable,
   };
