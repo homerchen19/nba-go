@@ -10,7 +10,16 @@ import catchAPIError from '../../utils/catchAPIError';
 const player = async (playerName, option) => {
   await NBA.updatePlayers();
 
-  const _players = await NBA.searchPlayers(playerName);
+  // split the input by commas and then find matching players and add to array
+  // works even if only input 1 player
+  const _players = [];
+  const nameArray = playerName.split(',');
+  nameArray.forEach(name => {
+    const playerData = NBA.searchPlayers(name.trim());
+    _players.push(...playerData);
+  });
+
+  // const _players = await NBA.searchPlayers(playerName);
 
   pMap(
     _players,
