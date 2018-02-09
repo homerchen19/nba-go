@@ -69,7 +69,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
     },
   });
 
-  const homeTeamBroadcastText = blessed.text({
+  const homeTeamNetworkText = blessed.text({
     top: 9,
     width: 40,
     align: 'right',
@@ -116,7 +116,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
     },
   });
 
-  const visitorTeamBroadcastText = blessed.text({
+  const visitorTeamNetworkText = blessed.text({
     top: 9,
     left: '66%+28',
     width: 40,
@@ -227,11 +227,11 @@ const getBlessed = (homeTeam, visitorTeam) => {
   screen.append(arenaText);
   screen.append(homeTeamFullNameText);
   screen.append(homeTeamStandingsText);
-  screen.append(homeTeamBroadcastText);
+  screen.append(homeTeamNetworkText);
   screen.append(homeTeamScoreText);
   screen.append(visitorTeamFullNameText);
   screen.append(visitorTeamStandingsText);
-  screen.append(visitorTeamBroadcastText);
+  screen.append(visitorTeamNetworkText);
   screen.append(visitorTeamScoreText);
   screen.append(scoreboardTable);
   screen.append(playByPlayBox);
@@ -246,9 +246,9 @@ const getBlessed = (homeTeam, visitorTeam) => {
     dateText,
     arenaText,
     homeTeamScoreText,
-    homeTeamBroadcastText,
+    homeTeamNetworkText,
     visitorTeamScoreText,
-    visitorTeamBroadcastText,
+    visitorTeamNetworkText,
     playByPlayBox,
     boxscoreTable,
   };
