@@ -69,15 +69,6 @@ const getBlessed = (homeTeam, visitorTeam) => {
     },
   });
 
-  const homeTeamNetworkText = blessed.text({
-    top: 9,
-    width: 40,
-    align: 'right',
-    style: {
-      fg: 'white',
-    },
-  });
-
   const homeTeamScoreText = blessed.bigtext({
     font: path.join(__dirname, './fonts/ter-u12n.json'),
     fontBold: path.join(__dirname, './fonts/ter-u12b.json'),
@@ -111,16 +102,6 @@ const getBlessed = (homeTeam, visitorTeam) => {
     width: 15,
     align: 'left',
     content: `(${visitorTeam.getWins()} - ${visitorTeam.getLoses()}) AWAY`,
-    style: {
-      fg: '#fbfbfb',
-    },
-  });
-
-  const visitorTeamNetworkText = blessed.text({
-    top: 9,
-    left: '66%+28',
-    width: 40,
-    align: 'left',
     style: {
       fg: '#fbfbfb',
     },
@@ -167,6 +148,15 @@ const getBlessed = (homeTeam, visitorTeam) => {
 
   const arenaText = blessed.text({
     top: 3,
+    left: 'center',
+    align: 'center',
+    style: {
+      fg: 'white',
+    },
+  });
+
+  const networkText = blessed.text({
+    top: 4,
     left: 'center',
     align: 'center',
     style: {
@@ -225,13 +215,12 @@ const getBlessed = (homeTeam, visitorTeam) => {
   screen.append(timeText);
   screen.append(dateText);
   screen.append(arenaText);
+  screen.append(networkText);
   screen.append(homeTeamFullNameText);
   screen.append(homeTeamStandingsText);
-  screen.append(homeTeamNetworkText);
   screen.append(homeTeamScoreText);
   screen.append(visitorTeamFullNameText);
   screen.append(visitorTeamStandingsText);
-  screen.append(visitorTeamNetworkText);
   screen.append(visitorTeamScoreText);
   screen.append(scoreboardTable);
   screen.append(playByPlayBox);
@@ -245,10 +234,9 @@ const getBlessed = (homeTeam, visitorTeam) => {
     timeText,
     dateText,
     arenaText,
+    networkText,
     homeTeamScoreText,
-    homeTeamNetworkText,
     visitorTeamScoreText,
-    visitorTeamNetworkText,
     playByPlayBox,
     boxscoreTable,
   };

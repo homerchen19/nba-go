@@ -148,10 +148,9 @@ const game = async option => {
     timeText,
     dateText,
     arenaText,
+    networkText,
     homeTeamScoreText,
-    homeTeamNetworkText,
     visitorTeamScoreText,
-    visitorTeamNetworkText,
     playByPlayBox,
     boxscoreTable,
   } = getBlessed(homeTeam, visitorTeam);
@@ -236,10 +235,8 @@ const game = async option => {
       arenaText.setContent(
         `${emoji.get('house')}  ${arena} | ${city}, ${state}`
       );
-      homeTeamNetworkText.setContent(`${homeTeamNetwork}  ${emoji.get('tv')}`);
-      homeTeamNetworkText.position.left = `30%-${homeTeamNetwork.length + 24}`;
-      visitorTeamNetworkText.setContent(
-        `${emoji.get('tv')}  ${visitorTeamNetwork}`
+      networkText.setContent(
+        `${homeTeamNetwork}  ${emoji.get('tv')}  ${visitorTeamNetwork}`
       );
       while (true) {
         let gamePlayByPlayData = {};

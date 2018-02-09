@@ -248,7 +248,7 @@ const scoreboard = (
       {
         colSpan: 10,
         content: bold(
-          `${homeTeamBroadcast}a ${emoji.get('tv')}  ${visitorTeamBroadcast}`
+          `${homeTeamBroadcast} ${emoji.get('tv')}  ${visitorTeamBroadcast}`
         ),
         hAlign: 'center',
       },
