@@ -66,25 +66,25 @@ const scoreboard = (
   const homeTeamStartingPlayers = getStartingPlayers(homeTeam);
   const visitorTeamStartingPlayers = getStartingPlayers(visitorTeam);
 
-  const broadcastersTV = broadcasters.tv.broadcaster;
-  let homeTeamBroadcast = broadcastersTV.filter(
+  const televisionNetworks = broadcasters.tv.broadcaster;
+  let homeTeamNetwork = televisionNetworks.filter(
     broadcaster => broadcaster.home_visitor === 'home'
   );
-  let visitorTeamBroadcast = broadcastersTV.filter(
+  let visitorTeamNetwork = televisionNetworks.filter(
     broadcaster => broadcaster.home_visitor === 'visitor'
   );
-  let nationalBroadcast = broadcastersTV.filter(
+  let nationalNetwork = televisionNetworks.filter(
     broadcaster => broadcaster.home_visitor === 'natl'
   );
-  nationalBroadcast = !nationalBroadcast.length
+  nationalNetwork = !nationalNetwork.length
     ? 'N/A'
-    : nationalBroadcast[0].display_name;
-  homeTeamBroadcast = !homeTeamBroadcast.length
-    ? nationalBroadcast
-    : homeTeamBroadcast[0].display_name;
-  visitorTeamBroadcast = !visitorTeamBroadcast.length
-    ? nationalBroadcast
-    : visitorTeamBroadcast[0].display_name;
+    : nationalNetwork[0].display_name;
+  homeTeamNetwork = !homeTeamNetwork.length
+    ? nationalNetwork
+    : homeTeamNetwork[0].display_name;
+  visitorTeamNetwork = !visitorTeamNetwork.length
+    ? nationalNetwork
+    : visitorTeamNetwork[0].display_name;
 
   scoreboardTable.push(
     vAlignCenter([
@@ -248,7 +248,7 @@ const scoreboard = (
       {
         colSpan: 10,
         content: bold(
-          `${homeTeamBroadcast} ${emoji.get('tv')}  ${visitorTeamBroadcast}`
+          `${homeTeamNetwork} ${emoji.get('tv')}  ${visitorTeamNetwork}`
         ),
         hAlign: 'center',
       },

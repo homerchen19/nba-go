@@ -71,19 +71,16 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime, broadcasters) => {
     nationalNetwork = !nationalNetwork.length
       ? 'N/A'
       : nationalNetwork[0].display_name;
-    homeTeamNetwork = padHomeTeamNetwork(
-      !homeTeamNetwork.length
-        ? nationalNetwork
-        : homeTeamNetwork[0].display_name
-    );
-    visitorTeamNetwork = padAwayTeamNetwork(
-      !visitorTeamNetwork.length
-        ? nationalNetwork
-        : visitorTeamNetwork[0].display_name
-    );
-    const networks = `${homeTeamNetwork} ${emoji.get('tv')}  ${
-      visitorTeamNetwork
-    }|`;
+    homeTeamNetwork = !homeTeamNetwork.length
+      ? nationalNetwork
+      : homeTeamNetwork[0].display_name;
+    visitorTeamNetwork = !visitorTeamNetwork.length
+      ? nationalNetwork
+      : visitorTeamNetwork[0].display_name;
+
+    const networks = `${padHomeTeamNetwork(homeTeamNetwork)} ${emoji.get(
+      'tv'
+    )}  ${padAwayTeamNetwork(visitorTeamNetwork)}|`;
     return `│⌘${match}│${score}│${padGameStatus(
       `${bold(periodStatus)} ${gameClock}`
     )}│${networks}`;
