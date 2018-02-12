@@ -5,6 +5,7 @@ import { center, left, right } from 'wide-align';
 import pMap from 'p-map';
 import ora from 'ora';
 
+import getBroadcastNetworks from './network';
 import Team from '../Team';
 
 import NBA from '../../utils/nba';
@@ -58,32 +59,13 @@ const createGameChoice = (homeTeam, visitorTeam, periodTime, broadcasters) => {
   const score = `${homeTeamScore} : ${visitorTeamScore}`;
 
   if (broadcasters) {
-    const televisionNetworks = broadcasters.tv.broadcaster;
-    let homeTeamNetwork = televisionNetworks.filter(
-      broadcaster => broadcaster.home_visitor === 'home'
-    );
-    let visitorTeamNetwork = televisionNetworks.filter(
-      broadcaster => broadcaster.home_visitor === 'visitor'
-    );
-    let nationalNetwork = televisionNetworks.filter(
-      broadcaster => broadcaster.home_visitor === 'natl'
-    );
-    nationalNetwork = !nationalNetwork.length
-      ? 'N/A'
-      : nationalNetwork[0].display_name;
-    homeTeamNetwork = !homeTeamNetwork.length
-      ? nationalNetwork
-      : homeTeamNetwork[0].display_name;
-    visitorTeamNetwork = !visitorTeamNetwork.length
-      ? nationalNetwork
-      : visitorTeamNetwork[0].display_name;
-
-    const networks = `${padHomeTeamNetwork(homeTeamNetwork)} ${emoji.get(
-      'tv'
-    )}  ${padAwayTeamNetwork(visitorTeamNetwork)}|`;
+    const networks = getBroadcastNetworks(broadcasters.tv.broadcaster);
+    const networksOutput = `${padHomeTeamNetwork(
+      networks.homeTeam
+    )} ${emoji.get('tv')}  ${padAwayTeamNetwork(networks.visitorTeam)}|`;
     return `│⌘${match}│${score}│${padGameStatus(
       `${bold(periodStatus)} ${gameClock}`
-    )}│${networks}`;
+    )}│${networksOutput}`;
   }
   return `│⌘${match}│${score}│${padGameStatus(
     `${bold(periodStatus)} ${gameClock}`

@@ -18,6 +18,7 @@ import preview from './preview';
 import scoreboard from './scoreboard';
 import boxScore from './boxScore';
 import live from './live';
+import getBroadcastNetworks from './network';
 
 import NBA from '../../utils/nba';
 import { error, bold } from '../../utils/log';
@@ -206,25 +207,7 @@ const game = async option => {
       );
       const { arena, city, state, date, time, broadcasters } = gameBoxScoreData;
 
-      const televisionNetworks = broadcasters.tv.broadcaster;
-      let homeTeamNetwork = televisionNetworks.filter(
-        broadcaster => broadcaster.home_visitor === 'home'
-      );
-      let visitorTeamNetwork = televisionNetworks.filter(
-        broadcaster => broadcaster.home_visitor === 'visitor'
-      );
-      let nationalNetwork = televisionNetworks.filter(
-        broadcaster => broadcaster.home_visitor === 'natl'
-      );
-      nationalNetwork = !nationalNetwork.length
-        ? 'N/A'
-        : nationalNetwork[0].display_name;
-      homeTeamNetwork = !homeTeamNetwork.length
-        ? nationalNetwork
-        : homeTeamNetwork[0].display_name;
-      visitorTeamNetwork = !visitorTeamNetwork.length
-        ? nationalNetwork
-        : visitorTeamNetwork[0].display_name;
+      const networks = getBroadcastNetworks(broadcasters.tv.broadcaster);
 
       dateText.setContent(
         `${emoji.get('calendar')}  ${format(date, 'YYYY/MM/DD')} ${time.slice(
@@ -236,7 +219,7 @@ const game = async option => {
         `${emoji.get('house')}  ${arena} | ${city}, ${state}`
       );
       networkText.setContent(
-        `${homeTeamNetwork}  ${emoji.get('tv')}  ${visitorTeamNetwork}`
+        `${networks.homeTeam}  ${emoji.get('tv')}  ${networks.visitorTeam}`
       );
       while (true) {
         let gamePlayByPlayData = {};
