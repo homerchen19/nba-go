@@ -44,21 +44,21 @@ describe('getBlessed', () => {
       expect(blessed.screen.mock.calls.length).toBe(1);
     });
 
-    it('should append 13 components and 1 key event', () => {
+    it('should append 15 components and 1 key event', () => {
       const { screen } = getBlessed(mockTeam(), mockTeam());
 
-      expect(screen.append.mock.calls.length).toBe(14);
+      expect(screen.append.mock.calls.length).toBe(15);
       expect(screen.key.mock.calls.length).toBe(1);
     });
   });
 
   describe('others', () => {
-    it('should call blessed.box twice, blessed.table twice, blessed.text 7 times and blessed.bigtext twice', () => {
+    it('should call blessed.box twice, blessed.table twice, blessed.text 9 times and blessed.bigtext twice', () => {
       getBlessed(mockTeam(), mockTeam());
 
       expect(blessed.box.mock.calls.length).toBe(2);
       expect(blessed.table.mock.calls.length).toBe(2);
-      expect(blessed.text.mock.calls.length).toBe(8);
+      expect(blessed.text.mock.calls.length).toBe(9);
       expect(blessed.bigtext.mock.calls.length).toBe(2);
     });
 
