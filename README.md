@@ -112,7 +112,7 @@ $ nba-go game -T
 ![game -T gif](https://user-images.githubusercontent.com/12113222/32414142-7897dfe0-c25b-11e7-9acf-d50ade5379fd.gif)
 
 ##### `-n` or `--networks`
-Display on schedule home and away television network information.
+Display on schedule home team and away team television network information.
 
 ```
 $ nba-go game -n
