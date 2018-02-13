@@ -219,7 +219,7 @@ const game = async option => {
         `${emoji.get('house')}  ${arena} | ${city}, ${state}`
       );
       networkText.setContent(
-        `${networks.homeTeam}  ${emoji.get('tv')}  ${networks.visitorTeam}`
+        `${networks.homeTeam} ${emoji.get('tv')}  ${networks.visitorTeam}`
       );
       while (true) {
         let gamePlayByPlayData = {};
