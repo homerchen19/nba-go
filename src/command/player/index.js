@@ -8,6 +8,7 @@ import playerInfoCompare from './infoCompare';
 
 import NBA from '../../utils/nba';
 import catchAPIError from '../../utils/catchAPIError';
+import seasonStatsCompare from './seasonStatsCompare';
 
 const player = async (playerName, option) => {
   await NBA.updatePlayers();
@@ -24,12 +25,12 @@ const player = async (playerName, option) => {
   // if we are comparing we need to get all the data first before make the table
   if (option.compare) {
     // get basic info about all the players in array
-    const mapper = elem => NBA.playerInfo({ PlayerID: elem.playerId });
 
     // do this a little bit different than the original
     // get all the player data in an array, then will pass to playerInfoCompare and parse it
+    const infoMapper = elem => NBA.playerInfo({ PlayerID: elem.playerId });
     let playerDataArr;
-    await pMap(_players, mapper)
+    await pMap(_players, infoMapper)
       .then(result => {
         playerDataArr = result;
       })
@@ -37,6 +38,17 @@ const player = async (playerName, option) => {
 
     if (option.info) {
       playerInfoCompare(playerDataArr);
+    }
+    if (option.regular) {
+      const profileMapper = elem =>
+        NBA.playerProfile({ PlayerID: elem.playerId });
+      let playerProfileArr;
+      await pMap(_players, profileMapper)
+        .then(result => {
+          playerProfileArr = result;
+        })
+        .catch(err => catchAPIError(err, 'NBA.playerProfile()'));
+      seasonStatsCompare(playerProfileArr, playerDataArr, 'Regular Season');
     }
   } else {
     pMap(
