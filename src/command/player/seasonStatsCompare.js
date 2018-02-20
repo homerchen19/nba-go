@@ -30,6 +30,7 @@ const makeNameStr = (playerInfo, seasonTtpe) => {
 // each season maps to an array of the player stats for that season
 const makeSeasonObj = (playerProfile, seasonStr) => {
   const seasonObj = {};
+  let index = 0;
   playerProfile.forEach(player => {
     // access the season totals for either post or regular season
     const seasonArr = player[`seasonTotals${seasonStr}`];
@@ -38,12 +39,14 @@ const makeSeasonObj = (playerProfile, seasonStr) => {
       // check if the season is already in the object
       if (seasonObj[currentSeason]) {
         // if it does add this players data to the array
-        seasonObj[currentSeason].push(season);
+        seasonObj[currentSeason][index] = season;
       } else {
-        // otherwise create a new array
-        seasonObj[currentSeason] = [season];
+        // otherwise create a new array with length of number of players
+        seasonObj[currentSeason] = [...Array(playerProfile.length)].fill({});
+        seasonObj[currentSeason][index] = season;
       }
     });
+    ++index;
   });
   return seasonObj;
 };
@@ -67,9 +70,11 @@ const makeRow = seasonData => {
     tov: '',
   };
 
+  let seasonId;
   seasonData.forEach(player => {
     //configure certain data before we append to string
-    if(player !== {}){
+    //make sure object isn't empty
+    if(Object.keys(player).length !== 0){
       player.fg3Pct = (player.fg3Pct * 100).toFixed(1)
       player.fgPct = (player.fgPct * 100).toFixed(1)
       player.ftPct = (player.ftPct * 100).toFixed(1)
@@ -77,14 +82,16 @@ const makeRow = seasonData => {
       player.teamAbbreviation = chalk`{bold.white.bgHex('${
           teamMainColor ? teamMainColor.hex : '#000'
         }') ${player.teamAbbreviation}}`
+      if(!template.seasonId){
+        seasonId = bold(player.seasonId);
+      }
     }
     Object.keys(template).forEach(key =>{
       //add data to str or if no data put in a dash
-      template[key] += (player[key] + '\n') || '-\n';
+      template[key] += (player[key] || '-') + '\n';
     });
   });
-
-  template.seasonId = bold(seasonData[0].seasonId);
+  template.seasonId = seasonId;
   return template;
 };
 
@@ -97,13 +104,10 @@ const seasonStatsCompare = (
   const seasonStr = seasonTtpe.replace(/\s/g, '');
 
   const seasonObj = makeSeasonObj(playerProfile, seasonStr);
-
   const nameStr = makeNameStr(playerInfo, seasonTtpe);
-  //const seasonDataStr = makeSeasonStr(seasonObj);
 
   // use all the strings we generated to make the table
   const seasonTable = table.basicTable();
-
   seasonTable.push([
     { colSpan: 14, content: nameStr.trim(), hAlign: 'center' },
   ]);
@@ -126,30 +130,24 @@ const seasonStatsCompare = (
     ])
   );
 
-  //for each season in seasonObj
-  //row = makeRow
-  //table.push(row)
-  Object.keys(seasonObj).forEach(key => {
-    debugger;
+  Object.keys(seasonObj).reverse().forEach(key => {
     const row = makeRow(seasonObj[key]);
-    debugger;
-  
     seasonTable.push(
       alignCenter([
-        row.seasonId,
-        row.teamAbbreviation,
-        row.playerAge,
-        row.gp,
-        row.min,
-        row.pts,
-        row.fgPct,
-        row.fg3Pct,
-        row.ftPct,
-        row.ast,
-        row.reb,
-        row.stl,
-        row.blk,
-        row.tov,
+        row.seasonId.trim(),
+        row.teamAbbreviation.trim(),
+        row.playerAge.trim(),
+        row.gp.trim(),
+        row.min.trim(),
+        row.pts.trim(),
+        row.fgPct.trim(),
+        row.fg3Pct.trim(),
+        row.ftPct.trim(),
+        row.ast.trim(),
+        row.reb.trim(),
+        row.stl.trim(),
+        row.blk.trim(),
+        row.tov.trim()
       ])
     );
   });
