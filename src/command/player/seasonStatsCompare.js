@@ -1,6 +1,4 @@
 /* eslint-disable */
-
-
 import chalk from 'chalk';
 import { getMainColor } from 'nba-color';
 
@@ -28,17 +26,38 @@ const makeNameStr = (playerInfo, seasonTtpe) => {
   return nameStr;
 };
 
+// make an object where keys are the seasons
+// each season maps to an array of the player stats for that season
+const makeSeasonObj = (playerProfile, seasonStr) => {
+  const seasonObj = {};
+  playerProfile.forEach(player => {
+    // access the season totals for either post or regular season
+    const seasonArr = player[`seasonTotals${seasonStr}`];
+    seasonArr.forEach(season => {
+      const currentSeason = season.seasonId;
+      // check if the season is already in the object
+      if (seasonObj[currentSeason]) {
+        // if it does add this players data to the array
+        seasonObj[currentSeason].push(season);
+      } else {
+        // otherwise create a new array
+        seasonObj[currentSeason] = [season];
+      }
+    });
+  });
+  return seasonObj;
+};
+
 // takes in the object contining seasons and returns an array where each entry represents a season
 // the entries will be objects where keys map to strings to push to table
-const makeSeasonStr = seasonObj => {
+const makeRow = seasonData => {
   const template = {
-    seasonId: '',
-    abbreviaton: '',
+    teamAbbreviation: '',
     playerAge: '',
     gp: '',
     min: '',
     pts: '',
-    fpPct: '',
+    fgPct: '',
     fg3Pct: '',
     ftPct: '',
     ast: '',
@@ -47,28 +66,26 @@ const makeSeasonStr = seasonObj => {
     blk: '',
     tov: '',
   };
-  /*
-  seasonTable.push(
-    alignCenter([
-      bold(seasonId),
-      chalk`{bold.white.bgHex('${
-        teamMainColor ? teamMainColor.hex : '#000'
-      }') ${teamAbbreviation}}`,
-      playerAge,
-      gp,
-      min,
-      pts,
-      (fgPct * 100).toFixed(1),
-      (fg3Pct * 100).toFixed(1),
-      (ftPct * 100).toFixed(1),
-      ast,
-      reb,
-      stl,
-      blk,
-      tov,
-    ])
-  );
-  */
+
+  seasonData.forEach(player => {
+    //configure certain data before we append to string
+    if(player !== {}){
+      player.fg3Pct = (player.fg3Pct * 100).toFixed(1)
+      player.fgPct = (player.fgPct * 100).toFixed(1)
+      player.ftPct = (player.ftPct * 100).toFixed(1)
+      let teamMainColor = getMainColor(player.teamAbbreviation);
+      player.teamAbbreviation = chalk`{bold.white.bgHex('${
+          teamMainColor ? teamMainColor.hex : '#000'
+        }') ${player.teamAbbreviation}}`
+    }
+    Object.keys(template).forEach(key =>{
+      //add data to str or if no data put in a dash
+      template[key] += (player[key] + '\n') || '-\n';
+    });
+  });
+
+  template.seasonId = bold(seasonData[0].seasonId);
+  return template;
 };
 
 const seasonStatsCompare = (
@@ -79,10 +96,10 @@ const seasonStatsCompare = (
   // these strings are used so we can get the correct data at the beginning and dont have to write same code twice
   const seasonStr = seasonTtpe.replace(/\s/g, '');
 
-  const seasonObj = makeSeasonTable(playerProfile, seasonStr);
-  const seasonDataStr = makeSeasonStr(seasonObj);
+  const seasonObj = makeSeasonObj(playerProfile, seasonStr);
 
   const nameStr = makeNameStr(playerInfo, seasonTtpe);
+  //const seasonDataStr = makeSeasonStr(seasonObj);
 
   // use all the strings we generated to make the table
   const seasonTable = table.basicTable();
@@ -109,104 +126,35 @@ const seasonStatsCompare = (
     ])
   );
 
-  console.log(seasonTable.toString());
-
-  /*
-  seasonTable.push(
-    alignCenter([
-      bold(seasonId),
-      chalk`{bold.white.bgHex('${
-        teamMainColor ? teamMainColor.hex : '#000'
-      }') ${teamAbbreviation}}`,
-      playerAge,
-      gp,
-      min,
-      pts,
-      (fgPct * 100).toFixed(1),
-      (fg3Pct * 100).toFixed(1),
-      (ftPct * 100).toFixed(1),
-      ast,
-      reb,
-      stl,
-      blk,
-      tov,
-    ])
-  );
-
-  seasonTotals.reverse().forEach(season => {
-    const {
-      seasonId,
-      teamAbbreviation,
-      playerAge,
-      gp,
-      min,
-      pts,
-      fgPct,
-      fg3Pct,
-      ftPct,
-      ast,
-      reb,
-      stl,
-      blk,
-      tov,
-    } = season;
-    const teamMainColor = getMainColor(teamAbbreviation);
-
-  const {
-    gp,
-    min,
-    pts,
-    fgPct,
-    fg3Pct,
-    ftPct,
-    ast,
-    reb,
-    stl,
-    blk,
-    tov,
-  } = careerTotals;
-
-  seasonTable.push(
-    alignCenter([
-      bold('Overall'),
-      bold(''),
-      bold(''),
-      bold(gp),
-      bold(min),
-      bold(pts),
-      bold((fgPct * 100).toFixed(1)),
-      bold((fg3Pct * 100).toFixed(1)),
-      bold((ftPct * 100).toFixed(1)),
-      bold(ast),
-      bold(reb),
-      bold(stl),
-      bold(blk),
-      bold(tov),
-    ])
-  );
-*/
-};
-
-// make an object where keys are the seasons
-// each season maps to an array of the player stats for that season
-const makeSeasonTable = (playerProfile, seasonStr) => {
-  const seasonObj = {};
-  playerProfile.forEach(player => {
-    // access the season totals for either post or regular season
-    const seasonArr = player[`seasonTotals${seasonStr}`];
-    seasonArr.forEach(season => {
-      const currentSeason = season.seasonId;
-      // check if the season is already in the object
-      if (seasonObj[currentSeason]) {
-        // if it does add this players data to the array
-        seasonObj[currentSeason].push(season);
-      } else {
-        // otherwise create a new array
-        seasonObj[currentSeason] = [season];
-      }
-    });
+  //for each season in seasonObj
+  //row = makeRow
+  //table.push(row)
+  Object.keys(seasonObj).forEach(key => {
+    debugger;
+    const row = makeRow(seasonObj[key]);
+    debugger;
+  
+    seasonTable.push(
+      alignCenter([
+        row.seasonId,
+        row.teamAbbreviation,
+        row.playerAge,
+        row.gp,
+        row.min,
+        row.pts,
+        row.fgPct,
+        row.fg3Pct,
+        row.ftPct,
+        row.ast,
+        row.reb,
+        row.stl,
+        row.blk,
+        row.tov,
+      ])
+    );
   });
-  return seasonObj;
+
+  console.log(seasonTable.toString());
 };
 
 export default seasonStatsCompare;
