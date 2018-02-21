@@ -4,6 +4,12 @@ import { getMainColor } from 'nba-color';
 
 import { bold } from '../../utils/log';
 import table from '../../utils/table';
+/*
+Author: DoubleB123, bbrenner321@gmail.com
+This is called by index.js when comparing the stats of players
+It is similar to seasonStats.js but a few more steps to 
+compile the data between players for display
+*/
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
@@ -27,7 +33,7 @@ const findMaxInd = arr =>{
 const makeNameStr = (playerInfo, seasonTtpe) => {
   let nameStr = '';
   playerInfo.forEach(player => {
-    const { teamAbbreviation, jersey, displayFirstLast } = {
+    const { teamAbbreviation, jersey, displayFirstLast } ={
       ...player.commonPlayerInfo[0],
     };
     const teamMainColor = getMainColor(teamAbbreviation);
@@ -67,6 +73,15 @@ const makeSeasonObj = (playerProfile, seasonStr) => {
   return seasonObj;
 };
 
+//takes in all the data and returns an array with the player's totals as each entry
+const makeOverall = (playerProfile, seasonStr) =>{
+  const overallArr = [];
+  playerProfile.forEach(player =>{
+    overallArr.push(...player[`careerTotals${seasonStr}`]);
+  });
+  return overallArr;
+};
+
 // takes in the data for a season and combines the stats into strings to be pushed to table
 const makeRow = seasonData => {
   const template = {
@@ -92,10 +107,13 @@ const makeRow = seasonData => {
       player.fg3Pct = (player.fg3Pct * 100).toFixed(1)
       player.fgPct = (player.fgPct * 100).toFixed(1)
       player.ftPct = (player.ftPct * 100).toFixed(1)
-      let teamMainColor = getMainColor(player.teamAbbreviation);
-      player.teamAbbreviation = chalk`{bold.white.bgHex('${
-          teamMainColor ? teamMainColor.hex : '#000'
-        }') ${player.teamAbbreviation}}`
+      //overall stats dont have team abbreviation, have to check if exists
+      if(player.teamAbbreviation){
+        let teamMainColor = getMainColor(player.teamAbbreviation);
+        player.teamAbbreviation = chalk`{bold.white.bgHex('${
+            teamMainColor ? teamMainColor.hex : '#000'
+          }') ${player.teamAbbreviation}}`
+      }
       if(!template.seasonId){
         seasonId = bold(player.seasonId);
       }
@@ -113,6 +131,7 @@ const makeRow = seasonData => {
     template[key] = template[key].join('\n')
    });
 
+  //set seasonId, do this at the end because didnt want key in there when looping
   template.seasonId = seasonId;
   return template;
 };
@@ -125,7 +144,10 @@ const seasonStatsCompare = (
 ) => {
   // these strings are used so we can get the correct data at the beginning and dont have to write same code twice
   const seasonStr = seasonTtpe.replace(/\s/g, '');
+
+  //compile the data into a format to push to the table
   const seasonObj = makeSeasonObj(playerProfile, seasonStr);
+  const overallArr = makeOverall(playerProfile, seasonStr);
   const nameStr = makeNameStr(playerInfo, seasonTtpe);
 
   // make sure we are adding rows in the correct order
@@ -182,6 +204,28 @@ const seasonStatsCompare = (
       ])
     );
   });
+
+  //add the final Overall row
+  const overallRow = makeRow(overallArr);
+  seasonTable.push(
+    alignCenter([
+      bold('Overall'),
+      bold(''),
+      bold(''),
+      bold(overallRow.gp.trim()),
+      bold(overallRow.min.trim()),
+      bold(overallRow.pts.trim()),
+      bold(overallRow.fgPct.trim()),
+      bold(overallRow.fg3Pct.trim()),
+      bold(overallRow.ftPct.trim()),
+      bold(overallRow.ast.trim()),
+      bold(overallRow.reb.trim()),
+      bold(overallRow.stl.trim()),
+      bold(overallRow.blk.trim()),
+      bold(overallRow.tov.trim())
+    ])
+  );
+
   console.log(seasonTable.toString());
 };
 

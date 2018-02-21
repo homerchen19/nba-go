@@ -24,8 +24,6 @@ const player = async (playerName, option) => {
 
   // if we are comparing we need to get all the data first before make the table
   if (option.compare) {
-    // get basic info about all the players in array
-
     // do this a little bit different than the original
     // get all the player data in an array, then will pass to playerInfoCompare and parse it
     const infoMapper = elem => NBA.playerInfo({ PlayerID: elem.playerId });
@@ -40,6 +38,7 @@ const player = async (playerName, option) => {
       playerInfoCompare(playerDataArr);
     }
     if (option.regular || option.playoffs) {
+      // if getting regular season data need to get more data
       const profileMapper = elem =>
         NBA.playerProfile({ PlayerID: elem.playerId });
       let playerProfileArr;
@@ -48,6 +47,7 @@ const player = async (playerName, option) => {
           playerProfileArr = result;
         })
         .catch(err => catchAPIError(err, 'NBA.playerProfile()'));
+
       if (option.regular) {
         seasonStatsCompare(playerProfileArr, playerDataArr, 'Regular Season');
       }
@@ -56,6 +56,7 @@ const player = async (playerName, option) => {
       }
     }
   } else {
+    // if we aren't doing any comparing
     pMap(
       _players,
       async _player => {
