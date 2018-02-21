@@ -1,4 +1,3 @@
-/* eslint-disable */
 import chalk from 'chalk';
 import { getMainColor } from 'nba-color';
 
@@ -14,16 +13,15 @@ compile the data between players for display
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
 
-//takes in an array and gives the index of the max value,
-//ignores the dashes in the array
-const findMaxInd = arr =>{
+// takes in an array and gives the index of the max value,
+// ignores the dashes in the array
+const findMaxInd = arr => {
   let maxInd = 0;
-  for(let i = 1; i<arr.length; ++i){
-    if(arr[i] === '-'){
-      continue;
-    }
-    if(arr[i] > arr[maxInd]){
-      maxInd = i;
+  for (let i = 1; i < arr.length; i += 1) {
+    if (arr[i] !== '-') {
+      if (arr[i] > arr[maxInd]) {
+        maxInd = i;
+      }
     }
   }
   return maxInd;
@@ -33,7 +31,7 @@ const findMaxInd = arr =>{
 const makeNameStr = (playerInfo, seasonTtpe) => {
   let nameStr = '';
   playerInfo.forEach(player => {
-    const { teamAbbreviation, jersey, displayFirstLast } ={
+    const { teamAbbreviation, jersey, displayFirstLast } = {
       ...player.commonPlayerInfo[0],
     };
     const teamMainColor = getMainColor(teamAbbreviation);
@@ -68,21 +66,22 @@ const makeSeasonObj = (playerProfile, seasonStr) => {
         seasonObj[currentSeason][index] = season;
       }
     });
-    ++index;
+    index += 1;
   });
   return seasonObj;
 };
 
-//takes in all the data and returns an array with the player's totals as each entry
-const makeOverall = (playerProfile, seasonStr) =>{
+// takes in all the data and returns an array with the player's totals as each entry
+const makeOverall = (playerProfile, seasonStr) => {
   const overallArr = [];
-  playerProfile.forEach(player =>{
+  playerProfile.forEach(player => {
     overallArr.push(...player[`careerTotals${seasonStr}`]);
   });
   return overallArr;
 };
 
 // takes in the data for a season and combines the stats into strings to be pushed to table
+/* eslint-disable no-param-reassign */
 const makeRow = seasonData => {
   const template = {
     teamAbbreviation: [],
@@ -97,44 +96,45 @@ const makeRow = seasonData => {
     reb: [],
     stl: [],
     blk: [],
-    tov: []
+    tov: [],
   };
   let seasonId;
   seasonData.forEach(player => {
-    //configure certain data before we append to string
-    //make sure object isn't empty
-    if(Object.keys(player).length !== 0){
-      player.fg3Pct = (player.fg3Pct * 100).toFixed(1)
-      player.fgPct = (player.fgPct * 100).toFixed(1)
-      player.ftPct = (player.ftPct * 100).toFixed(1)
-      //overall stats dont have team abbreviation, have to check if exists
-      if(player.teamAbbreviation){
-        let teamMainColor = getMainColor(player.teamAbbreviation);
+    // configure certain data before we append to string
+    // make sure object isn't empty
+    if (Object.keys(player).length !== 0) {
+      player.fg3Pct = (player.fg3Pct * 100).toFixed(1);
+      player.fgPct = (player.fgPct * 100).toFixed(1);
+      player.ftPct = (player.ftPct * 100).toFixed(1);
+      // overall stats dont have team abbreviation, have to check if exists
+      if (player.teamAbbreviation) {
+        const teamMainColor = getMainColor(player.teamAbbreviation);
         player.teamAbbreviation = chalk`{bold.white.bgHex('${
-            teamMainColor ? teamMainColor.hex : '#000'
-          }') ${player.teamAbbreviation}}`
+          teamMainColor ? teamMainColor.hex : '#000'
+        }') ${player.teamAbbreviation}}`;
       }
-      if(!template.seasonId){
+      if (!template.seasonId) {
         seasonId = bold(player.seasonId);
       }
     }
-    Object.keys(template).forEach(key =>{
-      //add data to str or if no data put in a dash
+    Object.keys(template).forEach(key => {
+      // add data to str or if no data put in a dash
       template[key].push(player[key] || '-');
     });
   });
 
-  Object.keys(template).forEach(key =>{
+  Object.keys(template).forEach(key => {
     // find which player has best stat and color it green
     const maxInd = findMaxInd(template[key]);
     template[key][maxInd] = chalk.green(template[key][maxInd]);
-    template[key] = template[key].join('\n')
-   });
+    template[key] = template[key].join('\n');
+  });
 
-  //set seasonId, do this at the end because didnt want key in there when looping
+  // set seasonId, do this at the end because didnt want key in there when looping
   template.seasonId = seasonId;
   return template;
 };
+/* eslint-enable no-param-reassign */
 
 // main function called by index.js
 const seasonStatsCompare = (
@@ -145,16 +145,16 @@ const seasonStatsCompare = (
   // these strings are used so we can get the correct data at the beginning and dont have to write same code twice
   const seasonStr = seasonTtpe.replace(/\s/g, '');
 
-  //compile the data into a format to push to the table
+  // compile the data into a format to push to the table
   const seasonObj = makeSeasonObj(playerProfile, seasonStr);
   const overallArr = makeOverall(playerProfile, seasonStr);
   const nameStr = makeNameStr(playerInfo, seasonTtpe);
 
   // make sure we are adding rows in the correct order
-  const seasonDates = Object.keys(seasonObj).sort((a,b) => {
-    //date has form 2003-04
-    const adate =a.split('-')[0]
-    const bdate = b.split('-')[0]
+  const seasonDates = Object.keys(seasonObj).sort((a, b) => {
+    // date has form 2003-04
+    const adate = a.split('-')[0];
+    const bdate = b.split('-')[0];
     return adate - bdate;
   });
 
@@ -182,7 +182,7 @@ const seasonStatsCompare = (
     ])
   );
 
-  //go through each season and push it to table
+  // go through each season and push it to table
   seasonDates.reverse().forEach(key => {
     const row = makeRow(seasonObj[key]);
     seasonTable.push(
@@ -200,12 +200,12 @@ const seasonStatsCompare = (
         row.reb.trim(),
         row.stl.trim(),
         row.blk.trim(),
-        row.tov.trim()
+        row.tov.trim(),
       ])
     );
   });
 
-  //add the final Overall row
+  // add the final Overall row
   const overallRow = makeRow(overallArr);
   seasonTable.push(
     alignCenter([
@@ -222,7 +222,7 @@ const seasonStatsCompare = (
       bold(overallRow.reb.trim()),
       bold(overallRow.stl.trim()),
       bold(overallRow.blk.trim()),
-      bold(overallRow.tov.trim())
+      bold(overallRow.tov.trim()),
     ])
   );
 
