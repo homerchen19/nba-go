@@ -8,6 +8,21 @@ import table from '../../utils/table';
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
 
+//takes in an array and gives the index of the max value,
+//ignores the dashes in the array
+const findMaxInd = arr =>{
+  let maxInd = 0;
+  for(let i = 1; i<arr.length; ++i){
+    if(arr[i] === '-'){
+      continue;
+    }
+    if(arr[i] > arr[maxInd]){
+      maxInd = i;
+    }
+  }
+  return maxInd;
+};
+
 // takes in the player info array and gets the names and jersey and creates a string containing them all
 const makeNameStr = (playerInfo, seasonTtpe) => {
   let nameStr = '';
@@ -28,6 +43,7 @@ const makeNameStr = (playerInfo, seasonTtpe) => {
 
 // make an object where keys are the seasons
 // each season maps to an array of the player stats for that season
+// each array has the length of the number of players, entries initalized to empty object
 const makeSeasonObj = (playerProfile, seasonStr) => {
   const seasonObj = {};
   let index = 0;
@@ -51,25 +67,23 @@ const makeSeasonObj = (playerProfile, seasonStr) => {
   return seasonObj;
 };
 
-// takes in the object contining seasons and returns an array where each entry represents a season
-// the entries will be objects where keys map to strings to push to table
+// takes in the data for a season and combines the stats into strings to be pushed to table
 const makeRow = seasonData => {
   const template = {
-    teamAbbreviation: '',
-    playerAge: '',
-    gp: '',
-    min: '',
-    pts: '',
-    fgPct: '',
-    fg3Pct: '',
-    ftPct: '',
-    ast: '',
-    reb: '',
-    stl: '',
-    blk: '',
-    tov: '',
+    teamAbbreviation: [],
+    playerAge: [],
+    gp: [],
+    min: [],
+    pts: [],
+    fgPct: [],
+    fg3Pct: [],
+    ftPct: [],
+    ast: [],
+    reb: [],
+    stl: [],
+    blk: [],
+    tov: []
   };
-
   let seasonId;
   seasonData.forEach(player => {
     //configure certain data before we append to string
@@ -88,13 +102,22 @@ const makeRow = seasonData => {
     }
     Object.keys(template).forEach(key =>{
       //add data to str or if no data put in a dash
-      template[key] += (player[key] || '-') + '\n';
+      template[key].push(player[key] || '-');
     });
   });
+
+  Object.keys(template).forEach(key =>{
+    // find which player has best stat and color it green
+    const maxInd = findMaxInd(template[key]);
+    template[key][maxInd] = chalk.green(template[key][maxInd]);
+    template[key] = template[key].join('\n')
+   });
+
   template.seasonId = seasonId;
   return template;
 };
 
+// main function called by index.js
 const seasonStatsCompare = (
   playerProfile,
   playerInfo,
@@ -102,9 +125,16 @@ const seasonStatsCompare = (
 ) => {
   // these strings are used so we can get the correct data at the beginning and dont have to write same code twice
   const seasonStr = seasonTtpe.replace(/\s/g, '');
-
   const seasonObj = makeSeasonObj(playerProfile, seasonStr);
   const nameStr = makeNameStr(playerInfo, seasonTtpe);
+
+  // make sure we are adding rows in the correct order
+  const seasonDates = Object.keys(seasonObj).sort((a,b) => {
+    //date has form 2003-04
+    const adate =a.split('-')[0]
+    const bdate = b.split('-')[0]
+    return adate - bdate;
+  });
 
   // use all the strings we generated to make the table
   const seasonTable = table.basicTable();
@@ -130,7 +160,8 @@ const seasonStatsCompare = (
     ])
   );
 
-  Object.keys(seasonObj).reverse().forEach(key => {
+  //go through each season and push it to table
+  seasonDates.reverse().forEach(key => {
     const row = makeRow(seasonObj[key]);
     seasonTable.push(
       alignCenter([
@@ -151,7 +182,6 @@ const seasonStatsCompare = (
       ])
     );
   });
-
   console.log(seasonTable.toString());
 };
 

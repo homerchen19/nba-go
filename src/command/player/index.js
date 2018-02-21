@@ -39,7 +39,7 @@ const player = async (playerName, option) => {
     if (option.info) {
       playerInfoCompare(playerDataArr);
     }
-    if (option.regular) {
+    if (option.regular || option.playoffs) {
       const profileMapper = elem =>
         NBA.playerProfile({ PlayerID: elem.playerId });
       let playerProfileArr;
@@ -48,7 +48,12 @@ const player = async (playerName, option) => {
           playerProfileArr = result;
         })
         .catch(err => catchAPIError(err, 'NBA.playerProfile()'));
-      seasonStatsCompare(playerProfileArr, playerDataArr, 'Regular Season');
+      if (option.regular) {
+        seasonStatsCompare(playerProfileArr, playerDataArr, 'Regular Season');
+      }
+      if (option.playoffs) {
+        seasonStatsCompare(playerProfileArr, playerDataArr, 'Post Season');
+      }
     }
   } else {
     pMap(
