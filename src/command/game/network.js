@@ -1,15 +1,13 @@
 import R from 'ramda';
 
 const getBroadcastNetworks = televisionNetworks => {
-  let homeTeamNetwork = R.find(R.propEq('home_visitor', 'home'))(
-    televisionNetworks
-  );
-  let visitorTeamNetwork = R.find(R.propEq('home_visitor', 'visitor'))(
-    televisionNetworks
-  );
-  let nationalNetwork = R.find(R.propEq('home_visitor', 'natl'))(
-    televisionNetworks
-  );
+  const findNetwork = prop =>
+    R.find(R.propEq('home_visitor', prop))(televisionNetworks);
+
+  let homeTeamNetwork = findNetwork('home');
+  let visitorTeamNetwork = findNetwork('visitor');
+  let nationalNetwork = findNetwork('natl');
+
   nationalNetwork = !nationalNetwork ? 'N/A' : nationalNetwork.display_name;
   homeTeamNetwork = !homeTeamNetwork
     ? nationalNetwork
