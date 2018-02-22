@@ -2,6 +2,8 @@ import format from 'date-fns/format';
 import { center } from 'wide-align';
 import emoji from 'node-emoji';
 
+import getBroadcastNetworks from './network';
+
 import { bold } from '../../utils/log';
 import { basicTable } from '../../utils/table';
 
@@ -64,6 +66,7 @@ const preview = (
     state,
     display_year,
     display_season,
+    broadcasters,
     homeTeamDashboardData,
     visitorTeamDashboardData,
   }
@@ -73,6 +76,7 @@ const preview = (
     homeTeam.getFullName({ color: false }).length,
     visitorTeam.getFullName({ color: false }).length
   );
+  const networks = getBroadcastNetworks(broadcasters.tv.broadcaster);
 
   gamePreviewTable.push(
     alignCenter([
@@ -96,6 +100,14 @@ const preview = (
       {
         colSpan: 16,
         content: bold(`${emoji.get('house')}  ${arena} ｜ ${city}, ${state}`),
+      },
+    ]),
+    alignCenter([
+      {
+        colSpan: 16,
+        content: bold(
+          `${networks.homeTeam} ${emoji.get('tv')}  ${networks.visitorTeam}`
+        ),
       },
     ]),
     alignCenter(

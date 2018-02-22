@@ -155,6 +155,15 @@ const getBlessed = (homeTeam, visitorTeam) => {
     },
   });
 
+  const networkText = blessed.text({
+    top: 4,
+    left: 'center',
+    align: 'center',
+    style: {
+      fg: 'white',
+    },
+  });
+
   const playByPlayBox = blessed.box({
     parent: screen,
     top: 15,
@@ -206,6 +215,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
   screen.append(timeText);
   screen.append(dateText);
   screen.append(arenaText);
+  screen.append(networkText);
   screen.append(homeTeamFullNameText);
   screen.append(homeTeamStandingsText);
   screen.append(homeTeamScoreText);
@@ -224,6 +234,7 @@ const getBlessed = (homeTeam, visitorTeam) => {
     timeText,
     dateText,
     arenaText,
+    networkText,
     homeTeamScoreText,
     visitorTeamScoreText,
     playByPlayBox,
