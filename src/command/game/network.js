@@ -1,22 +1,22 @@
+import R from 'ramda';
+
 const getBroadcastNetworks = televisionNetworks => {
-  let homeTeamNetwork = televisionNetworks.filter(
-    broadcaster => broadcaster.home_visitor === 'home'
+  let homeTeamNetwork = R.find(R.propEq('home_visitor', 'home'))(
+    televisionNetworks
   );
-  let visitorTeamNetwork = televisionNetworks.filter(
-    broadcaster => broadcaster.home_visitor === 'visitor'
+  let visitorTeamNetwork = R.find(R.propEq('home_visitor', 'visitor'))(
+    televisionNetworks
   );
-  let nationalNetwork = televisionNetworks.filter(
-    broadcaster => broadcaster.home_visitor === 'natl'
+  let nationalNetwork = R.find(R.propEq('home_visitor', 'natl'))(
+    televisionNetworks
   );
-  nationalNetwork = !nationalNetwork.length
-    ? 'N/A'
-    : nationalNetwork[0].display_name;
-  homeTeamNetwork = !homeTeamNetwork.length
+  nationalNetwork = !nationalNetwork ? 'N/A' : nationalNetwork.display_name;
+  homeTeamNetwork = !homeTeamNetwork
     ? nationalNetwork
-    : homeTeamNetwork[0].display_name;
-  visitorTeamNetwork = !visitorTeamNetwork.length
+    : homeTeamNetwork.display_name;
+  visitorTeamNetwork = !visitorTeamNetwork
     ? nationalNetwork
-    : visitorTeamNetwork[0].display_name;
+    : visitorTeamNetwork.display_name;
 
   return {
     homeTeam: homeTeamNetwork,
