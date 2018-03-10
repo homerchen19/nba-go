@@ -6,11 +6,18 @@ import { convertToCm, convertToKg } from '../../utils/convertUnit';
 import table from '../../utils/table';
 import { bold } from '../../utils/log';
 
+/*
+Author: DoubleB123, bbrenner321@gmail.com
+This is called by index.js when comparing the stats of players
+It is similar to info.js but a few more steps to 
+compile the data between players for display
+*/
+
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
 
 // in the original info.js it it doesn't have a foreach loop
-// here i loop through each player and create table entries and at the end push to the table
+// here I loop through each player and create table entries and at the end push to the table
 const infoCompare = playerInfo => {
   const playerTable = table.basicTable();
   // these will be the table entries, append to them and then add a new line
