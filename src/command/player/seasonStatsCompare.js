@@ -1,3 +1,4 @@
+import R from 'ramda';
 import chalk from 'chalk';
 import { getMainColor } from 'nba-color';
 
@@ -96,16 +97,18 @@ const makeRow = seasonData => {
         seasonId = bold(player.seasonId);
       }
     }
-    Object.keys(template).forEach(key => {
+    const templatePusher = (val, key) => {
       template[key].push(player[key] || '-');
-    });
+    };
+    R.forEachObjIndexed(templatePusher, template);
   });
 
-  Object.keys(template).forEach(key => {
+  const colorStats = (val, key) => {
     const maxInd = findMaxInd(template[key]);
     template[key][maxInd] = chalk.green(template[key][maxInd]);
     template[key] = template[key].join('\n');
-  });
+  };
+  R.forEachObjIndexed(colorStats, template);
 
   template.seasonId = seasonId;
   return template;
@@ -123,11 +126,12 @@ const seasonStatsCompare = (
   const overallArr = makeOverall(playerProfile, seasonStr);
   const nameStr = makeNameStr(playerInfo, seasonTtpe);
 
-  const seasonDates = Object.keys(seasonObj).sort((a, b) => {
+  const sorter = (a, b) => {
     const adate = a.split('-')[0];
     const bdate = b.split('-')[0];
     return adate - bdate;
-  });
+  };
+  const seasonDates = R.sort(sorter, R.keys(seasonObj));
 
   const seasonTable = table.basicTable();
   seasonTable.push([
