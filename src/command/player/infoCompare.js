@@ -6,32 +6,12 @@ import { convertToCm, convertToKg } from '../../utils/convertUnit';
 import table from '../../utils/table';
 import { bold } from '../../utils/log';
 
-/*
-Author: DoubleB123, bbrenner321@gmail.com
-This is called by index.js when comparing the stats of players
-It is similar to info.js but a few more steps to 
-compile the data between players for display
-*/
-
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
 
-// in the original info.js it it doesn't have a foreach loop
-// here I loop through each player and create table entries and at the end push to the table
 const infoCompare = playerInfo => {
   const playerTable = table.basicTable();
-  // these will be the table entries, append to them and then add a new line
-  // after the loop push to the table
   let nameStr = '';
-  let heightStr = '';
-  let weightStr = '';
-  let countryStr = '';
-  let birthStr = '';
-  let seasonStr = '';
-  let draftStr = '';
-  let ptsStr = '';
-  let rebStr = '';
-  let astStr = '';
 
   playerInfo.forEach(elem => {
     const {
@@ -62,18 +42,23 @@ const infoCompare = playerInfo => {
         : 'Undrafted';
 
     nameStr += `${playerName}\n`;
-    heightStr += `${height} / ${convertToCm(height)}\n`;
-    weightStr += `${weight} / ${convertToKg(weight)}\n`;
-    countryStr += `${country}\n`;
-    birthStr += `${format(birthdate, 'YYYY/MM/DD')}\n`;
-    seasonStr += `${seasonExp} yrs\n`;
-    draftStr += `${draft}\n`;
-    ptsStr += `${pts}\n`;
-    rebStr += `${reb}\n`;
-    astStr += `${ast}\n`;
+
+    playerTable.push(
+      alignCenter([
+        `${height} / ${convertToCm(height)}`,
+        `${weight} / ${convertToKg(weight)}`,
+        country,
+        `${format(birthdate, 'YYYY/MM/DD')}`,
+        `${seasonExp} yrs`,
+        draft,
+        pts,
+        reb,
+        ast,
+      ])
+    );
   });
 
-  playerTable.push(
+  playerTable.unshift(
     [
       {
         colSpan: 9,
@@ -92,17 +77,6 @@ const infoCompare = playerInfo => {
       bold('PTS'),
       bold('REB'),
       bold('AST'),
-    ]),
-    alignCenter([
-      heightStr.trim(),
-      weightStr.trim(),
-      countryStr.trim(),
-      birthStr.trim(),
-      seasonStr.trim(),
-      draftStr.trim(),
-      ptsStr.trim(),
-      rebStr.trim(),
-      astStr.trim(),
     ])
   );
   console.log(playerTable.toString());
