@@ -13,8 +13,6 @@ import seasonStatsCompare from './seasonStatsCompare';
 const player = async (playerName, option) => {
   await NBA.updatePlayers();
 
-  // split the input by commas and then find matching players and add to array
-  // works even if only input 1 player
   const _players = [];
   const nameArray = playerName.split(',');
   nameArray.forEach(name => {
@@ -22,10 +20,7 @@ const player = async (playerName, option) => {
     _players.push(...playerData);
   });
 
-  // if we are comparing we need to get all the data first before make the table
   if (option.compare) {
-    // do this a little bit different than the original
-    // get all the player data in an array, then will pass to playerInfoCompare and parse it
     const infoMapper = elem => NBA.playerInfo({ PlayerID: elem.playerId });
     let playerDataArr;
     try {
@@ -38,7 +33,6 @@ const player = async (playerName, option) => {
       playerInfoCompare(playerDataArr);
     }
     if (option.regular || option.playoffs) {
-      // if getting regular season data need to get more data
       const profileMapper = elem =>
         NBA.playerProfile({ PlayerID: elem.playerId });
       let playerProfileArr;
@@ -55,7 +49,6 @@ const player = async (playerName, option) => {
       }
     }
   } else {
-    // if we aren't doing any comparing
     pMap(
       _players,
       async _player => {
