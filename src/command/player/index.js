@@ -28,11 +28,11 @@ const player = async (playerName, option) => {
     // get all the player data in an array, then will pass to playerInfoCompare and parse it
     const infoMapper = elem => NBA.playerInfo({ PlayerID: elem.playerId });
     let playerDataArr;
-    await pMap(_players, infoMapper)
-      .then(result => {
-        playerDataArr = result;
-      })
-      .catch(err => catchAPIError(err, 'NBA.playerInfo()'));
+    try {
+      playerDataArr = await pMap(_players, infoMapper);
+    } catch (err) {
+      catchAPIError(err, 'NBA.playerInfo()');
+    }
 
     if (option.info) {
       playerInfoCompare(playerDataArr);
@@ -42,12 +42,11 @@ const player = async (playerName, option) => {
       const profileMapper = elem =>
         NBA.playerProfile({ PlayerID: elem.playerId });
       let playerProfileArr;
-      await pMap(_players, profileMapper)
-        .then(result => {
-          playerProfileArr = result;
-        })
-        .catch(err => catchAPIError(err, 'NBA.playerProfile()'));
-
+      try {
+        playerProfileArr = await pMap(_players, profileMapper);
+      } catch (err) {
+        catchAPIError(err, 'NBA.playerProfile()');
+      }
       if (option.regular) {
         seasonStatsCompare(playerProfileArr, playerDataArr, 'Regular Season');
       }
