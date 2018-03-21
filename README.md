@@ -182,6 +182,14 @@ $ nba-go player Curry -p
 ```
 ![player -p gif](https://user-images.githubusercontent.com/12113222/32500032-234e8fba-c40f-11e7-87c0-6e42a66a52dc.gif)
 
+##### `-c` or `--compare`  
+Get and compare the stats from multiple players. The better stat will be highlighted in green to make comparing easier.
+When listing the multiple names they must be in quotes and seperated by commas. Can be combined with the -i, -r, and -p flags.
+
+```
+$ nba-go player "Lebron James, Stephen Curry, James Harden" -c -i -r -p
+```
+
 #### Mixed them all
 Get all data at the same time.
 ```

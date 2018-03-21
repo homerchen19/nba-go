@@ -34,6 +34,10 @@ program
   .option('-i, --info', "Check the player's basic information")
   .option('-r, --regular', "Check the player's career regular season data")
   .option('-p, --playoffs', "Check the player's career playoffs data")
+  .option(
+    '-c, --compare',
+    "Compare the stats of two or more players. Seperate the names with commas, ex:'Stepen Curry, Lebron James'"
+  )
   .on('--help', () => {
     console.log('');
     console.log(
