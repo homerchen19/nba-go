@@ -138,6 +138,14 @@ describe('cli', () => {
       expect(nbaGo.game.mock.calls[0][0].tomorrow).toBe(true);
     });
 
+    it('should call nbaGo with option -n', () => {
+      process.argv = ['node', 'bin/cli.js', 'game', '-n'];
+
+      setup();
+
+      expect(nbaGo.game.mock.calls[0][0].networks).toBe(true);
+    });
+
     it('alias should work', () => {
       process.argv = ['node', 'bin/cli.js', 'p', 'Curry'];
       setup();

@@ -2,6 +2,8 @@ import format from 'date-fns/format';
 import emoji from 'node-emoji';
 import { center } from 'wide-align';
 
+import getBroadcastNetworks from './network';
+
 import { bold, nbaRed, neonGreen } from '../../utils/log';
 import { basicTable } from '../../utils/table';
 
@@ -57,7 +59,7 @@ const teamGameLeaders = (homeTeam, visitorTeam, field) =>
 const scoreboard = (
   homeTeam,
   visitorTeam,
-  { date, time, arena, city, state, display_year, display_season }
+  { date, time, arena, city, state, display_year, display_season, broadcasters }
 ) => {
   const scoreboardTable = basicTable();
 
@@ -65,6 +67,8 @@ const scoreboard = (
 
   const homeTeamStartingPlayers = getStartingPlayers(homeTeam);
   const visitorTeamStartingPlayers = getStartingPlayers(visitorTeam);
+
+  const networks = getBroadcastNetworks(broadcasters.tv.broadcaster);
 
   scoreboardTable.push(
     vAlignCenter([
@@ -224,7 +228,15 @@ const scoreboard = (
         hAlign: 'left',
       },
     ]),
-    [],
+    vAlignCenter([
+      {
+        colSpan: 10,
+        content: bold(
+          `${networks.homeTeam} ${emoji.get('tv')}  ${networks.visitorTeam}`
+        ),
+        hAlign: 'center',
+      },
+    ]),
     vAlignCenter([
       {
         colSpan: 10,

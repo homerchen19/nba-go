@@ -18,6 +18,7 @@ import preview from './preview';
 import scoreboard from './scoreboard';
 import boxScore from './boxScore';
 import live from './live';
+import getBroadcastNetworks from './network';
 
 import NBA from '../../utils/nba';
 import { error, bold } from '../../utils/log';
@@ -53,10 +54,10 @@ const getSeason = date => {
   return date;
 };
 
-const getGameWithOptionalFilter = async (games, filter) => {
-  if (filter && filter.split('=')[0] === 'team') {
+const getGameWithOptionalFilter = async (games, option) => {
+  if (option.filter && option.filter.split('=')[0] === 'team') {
     // TODO: Add more robust filtering but use team as proof of concept
-    const components = filter.split('=');
+    const components = option.filter.split('=');
     const team = components[1].toLowerCase();
     const potentialGames = games.filter(
       data =>
@@ -77,7 +78,7 @@ const getGameWithOptionalFilter = async (games, filter) => {
     } else return chooseGameFromSchedule(potentialGames);
   }
 
-  return chooseGameFromSchedule(games);
+  return chooseGameFromSchedule(games, option);
 };
 
 const game = async option => {
@@ -103,7 +104,6 @@ const game = async option => {
     error(`Can't find any option ${emoji.get('confused')}`);
     process.exit(1);
   }
-
   R.compose(cfontsDate, getSeason)(_date);
 
   const LADate = getLosAngelesTimezone(_date);
@@ -116,11 +116,9 @@ const game = async option => {
   } catch (err) {
     catchAPIError(err, 'NBA.getGamesFromDate()');
   }
-
   const {
     game: { homeTeam, visitorTeam, gameData },
-  } = await getGameWithOptionalFilter(gamesData, option.filter);
-
+  } = await getGameWithOptionalFilter(gamesData, option);
   try {
     const {
       sports_content: {
@@ -151,6 +149,7 @@ const game = async option => {
     timeText,
     dateText,
     arenaText,
+    networkText,
     homeTeamScoreText,
     visitorTeamScoreText,
     playByPlayBox,
@@ -206,7 +205,10 @@ const game = async option => {
       seasonText.setContent(
         bold(`${seasonMetaData.display_year} ${seasonMetaData.display_season}`)
       );
-      const { arena, city, state, date, time } = gameBoxScoreData;
+      const { arena, city, state, date, time, broadcasters } = gameBoxScoreData;
+
+      const networks = getBroadcastNetworks(broadcasters.tv.broadcaster);
+
       dateText.setContent(
         `${emoji.get('calendar')}  ${format(date, 'YYYY/MM/DD')} ${time.slice(
           0,
@@ -216,7 +218,9 @@ const game = async option => {
       arenaText.setContent(
         `${emoji.get('house')}  ${arena} | ${city}, ${state}`
       );
-
+      networkText.setContent(
+        `${networks.homeTeam} ${emoji.get('tv')}  ${networks.visitorTeam}`
+      );
       while (true) {
         let gamePlayByPlayData = {};
 
