@@ -189,6 +189,7 @@ When listing the multiple names they must be in quotes and seperated by commas. 
 ```
 $ nba-go player "Lebron James, Stephen Curry, James Harden" -c -i -r -p
 ```
+![player -c gif](https://user-images.githubusercontent.com/12113222/37696809-1fd54306-2d14-11e8-9261-4d9b6a08588a.gif)
 
 #### Mixed them all
 Get all data at the same time.
