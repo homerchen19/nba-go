@@ -12,7 +12,7 @@ const findMaxInd = arr => {
   let maxInd = 0;
   for (let i = 1; i < arr.length; i += 1) {
     if (arr[i] !== '-') {
-      if (arr[i] > arr[maxInd]) {
+      if (parseFloat(arr[i]) > parseFloat(arr[maxInd]) || arr[maxInd] === '-') {
         maxInd = i;
       }
     }
@@ -104,8 +104,10 @@ const makeRow = seasonData => {
   });
 
   const colorStats = (val, key) => {
-    const maxInd = findMaxInd(template[key]);
-    template[key][maxInd] = chalk.green(template[key][maxInd]);
+    if (key !== 'teamAbbreviation') {
+      const maxInd = findMaxInd(template[key]);
+      template[key][maxInd] = chalk.green(template[key][maxInd]);
+    }
     template[key] = template[key].join('\n');
   };
   R.forEachObjIndexed(colorStats, template);
