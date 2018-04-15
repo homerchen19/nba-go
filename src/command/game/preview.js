@@ -99,7 +99,11 @@ const preview = (
     alignCenter([
       {
         colSpan: 16,
-        content: bold(`${emoji.get('house')}  ${arena} ｜ ${city}, ${state}`),
+        content: bold(
+          `${emoji.get('house')}  ${arena.replace(/&amp;/g, '&')} ｜ ${city}, ${
+            state
+          }`
+        ),
       },
     ]),
     alignCenter([

@@ -216,7 +216,9 @@ const game = async option => {
         )}:${time.slice(2, 4)}`
       );
       arenaText.setContent(
-        `${emoji.get('house')}  ${arena} | ${city}, ${state}`
+        `${emoji.get('house')}  ${arena.replace(/&amp;/g, '&')}  | ${city}, ${
+          state
+        }`
       );
       networkText.setContent(
         `${networks.homeTeam} ${emoji.get('tv')}  ${networks.visitorTeam}`

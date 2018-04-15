@@ -216,7 +216,11 @@ const scoreboard = (
       },
       {
         colSpan: 6,
-        content: bold(`${emoji.get('house')}  ${arena} │ ${city}, ${state}`),
+        content: bold(
+          `${emoji.get('house')}  ${arena.replace(/&amp;/g, '&')}  │ ${city}, ${
+            state
+          }`
+        ),
         hAlign: 'center',
       },
       'C',
