@@ -211,6 +211,7 @@ $ NODE_ENV=development node bin/cli.js <command>
 ```
 
 ## Related repo:
+ - [nba-bar](https://github.com/xxhomey19/nba-bar)
  - [watch-nba](https://github.com/chentsulin/watch-nba)
  - [nba-color](https://github.com/xxhomey19/nba-color)
 
