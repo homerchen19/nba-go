@@ -116,187 +116,200 @@ const game = async option => {
   } catch (err) {
     catchAPIError(err, 'NBA.getGamesFromDate()');
   }
-  const {
-    game: { homeTeam, visitorTeam, gameData },
-  } = await getGameWithOptionalFilter(gamesData, option);
-  try {
+  if (gamesData.length === 0) {
+    console.log('No game available on this date.');
+  } else {
     const {
-      sports_content: {
-        game: _gameBoxScoreData,
-        sports_meta: { season_meta: _seasonMetaData },
-      },
-    } = await NBA.getBoxScoreFromDate(LADate, gameData.id);
+      game: { homeTeam, visitorTeam, gameData },
+    } = await getGameWithOptionalFilter(gamesData, option);
+    try {
+      const {
+        sports_content: {
+          game: _gameBoxScoreData,
+          sports_meta: { season_meta: _seasonMetaData },
+        },
+      } = await NBA.getBoxScoreFromDate(LADate, gameData.id);
 
-    gameBoxScoreData = _gameBoxScoreData;
-    seasonMetaData = _seasonMetaData;
-  } catch (err) {
-    catchAPIError(err, 'NBA.getBoxScoreFromDate()');
-  }
-
-  const { home, visitor } = gameBoxScoreData;
-
-  homeTeam.setGameStats(home.stats);
-  homeTeam.setPlayers(home.players.player);
-  homeTeam.setGameLeaders(home.Leaders);
-  visitorTeam.setGameStats(visitor.stats);
-  visitorTeam.setPlayers(visitor.players.player);
-  visitorTeam.setGameLeaders(visitor.Leaders);
-
-  const {
-    screen,
-    scoreboardTable,
-    seasonText,
-    timeText,
-    dateText,
-    arenaText,
-    networkText,
-    homeTeamScoreText,
-    visitorTeamScoreText,
-    playByPlayBox,
-    boxscoreTable,
-  } = getBlessed(homeTeam, visitorTeam);
-
-  switch (gameData.period_time.game_status) {
-    case '1': {
-      screen.destroy();
-      console.log('');
-
-      const spinner = ora('Loading Game Preview').start();
-
-      let homeTeamDashboardData;
-      let visitorTeamDashboardData;
-
-      try {
-        const {
-          overallTeamDashboard: [_homeTeamDashboardData],
-        } = await NBA.teamSplits({
-          Season: process.env.season,
-          TeamID: homeTeam.getID(),
-        });
-        const {
-          overallTeamDashboard: [_visitorTeamDashboardData],
-        } = await NBA.teamSplits({
-          Season: process.env.season,
-          TeamID: visitorTeam.getID(),
-        });
-
-        homeTeamDashboardData = _homeTeamDashboardData;
-        visitorTeamDashboardData = _visitorTeamDashboardData;
-      } catch (err) {
-        catchAPIError(err, 'NBA.teamSplits()');
-      }
-
-      spinner.stop();
-
-      preview(homeTeam, visitorTeam, {
-        ...seasonMetaData,
-        ...gameBoxScoreData,
-        homeTeamDashboardData,
-        visitorTeamDashboardData,
-      });
-      break;
+      gameBoxScoreData = _gameBoxScoreData;
+      seasonMetaData = _seasonMetaData;
+    } catch (err) {
+      catchAPIError(err, 'NBA.getBoxScoreFromDate()');
     }
 
-    case 'Halftime':
-    case '2': {
-      let updatedPlayByPlayData;
-      let updatedGameBoxScoreData;
+    const { home, visitor } = gameBoxScoreData;
 
-      seasonText.setContent(
-        bold(`${seasonMetaData.display_year} ${seasonMetaData.display_season}`)
-      );
-      const { arena, city, state, date, time, broadcasters } = gameBoxScoreData;
+    homeTeam.setGameStats(home.stats);
+    homeTeam.setPlayers(home.players.player);
+    homeTeam.setGameLeaders(home.Leaders);
+    visitorTeam.setGameStats(visitor.stats);
+    visitorTeam.setPlayers(visitor.players.player);
+    visitorTeam.setGameLeaders(visitor.Leaders);
 
-      const networks = getBroadcastNetworks(broadcasters.tv.broadcaster);
+    const {
+      screen,
+      scoreboardTable,
+      seasonText,
+      timeText,
+      dateText,
+      arenaText,
+      networkText,
+      homeTeamScoreText,
+      visitorTeamScoreText,
+      playByPlayBox,
+      boxscoreTable,
+    } = getBlessed(homeTeam, visitorTeam);
 
-      dateText.setContent(
-        `${emoji.get('calendar')}  ${format(date, 'YYYY/MM/DD')} ${time.slice(
-          0,
-          2
-        )}:${time.slice(2, 4)}`
-      );
-      arenaText.setContent(
-        `${emoji.get('house')}  ${arena} | ${city}, ${state}`
-      );
-      networkText.setContent(
-        `${networks.homeTeam} ${emoji.get('tv')}  ${networks.visitorTeam}`
-      );
-      while (true) {
-        let gamePlayByPlayData = {};
+    switch (gameData.period_time.game_status) {
+      case '1': {
+        screen.destroy();
+        console.log('');
 
-        try {
-          const {
-            sports_content: { game: _updatedPlayByPlayData },
-          } = await NBA.getPlayByPlayFromDate(LADate, gameData.id);
+        const spinner = ora('Loading Game Preview').start();
 
-          updatedPlayByPlayData = _updatedPlayByPlayData;
-        } catch (err) {
-          catchAPIError(err, 'NBA.getPlayByPlayFromDate()');
-        }
+        let homeTeamDashboardData;
+        let visitorTeamDashboardData;
 
         try {
           const {
-            sports_content: { game: _updatedGameBoxScoreData },
-          } = await NBA.getBoxScoreFromDate(LADate, gameData.id);
+            overallTeamDashboard: [_homeTeamDashboardData],
+          } = await NBA.teamSplits({
+            Season: process.env.season,
+            TeamID: homeTeam.getID(),
+          });
+          const {
+            overallTeamDashboard: [_visitorTeamDashboardData],
+          } = await NBA.teamSplits({
+            Season: process.env.season,
+            TeamID: visitorTeam.getID(),
+          });
 
-          updatedGameBoxScoreData = _updatedGameBoxScoreData;
+          homeTeamDashboardData = _homeTeamDashboardData;
+          visitorTeamDashboardData = _visitorTeamDashboardData;
         } catch (err) {
-          catchAPIError(err, 'NBA.getBoxScoreFromDate()');
+          catchAPIError(err, 'NBA.teamSplits()');
         }
 
-        gamePlayByPlayData = updatedPlayByPlayData;
-        gameBoxScoreData = updatedGameBoxScoreData;
+        spinner.stop();
 
-        const lastPlay = gamePlayByPlayData.play.slice(-1).pop();
-        homeTeam.setScore(lastPlay.home_score);
-        visitorTeam.setScore(lastPlay.visitor_score);
+        preview(homeTeam, visitorTeam, {
+          ...seasonMetaData,
+          ...gameBoxScoreData,
+          homeTeamDashboardData,
+          visitorTeamDashboardData,
+        });
+        break;
+      }
 
-        const isFinal =
-          (lastPlay.period === '4' || +lastPlay.period > 4) &&
-          lastPlay.description === 'End Period' &&
-          lastPlay.home_score !== lastPlay.visitor_score;
+      case 'Halftime':
+      case '2': {
+        let updatedPlayByPlayData;
+        let updatedGameBoxScoreData;
 
-        live(
-          homeTeam,
-          visitorTeam,
-          {
-            ...gamePlayByPlayData,
-            ...seasonMetaData,
-            isFinal,
-          },
-          gameBoxScoreData,
-          {
-            screen,
-            scoreboardTable,
-            timeText,
-            homeTeamScoreText,
-            visitorTeamScoreText,
-            playByPlayBox,
-            boxscoreTable,
+        seasonText.setContent(
+          bold(
+            `${seasonMetaData.display_year} ${seasonMetaData.display_season}`
+          )
+        );
+        const {
+          arena,
+          city,
+          state,
+          date,
+          time,
+          broadcasters,
+        } = gameBoxScoreData;
+
+        const networks = getBroadcastNetworks(broadcasters.tv.broadcaster);
+
+        dateText.setContent(
+          `${emoji.get('calendar')}  ${format(date, 'YYYY/MM/DD')} ${time.slice(
+            0,
+            2
+          )}:${time.slice(2, 4)}`
+        );
+        arenaText.setContent(
+          `${emoji.get('house')}  ${arena} | ${city}, ${state}`
+        );
+        networkText.setContent(
+          `${networks.homeTeam} ${emoji.get('tv')}  ${networks.visitorTeam}`
+        );
+        while (true) {
+          let gamePlayByPlayData = {};
+
+          try {
+            const {
+              sports_content: { game: _updatedPlayByPlayData },
+            } = await NBA.getPlayByPlayFromDate(LADate, gameData.id);
+
+            updatedPlayByPlayData = _updatedPlayByPlayData;
+          } catch (err) {
+            catchAPIError(err, 'NBA.getPlayByPlayFromDate()');
           }
-        );
 
-        if (isFinal) {
-          break;
+          try {
+            const {
+              sports_content: { game: _updatedGameBoxScoreData },
+            } = await NBA.getBoxScoreFromDate(LADate, gameData.id);
+
+            updatedGameBoxScoreData = _updatedGameBoxScoreData;
+          } catch (err) {
+            catchAPIError(err, 'NBA.getBoxScoreFromDate()');
+          }
+
+          gamePlayByPlayData = updatedPlayByPlayData;
+          gameBoxScoreData = updatedGameBoxScoreData;
+
+          const lastPlay = gamePlayByPlayData.play.slice(-1).pop();
+          homeTeam.setScore(lastPlay.home_score);
+          visitorTeam.setScore(lastPlay.visitor_score);
+
+          const isFinal =
+            (lastPlay.period === '4' || +lastPlay.period > 4) &&
+            lastPlay.description === 'End Period' &&
+            lastPlay.home_score !== lastPlay.visitor_score;
+
+          live(
+            homeTeam,
+            visitorTeam,
+            {
+              ...gamePlayByPlayData,
+              ...seasonMetaData,
+              isFinal,
+            },
+            gameBoxScoreData,
+            {
+              screen,
+              scoreboardTable,
+              timeText,
+              homeTeamScoreText,
+              visitorTeamScoreText,
+              playByPlayBox,
+              boxscoreTable,
+            }
+          );
+
+          if (isFinal) {
+            break;
+          }
+
+          await delay(
+            gameData.period_time.game_status === 'Halftime' ? 15000 : 3000
+          );
         }
-
-        await delay(
-          gameData.period_time.game_status === 'Halftime' ? 15000 : 3000
-        );
+        break;
       }
-      break;
-    }
 
-    case '3':
-    default: {
-      screen.destroy();
-      console.log('');
-      scoreboard(homeTeam, visitorTeam, {
-        ...gameBoxScoreData,
-        ...seasonMetaData,
-      });
-      console.log('');
-      boxScore(homeTeam, visitorTeam);
+      case '3':
+      default: {
+        screen.destroy();
+        console.log('');
+        scoreboard(homeTeam, visitorTeam, {
+          ...gameBoxScoreData,
+          ...seasonMetaData,
+        });
+        console.log('');
+        boxScore(homeTeam, visitorTeam);
+      }
     }
   }
 };
