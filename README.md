@@ -10,7 +10,7 @@
 </p>  
 
 
-> The finest NBA CLI.  
+> The finest NBA CLI.  d
 
 Watch NBA live play-by-play, game preview, box score and player information on your console.  
 Best CLI tool for those who are both **NBA fans** and **Engineers**.
