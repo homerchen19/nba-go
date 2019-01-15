@@ -5,8 +5,6 @@ import parse from 'date-fns/parse';
 import addDays from 'date-fns/add_days';
 import subDays from 'date-fns/sub_days';
 import format from 'date-fns/format';
-import getYear from 'date-fns/get_year';
-import getMonth from 'date-fns/get_month';
 import isValid from 'date-fns/is_valid';
 import emoji from 'node-emoji';
 import delay from 'delay';
@@ -19,41 +17,13 @@ import boxScore from './boxScore';
 import live from './live';
 import getBroadcastNetworks from './network';
 
+import setSeason from '../../utils/setSeason';
 import getApiDate from '../../utils/getApiDate';
 import NBA from '../../utils/nba';
 import { error, bold } from '../../utils/log';
 import { cfontsDate } from '../../utils/cfonts';
 import getBlessed from '../../utils/blessed';
 import catchAPIError from '../../utils/catchAPIError';
-
-const getSeason = date => {
-  const year = R.compose(
-    getYear,
-    parse
-  )(date);
-  const month = R.compose(
-    getMonth,
-    parse
-  )(date);
-
-  if (year < 2012 || (year === 2012 && month < 5)) {
-    error(
-      `Sorry, https://stats.nba.com/ doesn't provide season data before 2012-13 ${emoji.get(
-        'confused'
-      )}`
-    );
-
-    process.exit(1);
-  }
-
-  if (month > 9) {
-    process.env.season = `${year}-${(year + 1).toString().slice(-2)}`;
-  } else {
-    process.env.season = `${year - 1}-${year.toString().slice(-2)}`;
-  }
-
-  return date;
-};
 
 const getGameWithOptionalFilter = async (games, option) => {
   if (option.filter && option.filter.split('=')[0] === 'team') {
@@ -118,7 +88,7 @@ const game = async option => {
 
   R.compose(
     cfontsDate,
-    getSeason
+    setSeason
   )(_date);
 
   const apiDate = getApiDate(_date);
