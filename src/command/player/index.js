@@ -3,7 +3,6 @@ import emoji from 'node-emoji';
 
 import playerInfo from './info';
 import seasonStats from './seasonStats';
-
 import playerInfoCompare from './infoCompare';
 
 import NBA from '../../utils/nba';
@@ -13,18 +12,23 @@ import seasonStatsCompare from './seasonStatsCompare';
 const player = async (playerName, option) => {
   await NBA.updatePlayers();
 
-  const _players = [];
   const nameArray = playerName.split(',');
-  nameArray.forEach(name => {
-    const playerData = NBA.searchPlayers(name.trim());
-    _players.push(...playerData);
+
+  const [_players] = await pMap(nameArray, async name => {
+    const result = await NBA.searchPlayers(name.trim());
+
+    return result;
   });
 
   if (option.compare) {
-    const infoMapper = elem => NBA.playerInfo({ PlayerID: elem.playerId });
     let playerDataArr;
+
     try {
-      playerDataArr = await pMap(_players, infoMapper);
+      playerDataArr = await pMap(_players, async _player => {
+        const result = await NBA.playerInfo({ PlayerID: _player.playerId });
+
+        return result;
+      });
     } catch (err) {
       catchAPIError(err, 'NBA.playerInfo()');
     }
@@ -32,18 +36,24 @@ const player = async (playerName, option) => {
     if (option.info) {
       playerInfoCompare(playerDataArr);
     }
+
     if (option.regular || option.playoffs) {
-      const profileMapper = elem =>
-        NBA.playerProfile({ PlayerID: elem.playerId });
       let playerProfileArr;
+
       try {
-        playerProfileArr = await pMap(_players, profileMapper);
+        playerProfileArr = await pMap(_players, async _player => {
+          const result = NBA.playerProfile({ PlayerID: _player.playerId });
+
+          return result;
+        });
       } catch (err) {
         catchAPIError(err, 'NBA.playerProfile()');
       }
+
       if (option.regular) {
         seasonStatsCompare(playerProfileArr, playerDataArr, 'Regular Season');
       }
+
       if (option.playoffs) {
         seasonStatsCompare(playerProfileArr, playerDataArr, 'Post Season');
       }
@@ -105,6 +115,7 @@ const player = async (playerName, option) => {
         if (option.playoffs) {
           let seasonTotalsPostSeason;
           let careerTotalsPostSeason;
+
           try {
             const {
               seasonTotalsPostSeason: _seasonTotalsPostSeason,
