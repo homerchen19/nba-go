@@ -83,6 +83,7 @@
     "husky": "^1.3.1",
     "jest": "^23.6.0",
     "lint-staged": "^8.1.0",
+    "moment-timezone": "^0.5.23",
     "pkg": "^4.3.7",
     "prettier": "^1.15.3",
     "prettier-package-json": "^2.0.1",

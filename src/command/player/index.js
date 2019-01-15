@@ -95,7 +95,7 @@ const player = async (playerName, option) => {
             commonPlayerInfo[0].teamAbbreviation;
 
           seasonStats({
-            seasonTtpe: 'Regular Season',
+            seasonType: 'Regular Season',
             ...commonPlayerInfo[0],
             seasonTotals: seasonTotalsRegularSeason,
             careerTotals: careerTotalsRegularSeason[0],
@@ -130,7 +130,7 @@ const player = async (playerName, option) => {
               commonPlayerInfo[0].teamAbbreviation;
 
             seasonStats({
-              seasonTtpe: 'Playoffs',
+              seasonType: 'Playoffs',
               ...commonPlayerInfo[0],
               seasonTotals: seasonTotalsPostSeason,
               careerTotals: careerTotalsPostSeason[0],

@@ -154,8 +154,12 @@ const live = (
   } = blessedComponents;
 
   const {
-    home: { linescores: { period: homeTeamPeriod } },
-    visitor: { linescores: { period: visitorTeamPeriod } },
+    home: {
+      linescores: { period: homeTeamPeriod },
+    },
+    visitor: {
+      linescores: { period: visitorTeamPeriod },
+    },
   } = gameBoxScoreData;
 
   updateTeamQuarterScores(homeTeam, latestPeriod, homeTeamPeriod);

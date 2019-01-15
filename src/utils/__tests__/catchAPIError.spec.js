@@ -10,7 +10,7 @@ describe('catchAPIError', () => {
   });
 
   it('should work', () => {
-    catchAPIError('error message', 'NBA.getGamesFromDate()');
+    catchAPIError('error message', 'NBA.getGames()');
 
     expect(error).toBeCalledWith('error message');
     expect(process.exit).toBeCalledWith(1);

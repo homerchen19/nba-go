@@ -1,5 +1,5 @@
-import blessed from 'blessed';
 import path from 'path';
+import blessed from 'blessed';
 import { right } from 'wide-align';
 
 const getBlessed = (homeTeam, visitorTeam) => {

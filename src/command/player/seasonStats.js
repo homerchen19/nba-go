@@ -2,13 +2,13 @@ import chalk from 'chalk';
 import { getMainColor } from 'nba-color';
 
 import { bold } from '../../utils/log';
-import table from '../../utils/table';
+import { basicTable } from '../../utils/table';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
 
 const seasonStats = ({
-  seasonTtpe,
+  seasonType,
   nowTeamAbbreviation,
   jersey,
   displayFirstLast,
@@ -16,12 +16,11 @@ const seasonStats = ({
   careerTotals,
 }) => {
   const nowTeamMainColor = getMainColor(nowTeamAbbreviation);
-  const seasonTable = table.basicTable();
+  const seasonTable = basicTable();
   const playerName = chalk`{bold.white.bgHex('${
     nowTeamMainColor ? nowTeamMainColor.hex : '#000'
-  }') ${nowTeamAbbreviation}} {bold.white #${jersey} ${displayFirstLast} │ ${
-    seasonTtpe
-  }}`;
+  }') ${nowTeamAbbreviation}} {bold.white #${jersey} ${displayFirstLast} │ ${seasonType}}`;
+
   seasonTable.push([{ colSpan: 14, content: playerName, hAlign: 'center' }]);
   seasonTable.push(
     alignCenter([

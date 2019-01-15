@@ -1,7 +1,6 @@
 /* eslint-disable no-await-in-loop, no-constant-condition */
 
 import R from 'ramda';
-import moment from 'moment-timezone';
 import parse from 'date-fns/parse';
 import addDays from 'date-fns/add_days';
 import subDays from 'date-fns/sub_days';
@@ -20,21 +19,22 @@ import boxScore from './boxScore';
 import live from './live';
 import getBroadcastNetworks from './network';
 
+import getApiDate from '../../utils/getApiDate';
 import NBA from '../../utils/nba';
 import { error, bold } from '../../utils/log';
 import { cfontsDate } from '../../utils/cfonts';
 import getBlessed from '../../utils/blessed';
 import catchAPIError from '../../utils/catchAPIError';
 
-const getLosAngelesTimezone = date =>
-  moment
-    .tz(date, 'America/Los_Angeles')
-    .startOf('day')
-    .format();
-
 const getSeason = date => {
-  const year = R.compose(getYear, parse)(date);
-  const month = R.compose(getMonth, parse)(date);
+  const year = R.compose(
+    getYear,
+    parse
+  )(date);
+  const month = R.compose(
+    getMonth,
+    parse
+  )(date);
 
   if (year < 2012 || (year === 2012 && month < 5)) {
     error(
@@ -42,6 +42,7 @@ const getSeason = date => {
         'confused'
       )}`
     );
+
     process.exit(1);
   }
 
@@ -69,13 +70,18 @@ const getGameWithOptionalFilter = async (games, option) => {
         ) !== -1
     );
 
-    if (!potentialGames.length)
+    console.log({ potentialGames });
+
+    if (!potentialGames.length) {
       error(`Can't find any teams that match ${team}`);
-    else if (potentialGames.length === 1) {
+    } else if (potentialGames.length === 1) {
       const homeTeam = await getTeamInfo(potentialGames[0].home);
       const visitorTeam = await getTeamInfo(potentialGames[0].visitor);
+
       return { game: { gameData: potentialGames[0], homeTeam, visitorTeam } };
-    } else return chooseGameFromSchedule(potentialGames);
+    } else {
+      return chooseGameFromSchedule(potentialGames);
+    }
   }
 
   return chooseGameFromSchedule(games, option);
@@ -88,7 +94,12 @@ const game = async option => {
   let seasonMetaData;
 
   if (option.date) {
-    if (R.compose(isValid, parse)(option.date)) {
+    if (
+      R.compose(
+        isValid,
+        parse
+      )(option.date)
+    ) {
       _date = format(option.date, 'YYYY-MM-DD');
     } else {
       error('Date is invalid');
@@ -104,33 +115,42 @@ const game = async option => {
     error(`Can't find any option ${emoji.get('confused')}`);
     process.exit(1);
   }
-  R.compose(cfontsDate, getSeason)(_date);
 
-  const LADate = getLosAngelesTimezone(_date);
+  R.compose(
+    cfontsDate,
+    getSeason
+  )(_date);
+
+  const apiDate = getApiDate(_date);
 
   try {
     const {
-      sports_content: { games: { game: _gamesData } },
-    } = await NBA.getGamesFromDate(LADate);
+      sports_content: {
+        games: { game: _gamesData },
+      },
+    } = await NBA.getGames(apiDate);
+
     gamesData = _gamesData;
   } catch (err) {
-    catchAPIError(err, 'NBA.getGamesFromDate()');
+    catchAPIError(err, 'NBA.getGames()');
   }
+
   const {
     game: { homeTeam, visitorTeam, gameData },
   } = await getGameWithOptionalFilter(gamesData, option);
+
   try {
     const {
       sports_content: {
         game: _gameBoxScoreData,
         sports_meta: { season_meta: _seasonMetaData },
       },
-    } = await NBA.getBoxScoreFromDate(LADate, gameData.id);
+    } = await NBA.getBoxScore({ ...apiDate, gameId: gameData.id });
 
     gameBoxScoreData = _gameBoxScoreData;
     seasonMetaData = _seasonMetaData;
   } catch (err) {
-    catchAPIError(err, 'NBA.getBoxScoreFromDate()');
+    catchAPIError(err, 'NBA.getBoxScore()');
   }
 
   const { home, visitor } = gameBoxScoreData;
@@ -227,21 +247,21 @@ const game = async option => {
         try {
           const {
             sports_content: { game: _updatedPlayByPlayData },
-          } = await NBA.getPlayByPlayFromDate(LADate, gameData.id);
+          } = await NBA.getPlayByPlay({ ...apiDate, gameId: gameData.id });
 
           updatedPlayByPlayData = _updatedPlayByPlayData;
         } catch (err) {
-          catchAPIError(err, 'NBA.getPlayByPlayFromDate()');
+          catchAPIError(err, 'NBA.getPlayByPlay()');
         }
 
         try {
           const {
             sports_content: { game: _updatedGameBoxScoreData },
-          } = await NBA.getBoxScoreFromDate(LADate, gameData.id);
+          } = await NBA.getBoxScore({ ...apiDate, gameId: gameData.id });
 
           updatedGameBoxScoreData = _updatedGameBoxScoreData;
         } catch (err) {
-          catchAPIError(err, 'NBA.getBoxScoreFromDate()');
+          catchAPIError(err, 'NBA.getBoxScore()');
         }
 
         gamePlayByPlayData = updatedPlayByPlayData;

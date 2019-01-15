@@ -6,7 +6,7 @@ import isAsyncSupported from 'is-async-supported';
 import chalk from 'chalk';
 import updateNotifier from 'update-notifier';
 
-import nbaGo from './command';
+import { player as playerCommand, game as gameCommand } from './command';
 import { error, bold, nbaRed, neonGreen } from './utils/log';
 
 import pkg from '../package.json';
@@ -65,7 +65,8 @@ program
     if (!option.info && !option.regular && !option.playoffs) {
       option.info = true;
     }
-    nbaGo.player(name, option);
+
+    playerCommand(name, option);
   });
 
 program
@@ -113,7 +114,8 @@ program
     ) {
       option.today = true;
     }
-    nbaGo.game(option);
+
+    gameCommand(option);
   });
 
 program.on('--help', () => {
@@ -147,14 +149,17 @@ program.on('--help', () => {
 
 program.command('*').action(command => {
   error(`Unknown command: ${bold(command)}`);
+
   const commandNames = program.commands
     .map(c => c._name)
     .filter(name => name !== '*');
 
   const closeMatch = didYouMean(command, commandNames);
+
   if (closeMatch) {
     error(`Did you mean ${bold(closeMatch)} ?`);
   }
+
   process.exit(1);
 });
 

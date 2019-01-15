@@ -1,4 +1,2 @@
-import player from './player';
-import game from './game';
-
-export default { player, game };
+export { default as player } from './player';
+export { default as game } from './game';
