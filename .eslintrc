@@ -1,10 +1,6 @@
 {
   "parser": "babel-eslint",
-  "extends": [
-    "eslint:recommended",
-    "airbnb",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "airbnb", "prettier"],
   "env": {
     "node": true,
     "jest": true
@@ -17,16 +13,14 @@
     "global-require": "off",
     "no-underscore-dangle": "off",
     "no-console": "off",
+    "import/prefer-default-export": "off",
     "prettier/prettier": [
       "error",
       {
-        trailingComma: 'es5',
-        singleQuote: true,
+        "trailingComma": "es5",
+        "singleQuote": true
       }
     ]
   },
-  "plugins": [
-    "babel",
-    "prettier"
-  ]
+  "plugins": ["babel", "prettier"]
 }
