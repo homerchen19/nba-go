@@ -40,8 +40,6 @@ const getGameWithOptionalFilter = async (games, option) => {
         ) !== -1
     );
 
-    console.log({ potentialGames });
-
     if (!potentialGames.length) {
       error(`Can't find any teams that match ${team}`);
     } else if (potentialGames.length === 1) {
