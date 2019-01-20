@@ -3,14 +3,14 @@ import format from 'date-fns/format';
 import { getMainColor } from 'nba-color';
 
 import { convertToCm, convertToKg } from '../../utils/convertUnit';
-import table from '../../utils/table';
+import { basicTable } from '../../utils/table';
 import { bold } from '../../utils/log';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
 
 const infoCompare = playerInfo => {
-  const playerTable = table.basicTable();
+  const playerTable = basicTable();
   let nameStr = '';
 
   playerInfo.forEach(elem => {

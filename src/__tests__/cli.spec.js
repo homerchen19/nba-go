@@ -1,4 +1,5 @@
 jest.mock('update-notifier');
+jest.mock('chalk');
 
 jest.mock('../command');
 jest.mock('../utils/log');
@@ -12,10 +13,13 @@ let updateNotifier;
 const setup = () => {
   updateNotifier = require('update-notifier');
   updateNotifier.mockReturnValue({ notify: jest.fn() });
+
   log = require('../utils/log');
-  log.error = jest.fn();
+  log.error = jest.fn(s => s);
   log.bold = jest.fn(s => s);
-  nbaGo = require('../command').default;
+
+  nbaGo = require('../command');
+
   require('../cli');
 };
 
@@ -40,7 +44,7 @@ describe('cli', () => {
     process.argv = ['node', 'bin/cli.js', 'QQ'];
     setup();
 
-    expect(log.error).toBeCalledWith(`Unknown command: ${log.bold('QQ')}`);
+    expect(log.error).toBeCalledWith('Unknown command: QQ');
     expect(process.exit).toBeCalledWith(1);
   });
 
@@ -124,7 +128,6 @@ describe('cli', () => {
 
     it('should call nbaGo with option -t', () => {
       process.argv = ['node', 'bin/cli.js', 'game', '-t'];
-
       setup();
 
       expect(nbaGo.game.mock.calls[0][0].today).toBe(true);
@@ -132,7 +135,6 @@ describe('cli', () => {
 
     it('should call nbaGo with option -T', () => {
       process.argv = ['node', 'bin/cli.js', 'game', '-T'];
-
       setup();
 
       expect(nbaGo.game.mock.calls[0][0].tomorrow).toBe(true);
@@ -140,7 +142,6 @@ describe('cli', () => {
 
     it('should call nbaGo with option -n', () => {
       process.argv = ['node', 'bin/cli.js', 'game', '-n'];
-
       setup();
 
       expect(nbaGo.game.mock.calls[0][0].networks).toBe(true);

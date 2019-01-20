@@ -1,9 +1,10 @@
+import NBA from 'nba';
+import { getGames, getBoxScore, getPlayByPlay } from 'nba-stats-client';
+
+import nba from '../nba';
+
 jest.mock('nba');
 jest.mock('nba-stats-client');
-
-const NBA = require('nba');
-const NBA_client = require('nba-stats-client');
-const nba = require('../nba').default;
 
 describe('NBA', () => {
   it('updatePlayers should work', async () => {
@@ -41,21 +42,21 @@ describe('NBA', () => {
     expect(NBA.stats.teamInfoCommon).toBeCalled();
   });
 
-  it('getPlayByPlayFromDate should work', async () => {
-    await nba.getPlayByPlayFromDate();
+  it('getPlayByPlay should work', async () => {
+    await nba.getPlayByPlay();
 
-    expect(NBA_client.getPlayByPlayFromDate).toBeCalled();
+    expect(getPlayByPlay).toBeCalled();
   });
 
-  it('getBoxScoreFromDate should work', async () => {
-    await nba.getBoxScoreFromDate();
+  it('getBoxScore should work', async () => {
+    await nba.getBoxScore();
 
-    expect(NBA_client.getBoxScoreFromDate).toBeCalled();
+    expect(getBoxScore).toBeCalled();
   });
 
-  it('getGamesFromDate should work', async () => {
-    await nba.getGamesFromDate();
+  it('getGames should work', async () => {
+    await nba.getGames();
 
-    expect(NBA_client.getGamesFromDate).toBeCalled();
+    expect(getGames).toBeCalled();
   });
 });

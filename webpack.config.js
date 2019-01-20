@@ -1,11 +1,10 @@
 const webpack = require('webpack');
 const path = require('path');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  devtool: 'source-map',
   target: 'node',
   node: {
     __dirname: false,
@@ -31,9 +30,6 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
-    new UglifyJSPlugin({
-      sourceMap: true,
-    }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false,
@@ -45,4 +41,7 @@ module.exports = {
       },
     ]),
   ],
+  optimization: {
+    minimizer: [new TerserPlugin()],
+  },
 };

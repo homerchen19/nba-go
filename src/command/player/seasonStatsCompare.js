@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import { getMainColor } from 'nba-color';
 
 import { bold } from '../../utils/log';
-import table from '../../utils/table';
+import { basicTable } from '../../utils/table';
 
 const alignCenter = columns =>
   columns.map(content => ({ content, hAlign: 'center', vAlign: 'center' }));
@@ -20,7 +20,7 @@ const findMaxInd = arr => {
   return maxInd;
 };
 
-const makeNameStr = (playerInfo, seasonTtpe) => {
+const makeNameStr = (playerInfo, seasonType) => {
   let nameStr = '';
   playerInfo.forEach(player => {
     const { teamAbbreviation, jersey, displayFirstLast } = {
@@ -29,9 +29,7 @@ const makeNameStr = (playerInfo, seasonTtpe) => {
     const teamMainColor = getMainColor(teamAbbreviation);
     const playerName = chalk`{bold.white.bgHex('${
       teamMainColor ? teamMainColor.hex : '#000'
-    }') ${teamAbbreviation}} {bold.white #${jersey} ${displayFirstLast} │ ${
-      seasonTtpe
-    }}`;
+    }') ${teamAbbreviation}} {bold.white #${jersey} ${displayFirstLast} │ ${seasonType}}`;
     nameStr += `${playerName}\n`;
   });
   return nameStr;
@@ -82,6 +80,7 @@ const makeRow = seasonData => {
     tov: [],
   };
   let seasonId;
+
   seasonData.forEach(player => {
     if (Object.keys(player).length !== 0) {
       player.fg3Pct = (player.fg3Pct * 100).toFixed(1);
@@ -97,9 +96,11 @@ const makeRow = seasonData => {
         seasonId = bold(player.seasonId);
       }
     }
+
     const templatePusher = (val, key) => {
       template[key].push(player[key] || '-');
     };
+
     R.forEachObjIndexed(templatePusher, template);
   });
 
@@ -108,6 +109,7 @@ const makeRow = seasonData => {
     template[key][maxInd] = chalk.green(template[key][maxInd]);
     template[key] = template[key].join('\n');
   };
+
   R.forEachObjIndexed(colorStats, template);
 
   template.seasonId = seasonId;
@@ -118,22 +120,23 @@ const makeRow = seasonData => {
 const seasonStatsCompare = (
   playerProfile,
   playerInfo,
-  seasonTtpe = 'Regular Season'
+  seasonType = 'Regular Season'
 ) => {
-  const seasonStr = seasonTtpe.replace(/\s/g, '');
+  const seasonStr = seasonType.replace(/\s/g, '');
 
   const seasonObj = makeSeasonObj(playerProfile, seasonStr);
   const overallArr = makeOverall(playerProfile, seasonStr);
-  const nameStr = makeNameStr(playerInfo, seasonTtpe);
+  const nameStr = makeNameStr(playerInfo, seasonType);
 
   const sorter = (a, b) => {
-    const adate = a.split('-')[0];
-    const bdate = b.split('-')[0];
-    return adate - bdate;
+    const aDate = a.split('-')[0];
+    const bDate = b.split('-')[0];
+    return aDate - bDate;
   };
   const seasonDates = R.sort(sorter, R.keys(seasonObj));
 
-  const seasonTable = table.basicTable();
+  const seasonTable = basicTable();
+
   seasonTable.push([
     { colSpan: 14, content: nameStr.trim(), hAlign: 'center' },
   ]);
@@ -158,6 +161,7 @@ const seasonStatsCompare = (
 
   seasonDates.reverse().forEach(key => {
     const row = makeRow(seasonObj[key]);
+
     seasonTable.push(
       alignCenter([
         row.seasonId.trim(),

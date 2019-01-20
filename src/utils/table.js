@@ -1,6 +1,6 @@
 import Table from 'cli-table3';
 
-const basicTable = () =>
+export const basicTable = () =>
   new Table({
     head: [],
     chars: {
@@ -21,7 +21,3 @@ const basicTable = () =>
       middle: '│',
     },
   });
-
-module.exports = {
-  basicTable,
-};

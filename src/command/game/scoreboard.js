@@ -190,9 +190,10 @@ const scoreboard = (
       {
         colSpan: 6,
         content: bold(
-          `${emoji.get('calendar')}  ${format(date, 'YYYY/MM/DD')} ${
-            formatedTime
-          }`
+          `${emoji.get('calendar')}  ${format(
+            date,
+            'YYYY/MM/DD'
+          )} ${formatedTime}`
         ),
         hAlign: 'center',
       },
