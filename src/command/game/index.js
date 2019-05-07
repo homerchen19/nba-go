@@ -99,6 +99,10 @@ const game = async option => {
     } = await NBA.getGames(apiDate);
 
     gamesData = _gamesData;
+    if (!gamesData.length) {
+      error('No game available on this date.');
+      process.exit(1);
+    }
   } catch (err) {
     catchAPIError(err, 'NBA.getGames()');
   }
