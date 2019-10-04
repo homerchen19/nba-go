@@ -219,8 +219,8 @@ $ nba-go player Curry -i -r -p
 
 ## Development
 
-It's simple to run `nba-go` on your local computer.  
-The following is step-by-step instruction.
+* It's simple to run `nba-go` on your local computer.  
+* The following is step-by-step instruction.
 
 ```
 $ git clone https://github.com/xxhomey19/nba-go.git
