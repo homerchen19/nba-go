@@ -1,8 +1,8 @@
 {
   "name": "nba-go",
   "description": "The finest NBA CLI.",
-  "license": "MIT",
   "author": "xxhomey19",
+  "license": "MIT",
   "homepage": "https://github.com/xxhomey19/nba-go#readme",
   "repository": {
     "type": "git",
